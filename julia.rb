@@ -9,7 +9,7 @@ class Julia < Formula
   depends_on "gmp"
   depends_on "llvm"
   depends_on "glpk"
-  depends_on "staticfloat/julia/suite-sparse"
+  depends_on "suite-sparse"
   depends_on "staticfloat/julia/arpack-ng"
   depends_on "lighttpd"
   depends_on "fftw"
