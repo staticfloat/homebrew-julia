@@ -35,8 +35,9 @@ class Julia < Formula
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
 
-    ln_s "#{Formula.factory('homebrew/science/arpack-ng').lib}/libarpack.dylib", "usr/lib/"
+    ln_s "#{Formula.factory('staticfloat/julia/arpack-ng').lib}/libarpack.dylib", "usr/lib/"
 
+    # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
     # Make sure Julia uses clang if the environment supports it
@@ -46,6 +47,13 @@ class Julia < Formula
     ['READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'FFTW', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
+    
+    # call makefile to grab suitesparse libraries
+    system "make", "-C", "contrib", "-f", "repackage_system_suitesparse.make", *build_opts
+    
+    # symlink lighttpd binary into usr/sbin, so that launch-julia-webserver works properly
+    mkdir_p "usr/sbin/"
+    ln_s "#{Formula.factory('lighttpd').sbin}/lighttpd", "usr/sbin/"    
 
     # call make with the build options
     system "make", *build_opts
@@ -56,10 +64,6 @@ class Julia < Formula
     # Final install step, symlink julia binary and webserver into bin:
     bin.install_symlink "#{share}/julia/julia"
     bin.install_symlink "#{share}/julia/launch-julia-webserver"
-
-    # symlink lighttpd binary into usr/sbin, so that launch-julia-webserver works properly
-    mkdir_p "usr/sbin"
-    ln_s "#{Formula.factor('lighttpd').bin}/lighttpd", "usr/sbin/"
 
     # and for boatloads of fun, we'll make the test data, and allow it to be run from `brew test julia`
     system "make", "-C", "test/unicode/"
