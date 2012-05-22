@@ -4,6 +4,7 @@ class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
 
+  depends_on "gfortran"
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
