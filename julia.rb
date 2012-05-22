@@ -74,6 +74,6 @@ class Julia < Formula
   def test
     # Run julia-provided test suite, copied over in install step
     chdir "#{share}/julia/test"
-    system "julia", "runtests.jl", "all"
+    system "#{bin}/julia", "runtests.jl", "all"
   end
 end
