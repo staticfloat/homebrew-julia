@@ -3,6 +3,7 @@ require 'formula'
 class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
+  #head 'https://github.com/staticfloat/julia.git'
 
   depends_on "gfortran"
   depends_on "readline"
@@ -16,6 +17,9 @@ class Julia < Formula
   depends_on "fftw"
   depends_on "tbb"
   depends_on "metis"
+
+  # Fixes strip issues, thanks to @nolta
+  skip_clean 'bin'
 
   def install
     ENV.fortran
@@ -62,18 +66,14 @@ class Julia < Formula
     # Install!
     system "make", *(build_opts + ["install"])
 
-    # Final install step, symlink julia binary and webserver into bin:
-    bin.install_symlink "#{share}/julia/julia"
-    bin.install_symlink "#{share}/julia/launch-julia-webserver"
-
     # and for boatloads of fun, we'll make the test data, and allow it to be run from `brew test julia`
     system "make", "-C", "test/unicode/"
-    cp_r "test", "#{share}/julia/"
+    cp_r "test", "#{lib}/julia/"
   end
 
   def test
     # Run julia-provided test suite, copied over in install step
-    chdir "#{share}/julia/test"
+    chdir "#{lib}/julia/test"
     system "#{bin}/julia", "runtests.jl", "all"
   end
 end
