@@ -2,8 +2,8 @@ require 'formula'
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/JuliaLang/julia.git'
-  #head 'https://github.com/staticfloat/julia.git'
+  #head 'https://github.com/JuliaLang/julia.git'
+  head 'https://github.com/staticfloat/julia.git'
 
   depends_on "gfortran"
   depends_on "readline"
@@ -11,7 +11,6 @@ class Julia < Formula
   depends_on "gmp"
   depends_on "llvm"
   depends_on "glpk"
-  #depends_on "suite-sparse"
   depends_on "staticfloat/julia/arpack-ng"
   depends_on "staticfloat/julia/suite-sparse"
   depends_on "lighttpd"
@@ -24,7 +23,6 @@ class Julia < Formula
 
   def install
     ENV.fortran
-    ENV.deparallelize
 
     # Julia ignores CPPFLAGS and only uses CFLAGS, so we must store CPPFLAGS into CFLAGS
     ENV.append_to_cflags ENV['CPPFLAGS']
