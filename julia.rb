@@ -11,8 +11,9 @@ class Julia < Formula
   depends_on "gmp"
   depends_on "llvm"
   depends_on "glpk"
-  depends_on "suite-sparse"
+  #depends_on "suite-sparse"
   depends_on "staticfloat/julia/arpack-ng"
+  depends_on "staticfloat/julia/suite-sparse"
   depends_on "lighttpd"
   depends_on "fftw"
   depends_on "tbb"
@@ -23,6 +24,7 @@ class Julia < Formula
 
   def install
     ENV.fortran
+    ENV.deparallelize
 
     # Julia ignores CPPFLAGS and only uses CFLAGS, so we must store CPPFLAGS into CFLAGS
     ENV.append_to_cflags ENV['CPPFLAGS']
