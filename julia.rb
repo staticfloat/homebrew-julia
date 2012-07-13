@@ -2,8 +2,8 @@ require 'formula'
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  #head 'https://github.com/JuliaLang/julia.git'
-  head 'https://github.com/staticfloat/julia.git'
+  head 'https://github.com/JuliaLang/julia.git'
+  #head 'https://github.com/staticfloat/julia.git'
 
   depends_on "gfortran"
   depends_on "readline"
@@ -54,7 +54,7 @@ class Julia < Formula
     end
     
     # call makefile to grab suitesparse libraries
-    system "make", "-C", "contrib", "-f", "repackage_system_suitesparse.make", *build_opts
+    system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
     
     # symlink lighttpd binary into usr/sbin, so that launch-julia-webserver works properly
     mkdir_p "usr/sbin/"
