@@ -23,6 +23,7 @@ class Julia < Formula
 
   def install
     ENV.fortran
+    ENV.deparallelize
 
     # Julia ignores CPPFLAGS and only uses CFLAGS, so we must store CPPFLAGS into CFLAGS
     ENV.append_to_cflags ENV['CPPFLAGS']
