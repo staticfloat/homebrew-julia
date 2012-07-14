@@ -116,10 +116,10 @@ index 8d97532..3e09082 100644
  os_detect.jl: ../src/os_detect.h
  	$(QUIET_PERL) ${CC} -E -P -DJULIA ../src/os_detect.h | perl -p -e 's/\\n/\n/g' > $@
 diff --git a/deps/Makefile b/deps/Makefile
-index 1cd908e..698378d 100644
+index e8ab8cd..2e8bb4f 100644
 --- a/deps/Makefile
 +++ b/deps/Makefile
-@@ -635,7 +635,7 @@ distclean-suitesparse: clean-suitesparse
+@@ -631,7 +631,7 @@ distclean-suitesparse: clean-suitesparse
  # SUITESPARSE WRAPPER
  
  ifeq ($(USE_SYSTEM_SUITESPARSE), 1)
@@ -128,16 +128,7 @@ index 1cd908e..698378d 100644
  SUITESPARSE_LIB = -lumfpack -lcholmod -lamd -lcamd -lcolamd
  else
  SUITESPARSE_INC = -I SuiteSparse-$(SUITESPARSE_VER)/CHOLMOD/Include -I SuiteSparse-$(SUITESPARSE_VER)/SuiteSparse_config -L$(USRLIB)
-@@ -796,7 +796,7 @@ distclean-gmp-wrapper: clean-gmp-wrapper
- ## GLPK ##
- 
- ifeq ($(USE_SYSTEM_GLPK), 1)
--GLPK_PREFIX = /usr/
-+GLPK_PREFIX = $(shell ${HOMEBREW_BREW_FILE} --prefix)/
- GLPK_OBJ_TARGET =
- else
- GLPK_PREFIX = glpk-$(GLPK_VER)/
-@@ -830,7 +830,7 @@ distclean-glpk: clean-glpk
+@@ -824,7 +824,7 @@ distclean-glpk: clean-glpk
  ## GLPK Wrapper
  
  ifeq ($(USE_SYSTEM_GLPK), 1)
@@ -146,6 +137,14 @@ index 1cd908e..698378d 100644
  GLPKW_LIB = -lglpk
  else
  GLPKW_INC = -I $(abspath $(USR))/include/
+@@ -833,6 +833,7 @@ endif
+ 
+ 
+ $(USRLIB)/libglpk_wrapper.$(SHLIB_EXT): glpk_wrapper.c $(GLPK_OBJ_TARGET)
++	echo "doing the wrapping thing ..."
+ 	mkdir -p $(USRLIB)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -O2 -shared $(fPIC) $(GLPKW_INC) glpk_wrapper.c $(GLPKW_LIB) -o $(USRLIB)/libglpk_wrapper.$(SHLIB_EXT) -Wl,-rpath,$(USRLIB)
+ 	$(INSTALL_NAME_CMD)libglpk_wrapper.$(SHLIB_EXT) $@
 diff --git a/deps/Rmath/src/Makefile b/deps/Rmath/src/Makefile
 index a6f33dc..f1d1ab2 100644
 --- a/deps/Rmath/src/Makefile
