@@ -21,12 +21,37 @@ class Julia < Formula
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
 
+
   def install
     ENV.fortran
-    ENV.deparallelize
 
     # Julia ignores CPPFLAGS and only uses CFLAGS, so we must store CPPFLAGS into CFLAGS
     ENV.append_to_cflags ENV['CPPFLAGS']
+
+    # The directories in LDFLAGS are searched by julias Makefiles and the 
+    # '-L' is removed but all other arguments will break the build.
+    # To do this right julia should only extract the pathed after '-L' but
+    # it does not right now.
+    ENV.remove 'LDFLAGS', "-I#{MacOS.sdk_path}/usr/include"
+
+    # Some changes to support the CFLAGS/CPPFLAGS and CXXFLAGS for xcode-only installations:
+    inreplace 'Make.inc', 'CC += -mmacosx-version-min=10.5', 
+                          'CC += $(CFLAGS)'
+    inreplace 'Make.inc', 'CXX += -mmacosx-version-min=10.5', 
+                          'CXX += $(CXXFLAGS)'
+    inreplace 'base/Makefile', '$(QUIET_PERL) echo \'#include "errno.h"\' | cpp -dM - | perl -nle \'print "const $$1 = int32($$2)" if /^#define\s+(E\w+)\s+(\d+)\s*$$/\' | sort > $@',
+                               '$(QUIET_PERL) echo \'#include "errno.h"\' | cpp -I$(SDKROOT)/usr/include -dM - | perl -nle \'print "const $$1 = int32($$2)" if /^#define\s+(E\w+)\s+(\d+)\s*$$/\' | sort > $@'
+    inreplace 'deps/Makefile', 'SUITESPARSE_INC = -I /usr/include/suitesparse',
+                               'SUITESPARSE_INC = -I $(shell ${HOMEBREW_BREW_FILE} --prefix)/include/suitesparse'
+    inreplace 'deps/Makefile', 'GLPKW_INC = -I /usr/include/',
+                               'GLPKW_INC = -I $(shell ${HOMEBREW_BREW_FILE} --prefix)/include/'
+    inreplace 'deps/Rmath/src/Makefile', '$(QUIET_LINK) $(CC) -shared -o $@ $^ -L$(USRLIB) -lrandom $(RPATH_ORIGIN)',
+                                         '$(QUIET_LINK) $(CC) $(LDFLAGS) -shared -o $@ $^ -L$(USRLIB) -lrandom $(RPATH_ORIGIN)'
+    inreplace 'extras/Makefile', 'GLPK_PREFIX = /usr/include',
+                                 'GLPK_PREFIX = $(shell ${HOMEBREW_BREW_FILE} --prefix)/include'
+    inreplace 'extras/Makefile', '$(QUIET_PERL) cpp -Dnotdefined $^ > $@',
+                                 '$(QUIET_PERL) cpp -I$(SDKROOT)/usr/include -Dnotdefined $^ > $@'
+
 
     # Hack to allow julia to get the git version on demand
     ENV['GIT_DIR'] = cached_download/'.git'
