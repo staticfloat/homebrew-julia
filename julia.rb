@@ -21,6 +21,11 @@ class Julia < Formula
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
 
+  def patches
+    # Uses install_name_tool to add in ${HOMEBREW_PREFIX}/lib to the rpath of julia
+    DATA
+  end
+
   def install
     ENV.fortran
     ENV.deparallelize
@@ -34,14 +39,6 @@ class Julia < Formula
     # This from @ijt's formula, with possible exclusion if @sharpie makes standard for ENV.fortran builds
     libgfortran = `$FC --print-file-name libgfortran.a`.chomp
     ENV.append "LDFLAGS", "-L#{File.dirname libgfortran}"
-
-    # symlink external dylibs into julia's usr/lib directory, so that it can load them at runtime
-    mkdir_p "usr/lib"
-    ['', 'f', 'l', '_threads', 'f_threads', 'l_threads'].each do |ext|
-      ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
-    end
-
-    ln_s "#{Formula.factory('staticfloat/julia/arpack-ng').lib}/libarpack.dylib", "usr/lib/"
 
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
@@ -57,10 +54,6 @@ class Julia < Formula
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
     
-    # symlink lighttpd binary into usr/sbin, so that launch-julia-webserver works properly
-    mkdir_p "usr/sbin/"
-    ln_s "#{Formula.factory('lighttpd').sbin}/lighttpd", "usr/sbin/"    
-
     # call make with the build options
     system "make", *build_opts
 
@@ -78,3 +71,23 @@ class Julia < Formula
     system "#{bin}/julia", "runtests.jl", "all"
   end
 end
+
+
+__END__
+diff --git a/Makefile b/Makefile
+index 140a144..d67ab6a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -39,9 +39,9 @@ install: release
+ 	mkdir -p $(PREFIX)/{sbin,bin,etc,lib/julia,share/julia}
+ 	cp $(BUILD)/bin/*julia* $(PREFIX)/bin
+ ifeq ($(OS), Darwin)
+-	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-basic
+-	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-readline
+-	install_name_tool -add_rpath $(PREFIX)/lib $(PREFIX)/bin/julia-release-webserver
++	install_name_tool -rpath $(BUILD)/lib $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-basic
++	install_name_tool -rpath $(BUILD)/lib $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-readline
++	install_name_tool -add_rpath $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-webserver
+ endif
+ 	cd $(PREFIX)/bin && ln -s julia-release-$(DEFAULT_REPL) julia
+ 	cp -R -L $(BUILD)/lib/julia/* $(PREFIX)/lib/julia
