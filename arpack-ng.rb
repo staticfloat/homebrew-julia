@@ -2,8 +2,8 @@ require 'formula'
 
 class ArpackNg < Formula
   homepage 'http://forge.scilab.org/index.php/p/arpack-ng'
-  url 'http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/arpack-ng_3.1.0.tar.gz'
-  md5 '942a866c306ab6986f3f4fe59ac4b13e'
+  url 'http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/arpack-ng_3.1.1.tar.gz'
+  md5 'd65b915736650d8878719d4168e50c36'
 
   depends_on 'open-mpi'
 
