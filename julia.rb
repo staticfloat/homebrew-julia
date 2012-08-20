@@ -14,7 +14,7 @@ class Julia < Formula
   depends_on "https://raw.github.com/cycld/homebrew/41443150d9844e70b55ac626125a276d1cee9fcb/Library/Formula/llvm.rb"
   depends_on "glpk"
   depends_on "staticfloat/julia/arpack-ng"
-  depends_on "https://raw.github.com/staticfloat/homebrew/8e712dab01502055bf4ab1f92a0d26fadc857665/Library/Formula/suite-sparse.rb"
+  depends_on "https://raw.github.com/staticfloat/homebrew/652835f810439ffdde237a1818af58140421acd1/Library/Formula/suite-sparse.rb"
   depends_on "lighttpd"
   depends_on "fftw"
   depends_on "tbb"
