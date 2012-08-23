@@ -56,7 +56,7 @@ class Julia < Formula
     
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
-    
+
     # call make with the build options
     system "make", *build_opts
 
@@ -91,9 +91,9 @@ index 140a144..d67ab6a 100644
 -	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-basic
 -	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-readline
 -	install_name_tool -add_rpath $(PREFIX)/lib $(PREFIX)/bin/julia-release-webserver
-+	install_name_tool -rpath $(BUILD)/lib $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-basic
-+	install_name_tool -rpath $(BUILD)/lib $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-readline
-+	install_name_tool -add_rpath $(HOMEBREW_PREFIX)/lib $(PREFIX)/bin/julia-release-webserver
++	install_name_tool -rpath $(BUILD)/lib HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-basic
++	install_name_tool -rpath $(BUILD)/lib HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-readline
++	install_name_tool -add_rpath HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-webserver
  endif
  	cd $(PREFIX)/bin && ln -s julia-release-$(DEFAULT_REPL) julia
  	cp -R -L $(BUILD)/lib/julia/* $(PREFIX)/lib/julia
@@ -106,7 +106,7 @@ index 0c4a0fd..d6edb9f 100644
  
  ifeq ($(USE_SYSTEM_GLPK), 1)
 -GLPK_PREFIX = /usr/include
-+GLPK_PREFIX = /Users/sabae/.homebrew/include
++GLPK_PREFIX = HOMEBREW_PREFIX/include
  else
  GLPK_PREFIX = $(JULIAHOME)/deps/glpk-$(GLPK_VER)/src
  endif
