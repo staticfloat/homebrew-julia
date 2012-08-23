@@ -5,15 +5,14 @@ class Julia < Formula
   head 'https://github.com/JuliaLang/julia.git'
   #head 'https://github.com/staticfloat/julia.git'
 
-  depends_on "gfortran"
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
-  
-  # Temporarily using the llvm 3.1 formula from @cycld
-  depends_on "https://raw.github.com/cycld/homebrew/41443150d9844e70b55ac626125a276d1cee9fcb/Library/Formula/llvm.rb"
+  depends_on "llvm"
   depends_on "glpk"
   depends_on "staticfloat/julia/arpack-ng"
+
+  # Temporarily use pull request for suite-sparse 4.0.2
   depends_on "https://raw.github.com/staticfloat/homebrew/652835f810439ffdde237a1818af58140421acd1/Library/Formula/suite-sparse.rb"
   depends_on "lighttpd"
   depends_on "fftw"
@@ -50,7 +49,7 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK'].each do |dep|
+    ['FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
     
@@ -63,10 +62,6 @@ class Julia < Formula
     # Install!
     system "make", *(build_opts + ["install"])
     
-    # link in dylibs that are not installed to ${HOMEBREW_PREFIX}/lib by default
-    ln_s "#{Formula.factory('glpk').lib}/libglpk.dylib", "#{lib}"
-    ln_s "#{Formula.factory('staticfloat/julia/arpack-ng').lib}/libarpack.dylib", "#{lib}"
-
     # and for boatloads of fun, we'll make the test data, and allow it to be run from `brew test julia`
     system "make", "-C", "test/unicode/"
     cp_r "test", "#{lib}/julia/"
