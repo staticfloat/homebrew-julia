@@ -3,7 +3,6 @@ require 'formula'
 class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
-  #head 'https://github.com/staticfloat/julia.git'
 
   depends_on "readline"
   depends_on "pcre"
@@ -18,6 +17,10 @@ class Julia < Formula
   depends_on "fftw"
   depends_on "tbb"
   depends_on "metis"
+  # Not yet, but soon, julia will need openblas. We will know this when
+  # the patch of the Makefile breakes, because right now it links against the
+  # accelerate framework on Darwin.
+  #depends_on "openblas"
 
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
@@ -30,10 +33,6 @@ class Julia < Formula
 
   def install
     ENV.fortran
-    ENV.deparallelize
-
-    # Julia ignores CPPFLAGS and only uses CFLAGS, so we must store CPPFLAGS into CFLAGS
-    ENV.append_to_cflags ENV['CPPFLAGS']
 
     # Hack to allow julia to get the git version on demand
     ENV['GIT_DIR'] = cached_download/'.git'
@@ -45,11 +44,15 @@ class Julia < Formula
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
+    # Tell julia about our gfortran 
+    # (this enables to use gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
+    build_opts << "FC=#{ENV['FC']}"
+
     # Make sure Julia uses clang if the environment supports it
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK'].each do |dep|
+    ['FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
     
@@ -61,10 +64,14 @@ class Julia < Formula
 
     # Install!
     system "make", *(build_opts + ["install"])
-    
+
     # and for boatloads of fun, we'll make the test data, and allow it to be run from `brew test julia`
     system "make", "-C", "test/unicode/"
-    cp_r "test", "#{lib}/julia/"
+    
+    # I want the doc and examples! Todo: write about this in the caveats.
+    (share/'julia').install ['doc', 'examples']
+    # ...and the tests! (why are they not installed?)
+    (lib/'julia').install 'test'
   end
 
   def test
