@@ -9,19 +9,21 @@ class Julia < Formula
   depends_on "gmp"
   depends_on "llvm"
   depends_on "glpk"
+  depends_on "fftw"
+  
+  # We have our custum version of arpack-ng, pending acceptance into either homebrew-science or homebrew-main
   depends_on "staticfloat/julia/arpack-ng"
 
   # Temporarily use pull request for suite-sparse 4.0.2
   depends_on "https://raw.github.com/staticfloat/homebrew/652835f810439ffdde237a1818af58140421acd1/Library/Formula/suite-sparse.rb"
-  depends_on "lighttpd"
-  depends_on "fftw"
-  depends_on "tbb"
-  depends_on "metis"
-  # Not yet, but soon, julia will need openblas. We will know this when
-  # the patch of the Makefile breakes, because right now it links against the
-  # accelerate framework on Darwin.
-  #depends_on "openblas"
+  # Right now, use @samueljohn's openblas formula, until it gets merged into homebrew/science.
+  depends_on "staticfloat/julia/openblas"
 
+  
+  # Soon we will remove lighttpd in favor of nginx
+  depends_on "lighttpd"
+  depends_on "nginx"
+  
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
 
@@ -78,6 +80,13 @@ class Julia < Formula
     # Run julia-provided test suite, copied over in install step
     chdir "#{lib}/julia/test"
     system "#{bin}/julia", "runtests.jl", "all"
+  end
+  
+  def caveats; <<-EOS.undent
+    Documentation and Examples have been installed into #{share}/julia,
+    test suite has been installed into #{lib}/julia/test. Run the command
+    `brew test -v julia` to run all tests.
+    EOS
   end
 end
 
