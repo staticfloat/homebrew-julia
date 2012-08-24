@@ -8,9 +8,8 @@ brew tap staticfloat/julia
 brew install --HEAD julia
 ```
 
-to install Julia.  If you want to use [Gaston]() for plotting, be sure to install Python as a framework, followed by gnuplot with wxmac:
+to install Julia.  If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, be sure to install Python as a framework, followed by gnuplot with wxmac:
 
 ```
-brew install python --enable-framework
 brew install gnuplot --wx
 ```
