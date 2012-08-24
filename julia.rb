@@ -18,7 +18,6 @@ class Julia < Formula
   depends_on "https://raw.github.com/staticfloat/homebrew/652835f810439ffdde237a1818af58140421acd1/Library/Formula/suite-sparse.rb"
   # Right now, use @samueljohn's openblas formula, until it gets merged into homebrew/science.
   depends_on "staticfloat/julia/openblas"
-
   
   # Soon we will remove lighttpd in favor of nginx
   depends_on "lighttpd"
@@ -35,9 +34,12 @@ class Julia < Formula
 
   def install
     ENV.fortran
+    ENV.deparallelize if build.has_option? "d"
 
     # Hack to allow julia to get the git version on demand
     ENV['GIT_DIR'] = cached_download/'.git'
+    
+    ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
 
     # This from @ijt's formula, with possible exclusion if @sharpie makes standard for ENV.fortran builds
     libgfortran = `$FC --print-file-name libgfortran.a`.chomp
@@ -83,9 +85,13 @@ class Julia < Formula
   end
   
   def caveats; <<-EOS.undent
-    Documentation and Examples have been installed into #{share}/julia,
-    test suite has been installed into #{lib}/julia/test. Run the command
-    `brew test -v julia` to run all tests.
+    Documentation and Examples have been installed into:
+    #{share}/julia
+    
+    Test suite has been installed into:
+    #{lib}/julia/test
+     
+    Run the command `brew test -v julia` to run all tests.
     EOS
   end
 end
@@ -121,3 +127,36 @@ index 0c4a0fd..d6edb9f 100644
  else
  GLPK_PREFIX = $(JULIAHOME)/deps/glpk-$(GLPK_VER)/src
  endif
+diff --git a/deps/Makefile b/deps/Makefile
+index 64d01bb..a7ffdc9 100644
+--- a/deps/Makefile
++++ b/deps/Makefile
+@@ -654,7 +654,7 @@ distclean-suitesparse: clean-suitesparse
+ # SUITESPARSE WRAPPER
+ 
+ ifeq ($(USE_SYSTEM_SUITESPARSE), 1)
+-SUITESPARSE_INC = -I /usr/include/suitesparse
++SUITESPARSE_INC = -I HOMEBREW_PREFIX/include
+ SUITESPARSE_LIB = -lumfpack -lcholmod -lamd -lcamd -lcolamd
+ else
+ SUITESPARSE_INC = -I SuiteSparse-$(SUITESPARSE_VER)/CHOLMOD/Include -I SuiteSparse-$(SUITESPARSE_VER)/
+@@ -799,8 +799,8 @@ distclean-gmp:
+ 
+ ## GMP Wrapper
+ 
+-GMP_INC = -I gmp-$(GMP_VER)/
+-GMP_LIB = -L$(USRLIB)/ -lgmp
++GMP_INC = -I HOMEBREW_PREFIX/include
++GMP_LIB = -lgmp
+ 
+ $(USRLIB)/libgmp_wrapper.$(SHLIB_EXT): gmp_wrapper.c $(GMP_OBJ_TARGET) | $(USRLIB)
+        $(CC) $(CFLAGS) $(LDFLAGS) -O2 -shared $(fPIC) $(GMP_INC) gmp_wrapper.c -o $(USRLIB)/libgmp_wra
+@@ -847,7 +847,7 @@ distclean-glpk: clean-glpk
+ ## GLPK Wrapper
+ 
+ ifeq ($(USE_SYSTEM_GLPK), 1)
+-GLPKW_INC = -I /usr/include/
++GLPKW_INC = -I HOMEBREW_PREFIX/include/
+ GLPKW_LIB = -lglpk
+ else
+ GLPKW_INC = -I $(abspath $(USR))/include/
