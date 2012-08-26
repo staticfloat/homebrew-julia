@@ -163,3 +163,16 @@ index 64d01bb..a7ffdc9 100644
  GLPKW_LIB = -lglpk
  else
  GLPKW_INC = -I $(abspath $(USR))/include/
+diff --git a/Make.inc b/Make.inc
+index 5007938..146d0bd 100644
+--- a/Make.inc
++++ b/Make.inc
+@@ -147,7 +147,7 @@ endif
+ 
+ ifeq ($(USE_SYSTEM_BLAS), 1)
+ ifeq ($(OS), Darwin)
+-LIBBLAS = -framework vecLib -lBLAS
++LIBBLAS = -lopenblas
+ LIBBLASNAME = libblas
+ else
+ LIBBLAS = -lblas
