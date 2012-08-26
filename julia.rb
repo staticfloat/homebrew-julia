@@ -11,7 +11,7 @@ class Julia < Formula
   depends_on "glpk"
   depends_on "fftw"
   
-  # We have our custum version of arpack-ng, pending acceptance into either homebrew-science or homebrew-main
+  # We have our custom version of arpack-ng, pending acceptance into either homebrew-science or homebrew-main
   depends_on "staticfloat/julia/arpack-ng"
 
   # Temporarily use pull request for suite-sparse 4.0.2
@@ -39,7 +39,9 @@ class Julia < Formula
     # Hack to allow julia to get the git version on demand
     ENV['GIT_DIR'] = cached_download/'.git'
     
+    # Have to include CPPFLAGS in CFLAGS and CXXFLAGS because Julia's buildsystem doesn't listen to CPPFLAGS
     ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
+    ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
     # This from @ijt's formula, with possible exclusion if @sharpie makes standard for ENV.fortran builds
     libgfortran = `$FC --print-file-name libgfortran.a`.chomp
@@ -49,7 +51,7 @@ class Julia < Formula
     build_opts = ["PREFIX=#{prefix}"]
 
     # Tell julia about our gfortran 
-    # (this enables to use gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
+    # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
     build_opts << "FC=#{ENV['FC']}"
 
     # Make sure Julia uses clang if the environment supports it
@@ -59,12 +61,24 @@ class Julia < Formula
     ['FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
-    
+
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
 
+    # Sneak in the fftw libraries, as julia doesn't know how to load dylibs from any place other than
+    # julia's usr/lib directory and system default paths yet; the build process fixes that after the
+    # install step, but the bootstrapping process requires the use of the fftw libraries before then
+    ['', 'f', '_threads', 'f_threads'].each do |ext|
+      ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
+    end
+
     # call make with the build options
     system "make", *build_opts
+    
+    # Remove the fftw symlinks again, so we don't have conflicts when installing julia
+    ['', 'f', '_threads', 'f_threads'].each do |ext|
+      rm "usr/lib/libfftw3#{ext}.dylib"
+    end
 
     # Install!
     system "make", *(build_opts + ["install"])
@@ -140,17 +154,6 @@ index 64d01bb..a7ffdc9 100644
  SUITESPARSE_LIB = -lumfpack -lcholmod -lamd -lcamd -lcolamd
  else
  SUITESPARSE_INC = -I SuiteSparse-$(SUITESPARSE_VER)/CHOLMOD/Include -I SuiteSparse-$(SUITESPARSE_VER)/
-@@ -799,8 +799,8 @@ distclean-gmp:
- 
- ## GMP Wrapper
- 
--GMP_INC = -I gmp-$(GMP_VER)/
--GMP_LIB = -L$(USRLIB)/ -lgmp
-+GMP_INC = -I HOMEBREW_PREFIX/include
-+GMP_LIB = -lgmp
- 
- $(USRLIB)/libgmp_wrapper.$(SHLIB_EXT): gmp_wrapper.c $(GMP_OBJ_TARGET) | $(USRLIB)
-        $(CC) $(CFLAGS) $(LDFLAGS) -O2 -shared $(fPIC) $(GMP_INC) gmp_wrapper.c -o $(USRLIB)/libgmp_wra
 @@ -847,7 +847,7 @@ distclean-glpk: clean-glpk
  ## GLPK Wrapper
  
