@@ -4,7 +4,7 @@ class Openblas < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   url 'http://github.com/xianyi/OpenBLAS/zipball/v0.2.3'
   sha1 '388094941b39e702b75768b0a94da49b77d474c0'
-  head "https://github.com/xianyi/OpenBLAS.git"
+  #head "https://github.com/xianyi/OpenBLAS.git"
 
   keg_only :provided_by_osx
 
