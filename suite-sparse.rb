@@ -16,9 +16,9 @@ class SuiteSparse < Formula
   depends_on "tbb"
   depends_on "metis" if metis?
   depends_on "staticfloat/julia/openblas" if openblas?
-  
-  options "with-metis", "Compile in metis libraries"
-  options "with-openblas", "Use the openblas BLAS libraries instead of Apple's Accelerate"
+
+  option "with-metis", "Compile in metis libraries"
+  option "with-openblas", "Use the openblas BLAS libraries instead of Apple's Accelerate"
 
   def install
     # SuiteSparse doesn't like to build in parallel
@@ -34,7 +34,7 @@ class SuiteSparse < Formula
       s.change_make_var! "LAPACK", "$(BLAS)"
       s.change_make_var! "SPQR_CONFIG", "-DHAVE_TBB"
       s.change_make_var! "TBB", "-ltbb"
-      
+
       if metis?
         s.remove_make_var! "METIS_PATH"
         s.change_make_var! "METIS", Formula.factory("metis").lib + "libmetis.a"
