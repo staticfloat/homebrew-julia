@@ -10,6 +10,7 @@ class Julia < Formula
   depends_on "llvm"
   depends_on "glpk"
   depends_on "fftw"
+  depends_on "zlib"
   
   # We have our custom version of arpack-ng, pending acceptance into either homebrew-science or homebrew-main
   depends_on "staticfloat/julia/arpack-ng"
@@ -58,7 +59,7 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
 
@@ -74,7 +75,7 @@ class Julia < Formula
 
     # call make with the build options
     system "make", *build_opts
-    
+
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
