@@ -42,7 +42,7 @@ class Julia < Formula
     
     # Have to include CPPFLAGS in CFLAGS and CXXFLAGS because Julia's buildsystem doesn't listen to CPPFLAGS
     if not ENV['CPPFLAGS'] or not ENV['CFLAGS'] or not ENV['CXXFLAGS']
-      raise UsageError, "Must include --env=std option, e.g. `brew install --HEAD --env=std julia`"
+      raise "Must include --env=std option, e.g. `brew install --HEAD --env=std julia`"
     end
     ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
     ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
