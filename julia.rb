@@ -84,6 +84,11 @@ class Julia < Formula
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
 
+    # Setup the @rpath to also point to homebrew's lib folder so that julia can find everything she needs!
+    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-basic"
+    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-readline"
+    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-webserver"
+
     # Install!
     system "make", *(build_opts + ["install"])
 
@@ -115,23 +120,6 @@ class Julia < Formula
 end
 
 __END__
-diff --git a/Makefile b/Makefile
-index 140a144..d67ab6a 100644
---- a/Makefile
-+++ b/Makefile
-@@ -39,9 +39,9 @@ install: release
- 	mkdir -p $(PREFIX)/{sbin,bin,etc,lib/julia,share/julia}
- 	cp $(BUILD)/bin/*julia* $(PREFIX)/bin
- ifeq ($(OS), Darwin)
--	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-basic
--	install_name_tool -rpath $(BUILD)/lib $(PREFIX)/lib $(PREFIX)/bin/julia-release-readline
--	install_name_tool -add_rpath $(PREFIX)/lib $(PREFIX)/bin/julia-release-webserver
-+	install_name_tool -rpath $(BUILD)/lib HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-basic
-+	install_name_tool -rpath $(BUILD)/lib HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-readline
-+	install_name_tool -add_rpath HOMEBREW_PREFIX/lib $(PREFIX)/bin/julia-release-webserver
- endif
- 	cd $(PREFIX)/bin && ln -s julia-release-$(DEFAULT_REPL) julia
- 	cp -R -L $(BUILD)/lib/julia/* $(PREFIX)/lib/julia
 diff --git a/extras/Makefile b/extras/Makefile
 index 0c4a0fd..d6edb9f 100644
 --- a/extras/Makefile
