@@ -7,7 +7,7 @@ A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to inst
 brew install gfortran
 brew tap staticfloat/julia
 brew tap homebrew/dupes
-brew install --HEAD --env=std julia
+brew install --HEAD julia
 ```
 
 If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:

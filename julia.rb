@@ -26,6 +26,9 @@ class Julia < Formula
   
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
+  
+  # Need this as Julia's build process is quite messy with respect to env variables
+  env :std
 
   def patches
     # Uses install_name_tool to add in ${HOMEBREW_PREFIX}/lib to the rpath of julia,
@@ -41,9 +44,6 @@ class Julia < Formula
     ENV['GIT_DIR'] = cached_download/'.git'
     
     # Have to include CPPFLAGS in CFLAGS and CXXFLAGS because Julia's buildsystem doesn't listen to CPPFLAGS
-    if not ENV['CPPFLAGS'] or not ENV['CFLAGS'] or not ENV['CXXFLAGS']
-      raise "Must include --env=std option, e.g. `brew install --HEAD --env=std julia`"
-    end
     ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
     ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
