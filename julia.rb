@@ -62,7 +62,7 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'LAPACK', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
 
@@ -75,6 +75,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
+    ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
 
     # call make with the build options
     system "make", *build_opts
@@ -83,11 +84,15 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
+    rm "usr/lib/libopenblas.dylib"
 
-    # Setup the @rpath to also point to homebrew's lib folder so that julia can find everything she needs!
-    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-basic"
-    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-readline"
-    system "install_name_tool", "-add_rpath", "#{HOMEBREW_PREFIX}/lib", "usr/bin/julia-release-webserver"
+    # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
+    # as well as any keg-only libraries that they need.
+    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').lib}"].each do |rpath|
+      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-basic"
+      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-readline"
+      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-webserver"
+    end
 
     # Install!
     system "make", *(build_opts + ["install"])
@@ -156,15 +161,17 @@ index 64d01bb..a7ffdc9 100644
  else
  GLPKW_INC = -I $(abspath $(USR))/include/
 diff --git a/Make.inc b/Make.inc
-index 5007938..146d0bd 100644
+index 0465d05..263ebeb 100644
 --- a/Make.inc
 +++ b/Make.inc
-@@ -147,7 +147,7 @@ endif
+@@ -155,8 +155,8 @@ endif
  
  ifeq ($(USE_SYSTEM_BLAS), 1)
  ifeq ($(OS), Darwin)
 -LIBBLAS = -framework vecLib -lBLAS
-+LIBBLAS = -lopenblas
- LIBBLASNAME = libblas
+-LIBBLASNAME = libblas
++LIBBLAS = -L$(USRLIB) -lopenblas
++LIBBLASNAME = libopenblas
  else
  LIBBLAS = -lblas
+ LIBBLASNAME = libblas
