@@ -6,6 +6,9 @@ class ArpackNg < Formula
   md5 'd65b915736650d8878719d4168e50c36'
 
   depends_on 'open-mpi'
+  depends_on 'staticfloat/julia/openblas' if build.include? 'with-openblas'
+  
+  option "with-openblas", "Use the openblas BLAS libraries instead of Apple's Accelerate"
 
   def install
     ENV.fortran
@@ -14,8 +17,13 @@ class ArpackNg < Formula
     ENV['MPIF77'] = 'mpif77'
 
     configure_args = ["--disable-dependency-tracking", "--prefix=#{prefix}", "--enable-shared"]
-    configure_args << "--with-blas=-framework Accelerate"
-    configure_args << "--with-lapack=-framework Accelerate"
+    if build.include? 'with-openblas'
+      configure_args << "--with-blas=openblas"
+      configure_args << "--with-lapack=openblas"
+    else
+      configure_args << "--with-blas=-framework Accelerate"
+      configure_args << "--with-lapack=-framework Accelerate"
+    end
 
     system "./configure", *configure_args
 

@@ -10,19 +10,24 @@ class Julia < Formula
   depends_on "llvm"
   depends_on "glpk"
   depends_on "fftw"
-  depends_on "zlib"
+  depends_on "homebrew/dupes/zlib"
   
-  # We have our custom version of arpack-ng, pending acceptance into either homebrew-science or homebrew-main
-  depends_on "staticfloat/julia/arpack-ng"
+  # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
+  if build.include? "with-accelerate"
+    depends_on "staticfloat/julia/arpack-ng"
+    depends_on "staticfloat/julia/suite-sparse"
+  else
+    depends_on "staticfloat/julia/arpack-ng" => "with-openblas"
+    depends_on "staticfloat/julia/suite-sparse" => "with-openblas"
+    depends_on "staticfloat/julia/openblas"
+  end
 
-  # Temporarily use pull request for suite-sparse 4.0.2
-  depends_on "https://raw.github.com/staticfloat/homebrew/652835f810439ffdde237a1818af58140421acd1/Library/Formula/suite-sparse.rb"
-  # Right now, use @samueljohn's openblas formula, until it gets merged into homebrew/science.
-  depends_on "staticfloat/julia/openblas"
-  
   # Soon we will remove lighttpd in favor of nginx
   depends_on "lighttpd"
   depends_on "nginx"
+  
+  # This option forces us to use accelerate, as opposed to the default of openblas
+  option "with-accelerate", "Use Apple's Accelerate framework instead of OpenBLAS for linear algebra routines"
   
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
@@ -30,10 +35,22 @@ class Julia < Formula
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
 
+  # Here we build up a list of patches to be applied
   def patches
-    # Uses install_name_tool to add in ${HOMEBREW_PREFIX}/lib to the rpath of julia,
-    # and fixes hardcoded include path for glpk.h
-    DATA
+    patch_list = []
+    
+    # First patch fixes hardcoded location of glpk.h
+    patch_list << "https://raw.github.com/gist/3806089/77b10c7bf7bac9370806cdc7e887435d56b505f6/glpk.h.diff"
+    
+    # Second patch fixes hardcoded paths to deps in deps/Makefile
+    patch_list << "https://raw.github.com/gist/3806093/7c812721a27b9e88f74facc4d726044d415c4c41/deps.Makefile.diff"
+    
+    # Finally, if we're compiling for openblas, we need to patch that into make.inc
+    if not build.include? "with-accelerate"
+      patch_list << "https://raw.github.com/gist/3806092/220c4be173225347d4f5244ea2a50b715010fe25/make.inc.diff"
+    end
+    
+    return patch_list
   end
 
   def install
@@ -75,7 +92,9 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
+    if not build.include? "with-accelerate"
+      ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
+    end
 
     # call make with the build options
     system "make", *build_opts
@@ -84,7 +103,9 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
-    rm "usr/lib/libopenblas.dylib"
+    if not build.include? "with-accelerate"
+      rm "usr/lib/libopenblas.dylib"
+    end
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
@@ -123,55 +144,3 @@ class Julia < Formula
     EOS
   end
 end
-
-__END__
-diff --git a/extras/Makefile b/extras/Makefile
-index 0c4a0fd..d6edb9f 100644
---- a/extras/Makefile
-+++ b/extras/Makefile
-@@ -8,7 +8,7 @@ GLPK_VER = 4.47
- GLPK_CONST = 0x[0-9a-fA-F]+|[-+]?\s*[0-9]+
- 
- ifeq ($(USE_SYSTEM_GLPK), 1)
--GLPK_PREFIX = /usr/include
-+GLPK_PREFIX = HOMEBREW_PREFIX/include
- else
- GLPK_PREFIX = $(JULIAHOME)/deps/glpk-$(GLPK_VER)/src
- endif
-diff --git a/deps/Makefile b/deps/Makefile
-index 64d01bb..a7ffdc9 100644
---- a/deps/Makefile
-+++ b/deps/Makefile
-@@ -654,7 +654,7 @@ distclean-suitesparse: clean-suitesparse
- # SUITESPARSE WRAPPER
- 
- ifeq ($(USE_SYSTEM_SUITESPARSE), 1)
--SUITESPARSE_INC = -I /usr/include/suitesparse
-+SUITESPARSE_INC = -I HOMEBREW_PREFIX/include
- SUITESPARSE_LIB = -lumfpack -lcholmod -lamd -lcamd -lcolamd
- else
- SUITESPARSE_INC = -I SuiteSparse-$(SUITESPARSE_VER)/CHOLMOD/Include -I SuiteSparse-$(SUITESPARSE_VER)/
-@@ -847,7 +847,7 @@ distclean-glpk: clean-glpk
- ## GLPK Wrapper
- 
- ifeq ($(USE_SYSTEM_GLPK), 1)
--GLPKW_INC = -I /usr/include/
-+GLPKW_INC = -I HOMEBREW_PREFIX/include/
- GLPKW_LIB = -lglpk
- else
- GLPKW_INC = -I $(abspath $(USR))/include/
-diff --git a/Make.inc b/Make.inc
-index 0465d05..263ebeb 100644
---- a/Make.inc
-+++ b/Make.inc
-@@ -155,8 +155,8 @@ endif
- 
- ifeq ($(USE_SYSTEM_BLAS), 1)
- ifeq ($(OS), Darwin)
--LIBBLAS = -framework vecLib -lBLAS
--LIBBLASNAME = libblas
-+LIBBLAS = -L$(USRLIB) -lopenblas
-+LIBBLASNAME = libopenblas
- else
- LIBBLAS = -lblas
- LIBBLASNAME = libblas

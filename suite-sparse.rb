@@ -1,21 +1,12 @@
 require 'formula'
-
-def metis?
-  build.include? 'with-metis'
-end
-
-def openblas?
-  build.include? 'with-openblas'
-end
-
 class SuiteSparse < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.0.2.tar.gz'
   sha1 '46b24a28eef4b040ea5a02d2c43e82e28b7d6195'
 
   depends_on "tbb"
-  depends_on "metis" if metis?
-  depends_on "staticfloat/julia/openblas" if openblas?
+  depends_on "metis" if build.include? 'with-metis'
+  depends_on "staticfloat/julia/openblas" if build.include? 'with-openblas'
 
   option "with-metis", "Compile in metis libraries"
   option "with-openblas", "Use the openblas BLAS libraries instead of Apple's Accelerate"
@@ -26,7 +17,7 @@ class SuiteSparse < Formula
 
     inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
       # Put in the proper libraries
-      if openblas?
+      if build.include? 'with-openblas'
         s.change_make_var! "BLAS", "-lopenblas"
       else
         s.change_make_var! "BLAS", "-Wl,-framework -Wl,Accelerate"
@@ -35,7 +26,7 @@ class SuiteSparse < Formula
       s.change_make_var! "SPQR_CONFIG", "-DHAVE_TBB"
       s.change_make_var! "TBB", "-ltbb"
 
-      if metis?
+      if build.include? 'with-metis'
         s.remove_make_var! "METIS_PATH"
         s.change_make_var! "METIS", Formula.factory("metis").lib + "libmetis.a"
       end
