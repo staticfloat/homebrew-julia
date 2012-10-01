@@ -47,7 +47,7 @@ class Julia < Formula
     
     # Finally, if we're compiling for openblas, we need to patch that into make.inc
     if not build.include? "with-accelerate"
-      patch_list << "https://raw.github.com/gist/3806092/220c4be173225347d4f5244ea2a50b715010fe25/make.inc.diff"
+      patch_list << "https://raw.github.com/gist/3806092/5993e2f3753e1cbb7725be20ac3b3f7dc9eab56c/make.inc.diff"
     end
     
     return patch_list
@@ -79,10 +79,10 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'BLAS', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
-
+    
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
 

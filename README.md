@@ -17,7 +17,6 @@ If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, ins
 brew install gnuplot --wx
 ```
 
-
 Using a newer version of gfortran
 =================================
 Some may prefer a more recent version of gfortran, in which case gfortran-4.7 is available through the [`homebrew-dupes` Tap](https://github.com/Homebrew/homebrew-dupes) (Note that this can take a very long time):
