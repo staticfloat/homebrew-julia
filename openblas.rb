@@ -8,6 +8,8 @@ class Openblas < Formula
 
   keg_only :provided_by_osx
 
+  env :std
+
   def install
     ENV.fortran
 
