@@ -64,10 +64,6 @@ class Julia < Formula
     ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
     ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
-    # This from @ijt's formula, with possible exclusion if @sharpie makes standard for ENV.fortran builds
-    libgfortran = `$FC --print-file-name libgfortran.a`.chomp
-    ENV.append "LDFLAGS", "-L#{File.dirname libgfortran}"
-
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
@@ -95,6 +91,7 @@ class Julia < Formula
     if not build.include? "with-accelerate"
       ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
     end
+    ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
     system "make", *build_opts
@@ -106,6 +103,7 @@ class Julia < Formula
     if not build.include? "with-accelerate"
       rm "usr/lib/libopenblas.dylib"
     end
+    rm "usr/lib/libpcre.dylib"
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
