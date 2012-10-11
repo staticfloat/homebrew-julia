@@ -115,14 +115,6 @@ class Julia < Formula
 
     # Install!
     system "make", *(build_opts + ["install"])
-
-    # and for boatloads of fun, we'll make the test data, and allow it to be run from `brew test julia`
-    system "make", "-C", "test/unicode/"
-    
-    # I want the doc and examples! Todo: write about this in the caveats.
-    (share/'julia').install ['doc', 'examples']
-    # ...and the tests! (why are they not installed?)
-    (lib/'julia').install 'test'
   end
 
   def test
