@@ -13,21 +13,13 @@ class Julia < Formula
   depends_on "homebrew/dupes/zlib"
   
   # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
-  if build.include? "with-accelerate"
-    depends_on "staticfloat/julia/arpack-ng"
-    depends_on "staticfloat/julia/suite-sparse"
-  else
-    depends_on "staticfloat/julia/arpack-ng" => "with-openblas"
-    depends_on "staticfloat/julia/suite-sparse" => "with-openblas"
-    depends_on "staticfloat/julia/openblas"
-  end
+  depends_on "staticfloat/julia/arpack-ng"
+  depends_on "staticfloat/julia/suite-sparse"
+  depends_on "staticfloat/julia/openblas"
 
   # Soon we will remove lighttpd in favor of nginx
   depends_on "lighttpd"
   depends_on "nginx"
-  
-  # This option forces us to use accelerate, as opposed to the default of openblas
-  option "with-accelerate", "Use Apple's Accelerate framework instead of OpenBLAS for linear algebra routines"
   
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
@@ -44,11 +36,6 @@ class Julia < Formula
     
     # Second patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://raw.github.com/gist/3806093/7c812721a27b9e88f74facc4d726044d415c4c41/deps.Makefile.diff"
-    
-    # Finally, if we're compiling for openblas, we need to patch that into make.inc
-    if not build.include? "with-accelerate"
-      patch_list << "https://raw.github.com/gist/3806092/5993e2f3753e1cbb7725be20ac3b3f7dc9eab56c/make.inc.diff"
-    end
     
     return patch_list
   end
@@ -88,9 +75,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    if not build.include? "with-accelerate"
-      ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
-    end
+    ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
@@ -100,9 +85,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
-    if not build.include? "with-accelerate"
-      rm "usr/lib/libopenblas.dylib"
-    end
+    rm "usr/lib/libopenblas.dylib"
     rm "usr/lib/libpcre.dylib"
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
