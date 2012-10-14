@@ -6,8 +6,6 @@ class ArpackNg < Formula
   md5 'd65b915736650d8878719d4168e50c36'
 
   depends_on 'open-mpi'
-  
-  option "with-openblas", "Use the openblas BLAS libraries instead of Apple's Accelerate"
 
   def install
     ENV.fortran
