@@ -21,6 +21,9 @@ class Julia < Formula
   depends_on "lighttpd"
   depends_on "nginx"
   
+  # Because of new tk wrapper part
+  depends_on :x11
+  
   # Fixes strip issues, thanks to @nolta
   skip_clean 'bin'
   
@@ -80,6 +83,11 @@ class Julia < Formula
 
     # call make with the build options
     system "make", *build_opts
+    
+    # Have to actually go into deps to make install-tk-wrapper.  What's all that about, eh?
+    cd "deps"
+    system "make", "install-tk-wrapper", *build_opts
+    cd ".."
 
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
@@ -90,12 +98,12 @@ class Julia < Formula
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
-    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').lib}"].each do |rpath|
+    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').lib}", "/usr/X11/lib"].each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-basic"
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-readline"
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-webserver"
     end
-
+    
     # Install!
     system "make", *(build_opts + ["install"])
   end
