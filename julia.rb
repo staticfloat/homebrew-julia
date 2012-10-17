@@ -3,6 +3,8 @@ require 'formula'
 class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
+  #head 'https://github.com/staticfloat/julia.git', :branch => "tkport"
+
 
   depends_on "readline"
   depends_on "pcre"
@@ -24,9 +26,6 @@ class Julia < Formula
   # Because of new tk wrapper part
   depends_on :x11
   
-  # Fixes strip issues, thanks to @nolta
-  skip_clean 'bin'
-  
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
 
@@ -39,6 +38,9 @@ class Julia < Formula
     
     # Second patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://raw.github.com/gist/3806093/7c812721a27b9e88f74facc4d726044d415c4c41/deps.Makefile.diff"
+
+    # Third patch forces us to link with OpenBLAS, not Accelerate
+    patch_list << "https://raw.github.com/gist/3806092/5993e2f3753e1cbb7725be20ac3b3f7dc9eab56c/make.inc.diff"
     
     return patch_list
   end

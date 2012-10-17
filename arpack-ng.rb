@@ -6,6 +6,7 @@ class ArpackNg < Formula
   md5 'd65b915736650d8878719d4168e50c36'
 
   depends_on 'open-mpi'
+  depends_on 'openblas'
 
   def install
     ENV.fortran
