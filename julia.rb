@@ -3,8 +3,6 @@ require 'formula'
 class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
-  #head 'https://github.com/staticfloat/julia.git', :branch => "tkport"
-
 
   depends_on "readline"
   depends_on "pcre"
@@ -12,7 +10,6 @@ class Julia < Formula
   depends_on "llvm"
   depends_on "glpk"
   depends_on "fftw"
-  depends_on "homebrew/dupes/zlib"
   
   # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
   depends_on "staticfloat/julia/arpack-ng"
