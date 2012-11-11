@@ -34,7 +34,7 @@ class Julia < Formula
     patch_list << "https://raw.github.com/gist/3806089/77b10c7bf7bac9370806cdc7e887435d56b505f6/glpk.h.diff"
     
     # Second patch fixes hardcoded paths to deps in deps/Makefile
-    patch_list << "https://raw.github.com/gist/3806093/7c812721a27b9e88f74facc4d726044d415c4c41/deps.Makefile.diff"
+    patch_list << "https://raw.github.com/gist/3806093/0f1f38e9f03dcfecd5b01df082ed60ef3f5a6562/deps.Makefile.diff"
 
     # Third patch forces us to link with OpenBLAS, not Accelerate
     patch_list << "https://raw.github.com/gist/3806092/5993e2f3753e1cbb7725be20ac3b3f7dc9eab56c/make.inc.diff"
