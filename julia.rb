@@ -77,7 +77,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    ln_s "#{Formula.factory('openblas').lib}/libopenblas.dylib", "usr/lib/"
+    ln_s "#{Formula.factory('openblas').opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
@@ -97,7 +97,7 @@ class Julia < Formula
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
-    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').lib}", "/usr/X11/lib"].each do |rpath|
+    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-basic"
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-readline"
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-webserver"
