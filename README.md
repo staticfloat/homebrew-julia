@@ -41,9 +41,9 @@ $ brew unlink openblas
 $ brew install openblas --HEAD
 ```
 
-This will install the latest `develop` branch of OpenBLAS.  Julia will happily link against this new version, but unfortunately SuiteSparse and arpack-ng will not, so we must recompile SuiteSparse, arpack-ng and therefore Julia:
+This will install the latest `develop` branch of OpenBLAS.  Julia will happily link against this new version, but unfortunately SuiteSparse will not, so we must recompile SuiteSparse and therefore Julia:
 
 ```
-$ brew rm suite-sparse arpack-ng julia
+$ brew rm suite-sparse julia
 $ brew install --HEAD julia
 ```
