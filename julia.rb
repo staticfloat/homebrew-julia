@@ -37,7 +37,7 @@ class Julia < Formula
     patch_list << "https://raw.github.com/gist/3806093/0f1f38e9f03dcfecd5b01df082ed60ef3f5a6562/deps.Makefile.diff"
 
     # Third patch forces us to link with OpenBLAS, not Accelerate
-    patch_list << "https://raw.github.com/gist/3806092/5993e2f3753e1cbb7725be20ac3b3f7dc9eab56c/make.inc.diff"
+    patch_list << "https://raw.github.com/gist/3806092/3b1792839567d2ea56440494bcf5954edbc82ea4/make.inc.diff"
     
     return patch_list
   end
@@ -109,7 +109,7 @@ class Julia < Formula
 
   def test
     # Run julia-provided test suite, copied over in install step
-    chdir "#{lib}/julia/test"
+    chdir "#{share}/julia/test"
     system "#{bin}/julia", "runtests.jl", "all"
   end
   
@@ -118,7 +118,7 @@ class Julia < Formula
     #{share}/julia
     
     Test suite has been installed into:
-    #{lib}/julia/test
+    #{share}/julia/test
      
     Run the command `brew test -v julia` to run all tests.
     EOS
