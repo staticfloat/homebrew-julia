@@ -100,7 +100,6 @@ class Julia < Formula
     ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-basic"
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-readline"
-      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-webserver"
     end
     
     # Install!
