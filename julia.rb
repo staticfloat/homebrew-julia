@@ -53,6 +53,9 @@ class Julia < Formula
     ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
     ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
+    libgfortran = `$FC --print-file-name libgfortran.a`.chomp
+    ENV.append "LDFLAGS", "-L#{File.dirname libgfortran}"
+
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
