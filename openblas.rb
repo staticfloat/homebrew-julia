@@ -14,7 +14,7 @@ class Openblas < Formula
     ENV.fortran
 
     # Must call in two steps
-    system "make", "CC=#{ENV['CC']}", "CFLAGS=#{ENV['CFLAGS']}", "FC=#{ENV['FC']}"
+    system "make", "CC=#{ENV['CC']}", "FC=#{ENV['FC']}"
     system "make", "PREFIX=#{prefix}", "install"
   end
 end
