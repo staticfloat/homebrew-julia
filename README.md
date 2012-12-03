@@ -10,6 +10,8 @@ $ brew tap staticfloat/julia
 $ brew install --HEAD julia
 ```
 
+Note that warnings about tapping `suite-sparse` are normal, and to install this patched version of Suite Sparse you may use `brew install staticfloat/julia/suitesparse`, although this should be unnecessary as the Julia formula internally depends on `staticfloat/julia/suite-sparse`.
+
 If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:
 
 ```
