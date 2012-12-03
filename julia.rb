@@ -26,6 +26,9 @@ class Julia < Formula
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
 
+  # Options that can be passed to the build process
+  option "build-debug", "Builds julia with debugging information included"
+
   # Here we build up a list of patches to be applied
   def patches
     patch_list = []
@@ -37,13 +40,15 @@ class Julia < Formula
     patch_list << "https://raw.github.com/gist/3806093/0f1f38e9f03dcfecd5b01df082ed60ef3f5a6562/deps.Makefile.diff"
 
     # Third patch forces us to link with OpenBLAS, not Accelerate
-    patch_list << "https://raw.github.com/gist/3806092/3b1792839567d2ea56440494bcf5954edbc82ea4/make.inc.diff"
+    patch_list << "https://raw.github.com/gist/3806092/ca83cfcfb00f9c95948aed270c38fe8b28c173d6/make.inc.diff"
     
     return patch_list
   end
 
   def install
     ENV.fortran
+
+    # This makes it easier to see what has broken
     ENV.deparallelize if build.has_option? "d"
 
     # Hack to allow julia to get the git version on demand
@@ -81,13 +86,20 @@ class Julia < Formula
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
-    system "make", *build_opts
-    
-    # Have to actually go into deps to make install-tk-wrapper.  What's all that about, eh?
-    cd "deps"
-    system "make", "install-tk-wrapper", *build_opts
-    cd ".."
+    target = "release"
+    if build.include? "build-debug"
+      target = "debug"
+      ohai "Making debug build"
+    end
+    system "make", target, *build_opts
 
+    if not build.include? "build-debug"
+      # Have to actually go into deps to make install-tk-wrapper.  What's all that about, eh?
+      cd "deps"
+      system "make", "install-tk-wrapper", *build_opts
+      cd ".."
+    end
+    
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
@@ -98,9 +110,11 @@ class Julia < Formula
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
     ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
-      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-basic"
-      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-release-readline"
+      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-#{target}-basic"
+      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-#{target}-readline"
     end
+
+    system "false"
     
     # Install!
     system "make", *(build_opts + ["install"])
@@ -112,7 +126,13 @@ class Julia < Formula
     system "#{bin}/julia", "runtests.jl", "all"
   end
   
-  def caveats; <<-EOS.undent
+  def caveats
+    caveat = ""
+    if build.include? "build-debug"
+      caveat += "Because this was a debug build, the tk wrapper has not been installed\n\n"
+    end
+
+    caveat + <<-EOS.undent
     Documentation and Examples have been installed into:
     #{share}/julia
     
