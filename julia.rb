@@ -40,7 +40,7 @@ class Julia < Formula
     patch_list << "https://raw.github.com/gist/3806093/0f1f38e9f03dcfecd5b01df082ed60ef3f5a6562/deps.Makefile.diff"
 
     # Third patch forces us to link with OpenBLAS, not Accelerate
-    patch_list << "https://raw.github.com/gist/3806092/ca83cfcfb00f9c95948aed270c38fe8b28c173d6/make.inc.diff"
+    patch_list << "https://raw.github.com/gist/3806092/426a2912a0a0fec764e4048801a9427e615e33d7/make.inc.diff"
     
     return patch_list
   end
@@ -114,8 +114,6 @@ class Julia < Formula
       system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-#{target}-readline"
     end
 
-    system "false"
-    
     # Install!
     system "make", *(build_opts + ["install"])
   end
