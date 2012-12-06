@@ -1,37 +1,22 @@
 homebrew-julia
 ==============
 
-A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler (See below if you care about using a newer gfortran). After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
+A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler, and llvm, the backend compiler for Julia. After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
 
 ```
 $ brew update
 $ brew install gfortran
+$ brew install llvm --disable-assertions
 $ brew tap staticfloat/julia
 $ brew install --HEAD julia
 ```
 
-Note that warnings about tapping `suite-sparse` are normal, and to install this patched version of Suite Sparse you may use `brew install staticfloat/julia/suitesparse`, although this should be unnecessary as the Julia formula internally depends on `staticfloat/julia/suite-sparse`.
+Note that warnings about tapping the custom version of `suite-sparse` over `mxcl/suite-sparse` are normal, and to manually install this patched version of Suite Sparse you may use `brew install staticfloat/julia/suitesparse`, although this should be unnecessary as the Julia formula internally depends on `staticfloat/julia/suite-sparse` and will install it automatically.
 
 If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:
 
 ```
 $ brew install gnuplot --wx
-```
-
-Using a newer version of gfortran
-=================================
-Some may prefer a more recent version of gfortran, in which case gfortran-4.7 is available through the [`homebrew-dupes` Tap](https://github.com/Homebrew/homebrew-dupes) (Note that this can take a very long time):
-
-```
-$ brew tap homebrew/dupes
-$ brew install gcc --enable-fortran
-```
-
-If you have installed the 4.7 version of gfortran, you must export the `FC` variable to tell the julia build process where to find it, as well as tell it to automatically include the default fortran flags:
-
-```
-$ export FC=$(brew --prefix)/bin/gfortran-4.7
-$ brew install --HEAD julia --default-fortran-flags
 ```
 
 Using OpenBLAS HEAD
@@ -49,3 +34,7 @@ This will install the latest `develop` branch of OpenBLAS.  Julia will happily l
 $ brew rm suite-sparse julia
 $ brew install --HEAD julia
 ```
+
+Conflicts with Homebrew-science
+===============================
+There is currently a bug in Homebrew that causes incorrect versions of SuiteSparse and OpenBLAS to be installed if you have Homebrew-science tapped.  The Homebrew bug is [being tracked](https://github.com/mxcl/homebrew/issues/16375), but please report your julia-specfic problems [in this tap](https://github.com/staticfloat/homebrew-julia/issues).
