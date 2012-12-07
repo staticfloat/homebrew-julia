@@ -10,15 +10,14 @@ class Julia < Formula
   depends_on "llvm"
   depends_on "glpk"
   depends_on "fftw"
+
+  # Note that the webserver is in pretty poor shape right now, we probably don't even need this
+  depends_on "nginx"
   
   # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
   depends_on "staticfloat/julia/arpack-ng"
   depends_on "staticfloat/julia/suite-sparse"
   depends_on "staticfloat/julia/openblas"
-
-  # Soon we will remove lighttpd in favor of nginx
-  depends_on "lighttpd"
-  depends_on "nginx"
   
   # Because of new tk wrapper part
   depends_on :x11
