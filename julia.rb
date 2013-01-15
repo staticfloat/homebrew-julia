@@ -15,9 +15,15 @@ class Julia < Formula
   depends_on "nginx"
   
   # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
-  depends_on "staticfloat/julia/arpack-ng"
-  depends_on "staticfloat/julia/suite-sparse"
-  depends_on "staticfloat/julia/openblas"
+  if build.include? "64bit"
+    depends_on "staticfloat/julia/arpack-ng64"
+    depends_on "staticfloat/julia/suite-sparse64"
+    depends_on "staticfloat/julia/openblas64"
+  else
+    depends_on "staticfloat/julia/arpack-ng"
+    depends_on "staticfloat/julia/suite-sparse"
+    depends_on "homebrew/science/openblas"
+  end
   
   # Because of new tk wrapper part
   depends_on :x11
@@ -27,6 +33,7 @@ class Julia < Formula
 
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
+  option "64bit", "Builds julia on top of 64-bit linear algebra libraries"
 
   # Here we build up a list of patches to be applied
   def patches
@@ -54,11 +61,18 @@ class Julia < Formula
     ENV['GIT_DIR'] = cached_download/'.git'
     
     # Have to include CPPFLAGS in CFLAGS and CXXFLAGS because Julia's buildsystem doesn't listen to CPPFLAGS
-    ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
-    ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
+    #ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
+    #ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
+
+    # If we're not building 64-bit, need to define this!
+    if build.include? "64bit" and Hardware.is_64_bit?
+      build_opts << "USE_LIB64=1"
+    else
+      build_opts << "USE_LIB64=0"
+    end
 
     # Tell julia about our gfortran 
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
