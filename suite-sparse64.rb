@@ -1,5 +1,5 @@
 require 'formula'
-class SuiteSparse < Formula
+class SuiteSparse64 < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.0.2.tar.gz'
   sha1 '46b24a28eef4b040ea5a02d2c43e82e28b7d6195'
