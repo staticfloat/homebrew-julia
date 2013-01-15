@@ -31,7 +31,7 @@ class Openblas64 < Formula
               "LAPACK_URL=file://#{lapack.cached_download}"
 
     # Must call in two steps
-    system "make", "FC=#{ENV['FC']} INTERFACE64=1"
+    system "make", "INTERFACE64=1", "FC=#{ENV['FC']}"
     system "make", "PREFIX=#{prefix}", "install"
   end
 end
