@@ -1,5 +1,5 @@
 require 'formula'
-class SuiteSparse64 < Formula
+class SuiteSparse64Julia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.0.2.tar.gz'
   sha1 '46b24a28eef4b040ea5a02d2c43e82e28b7d6195'
@@ -9,6 +9,8 @@ class SuiteSparse64 < Formula
   depends_on "homebrew/science/openblas"
 
   option "with-metis", "Compile in metis libraries"
+
+  keg_only "Conflicts with suite-sparse"
 
   def install
     # SuiteSparse doesn't like to build in parallel
@@ -34,7 +36,7 @@ class SuiteSparse64 < Formula
       s.change_make_var! "INSTALL_INCLUDE", include
     end
 
-    system "make library UMFPACK_CONFIG=-DLONGBLAS='long long' CHOLMOD_CONFIG=-DLONGBLAS='long long'"
+    system "make library UMFPACK_CONFIG=-DLONGBLAS=\"'long long'\" CHOLMOD_CONFIG=-DLONGBLAS=\"'long long'\""
 
     lib.mkpath
     include.mkpath

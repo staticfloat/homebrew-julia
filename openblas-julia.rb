@@ -8,7 +8,7 @@ class OpenblasLapack < Formula
   sha1 '93a6e4e6639aaf00571d53a580ddc415416e868b'
 end
 
-class Openblas64 < Formula
+class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   # Maintainers, remember to update the LAPACK url in OpenblasLapack above.
   # See the "LAPACK_URL" in the openblas Makefile for the right version.
@@ -31,7 +31,7 @@ class Openblas64 < Formula
               "LAPACK_URL=file://#{lapack.cached_download}"
 
     # Must call in two steps
-    system "make", "FC=#{ENV['FC']} INTERFACE64=1"
+    system "make", "FC=#{ENV['FC']}"
     system "make", "PREFIX=#{prefix}", "install"
   end
 end

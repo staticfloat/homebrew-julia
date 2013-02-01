@@ -1,12 +1,13 @@
 require 'formula'
 
-class ArpackNg64 < Formula
+class Arpack64Julia < Formula
   homepage 'http://forge.scilab.org/index.php/p/arpack-ng'
   url 'http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/arpack-ng_3.1.1.tar.gz'
-  md5 'd65b915736650d8878719d4168e50c36'
 
   depends_on 'open-mpi'
   depends_on 'openblas'
+
+  keg_only "Conflicts with arpack-ng"
 
   def install
     ENV.fortran

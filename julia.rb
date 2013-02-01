@@ -14,15 +14,15 @@ class Julia < Formula
   # Note that the webserver is in pretty poor shape right now, we probably don't even need this
   depends_on "nginx"
   
-  # We have our custom formulae of arpack-ng, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
+  # We have our custom formulae of arpack, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
   if build.include? "64bit"
-    depends_on "staticfloat/julia/arpack-ng64"
-    depends_on "staticfloat/julia/suite-sparse64"
-    depends_on "staticfloat/julia/openblas64"
+    depends_on "arpack64-julia"
+    depends_on "suite-sparse64-julia"
+    depends_on "openblas64-julia"
   else
-    depends_on "staticfloat/julia/arpack-ng"
-    depends_on "staticfloat/julia/suite-sparse"
-    depends_on "homebrew/science/openblas"
+    depends_on "arpack-julia"
+    depends_on "suite-sparse-julia"
+    depends_on "openblas-julia"
   end
   
   # Because of new tk wrapper part
@@ -59,17 +59,19 @@ class Julia < Formula
 
     # Hack to allow julia to get the git version on demand
     ENV['GIT_DIR'] = cached_download/'.git'
-    
-    # Have to include CPPFLAGS in CFLAGS and CXXFLAGS because Julia's buildsystem doesn't listen to CPPFLAGS
-    #ENV['CFLAGS'] += ' ' + ENV['CPPFLAGS']
-    #ENV['CXXFLAGS'] += ' ' + ENV['CPPFLAGS']
 
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
     # If we're not building 64-bit, need to define this!
-    if build.include? "64bit" and Hardware.is_64_bit?
-      build_opts << "USE_LIB64=1"
+    openblas_name = 'openblas-julia'
+    if build.include? "64bit"
+      if Hardware.is_64_bit?
+        build_opts << "USE_LIB64=1"
+        openblas_formula = 'openblas64-julia'
+      else
+        opoo "Cannot use --64bit on 32bit hardware!"
+      end
     else
       build_opts << "USE_LIB64=0"
     end
@@ -95,7 +97,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    ln_s "#{Formula.factory('openblas').opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
+    ln_s "#{Formula.factory(openblas_formula).opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
