@@ -5,9 +5,9 @@ class Arpack64Julia < Formula
   url 'http://forge.scilab.org/index.php/p/arpack-ng/downloads/get/arpack-ng_3.1.1.tar.gz'
 
   depends_on 'open-mpi'
-  depends_on 'openblas'
+  depends_on 'openblas64-julia'
 
-  keg_only "Conflicts with arpack-ng"
+  keg_only "Conflicts with arpack"
 
   def install
     ENV.fortran

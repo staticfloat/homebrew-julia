@@ -6,7 +6,7 @@ class SuiteSparse64Julia < Formula
 
   depends_on "tbb" if build.include? 'with-tbb'
   depends_on "metis" if build.include? 'with-metis'
-  depends_on "homebrew/science/openblas"
+  depends_on "openblas64-julia"
 
   option "with-metis", "Compile in metis libraries"
 

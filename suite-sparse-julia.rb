@@ -6,9 +6,11 @@ class SuiteSparseJulia < Formula
 
   depends_on "tbb" if build.include? 'with-tbb'
   depends_on "metis" if build.include? 'with-metis'
-  depends_on "staticfloat/julia/openblas"
+  depends_on "openblas-julia"
 
   option "with-metis", "Compile in metis libraries"
+  
+  keg_only "Conflicts with suite-sparse"
 
   def install
     # SuiteSparse doesn't like to build in parallel

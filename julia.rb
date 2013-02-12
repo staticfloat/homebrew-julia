@@ -1,5 +1,17 @@
 require 'formula'
 
+
+# Avoid Julia downloading these tools ondemand
+# We don't have full formulae for them, as julia makes very specific use of these formulae
+class JuliaDoubleConversion < Formula
+  url 'http://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz'
+  sha1 'de238c7f0ec2d28bd7c54cff05504478a7a72124'
+end
+class JuliaDSFMT < Formula
+  url 'http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/dSFMT-src-2.2.tar.gz'
+  sha1 'd64e1c1927d6532c62aff271bd1cd0d4859c3c6d'
+end
+
 class Julia < Formula
   homepage 'http://julialang.org'
   head 'https://github.com/JuliaLang/julia.git'
@@ -16,8 +28,8 @@ class Julia < Formula
   
   # We have our custom formulae of arpack, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
   if build.include? "64bit"
-    depends_on "arpack64-julia"
-    depends_on "suite-sparse64-julia"
+    depends_on "arpack64-julia" => :build
+    depends_on "suite-sparse64-julia" => :build
     depends_on "openblas64-julia"
   else
     depends_on "arpack-julia"
@@ -39,13 +51,10 @@ class Julia < Formula
   def patches
     patch_list = []
     
-    # First patch fixes hardcoded location of glpk.h
-    patch_list << "https://raw.github.com/gist/3806089/77b10c7bf7bac9370806cdc7e887435d56b505f6/glpk.h.diff"
-    
-    # Second patch fixes hardcoded paths to deps in deps/Makefile
-    patch_list << "https://raw.github.com/gist/3806093/0f1f38e9f03dcfecd5b01df082ed60ef3f5a6562/deps.Makefile.diff"
+    # First patch fixes hardcoded paths to deps in deps/Makefile
+    patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
-    # Third patch forces us to link with OpenBLAS, not Accelerate
+    # Second patch forces us to link with OpenBLAS, not Accelerate
     patch_list << "https://raw.github.com/gist/3806092/426a2912a0a0fec764e4048801a9427e615e33d7/make.inc.diff"
     
     return patch_list
@@ -53,7 +62,19 @@ class Julia < Formula
 
   def install
     ENV.fortran
-
+    
+    # Download double-conversion, then symlink it into deps/
+    doubleconversion = JuliaDoubleConversion.new
+    doubleconversion.brew{}
+    ln_s doubleconversion.cached_download, 'deps/'
+    ohai "Using double-conversion: #{doubleconversion.cached_download}"
+    
+    # Download DSFMT, then symlink it into deps/random/
+    dsfmt = JuliaDSFMT.new
+    dsfmt.brew{}
+    ln_s dsfmt.cached_download, 'deps/random/'
+    ohai "Using DSFMT: #{dsfmt.cached_download}"
+    
     # This makes it easier to see what has broken
     ENV.deparallelize if build.has_option? "d"
 
@@ -64,11 +85,15 @@ class Julia < Formula
     build_opts = ["PREFIX=#{prefix}"]
 
     # If we're not building 64-bit, need to define this!
-    openblas_name = 'openblas-julia'
+    openblas = 'openblas-julia'
+    arpack = 'arpack-julia'
+    suitesparse = 'suite-sparse-julia'
     if build.include? "64bit"
       if Hardware.is_64_bit?
         build_opts << "USE_LIB64=1"
-        openblas_formula = 'openblas64-julia'
+        openblas = 'openblas64-julia'
+        arpack = 'arpack64-julia'
+        suitesparse = 'suite-sparse64-julia'
       else
         opoo "Cannot use --64bit on 32bit hardware!"
       end
@@ -79,12 +104,15 @@ class Julia < Formula
     # Tell julia about our gfortran 
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
     build_opts << "FC=#{ENV['FC']}"
+    
+    # Make sure we have space to muck around with RPATHS
+    ENV['LDFLAGS'] += " -headerpad_max_install_names"
 
     # Make sure Julia uses clang if the environment supports it
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'LIGHTTPD', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
     
@@ -97,7 +125,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    ln_s "#{Formula.factory(openblas_formula).opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
+    ln_s "#{Formula.factory(openblas).opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
@@ -114,23 +142,24 @@ class Julia < Formula
       system "make", "install-tk-wrapper", *build_opts
       cd ".."
     end
-    
+
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
     rm "usr/lib/libopenblas.dylib"
     rm "usr/lib/libpcre.dylib"
+    
+    # Install!
+    system "make", *(build_opts + ["install"])
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
-    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory('openblas').opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
-      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-#{target}-basic"
-      system "install_name_tool", "-add_rpath", rpath, "usr/bin/julia-#{target}-readline"
+    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory(openblas).opt_prefix}/lib", "#{Formula.factory(arpack).opt_prefix}/lib",
+      "#{Formula.factory(suitesparse).opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
+      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-basic"
+      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-readline"
     end
-
-    # Install!
-    system "make", *(build_opts + ["install"])
   end
 
   def test
