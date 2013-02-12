@@ -167,7 +167,7 @@ class Julia < Formula
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
-    rpaths = ["#{HOMEBREW_PREFIX}/lib", "/usr/X11/lib"]
+    rpaths = []
 
     # Only add in openblas if we're not using accelerate
     rpathFormulae = [arpack, suitesparse]
@@ -178,12 +178,16 @@ class Julia < Formula
       rpaths << "#{Formula.factory(formula).opt_prefix}/lib"
     end
 
+    # Add in generic Homebrew and system paths
+    rpaths << "#{HOMEBREW_PREFIX}/lib"
+    rpaths << "/usr/X11/lib"
+
     # Add those rpaths to the binaries
     rpaths.each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-basic"
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-readline"
+      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-webserver"      
     end
-    ohai "NABIL: Do I need to do this for the webserver as well?"
   end
 
   def test
