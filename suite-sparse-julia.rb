@@ -6,9 +6,10 @@ class SuiteSparseJulia < Formula
 
   depends_on "tbb" if build.include? 'with-tbb'
   depends_on "metis" if build.include? 'with-metis'
-  depends_on "openblas-julia"
+  depends_on "openblas-julia" if !build.include? 'with-accelerate'
 
   option "with-metis", "Compile in metis libraries"
+  option 'with-accelerate', 'Compile against Accelerate/vecLib instead of OpenBLAS'
   
   keg_only "Conflicts with suite-sparse"
 
@@ -18,7 +19,8 @@ class SuiteSparseJulia < Formula
 
     inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
       # Put in the proper libraries
-      s.change_make_var! "BLAS", "-lopenblas"
+      s.change_make_var! "BLAS", "-lopenblas" if !build.include? 'with-accelerate'
+      s.change_make_var! "BLAS", "-Wl,-framework -Wl,Accelerate" if build.include? 'with-accelerate'
       s.change_make_var! "LAPACK", "$(BLAS)"
 
       if build.include? "with-tbb"

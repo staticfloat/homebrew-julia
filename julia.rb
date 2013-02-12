@@ -23,18 +23,28 @@ class Julia < Formula
   depends_on "glpk"
   depends_on "fftw"
 
-  # Note that the webserver is in pretty poor shape right now, we probably don't even need this
+  # This for the webserver
   depends_on "nginx"
   
-  # We have our custom formulae of arpack, openblas and suite-sparse, pending acceptance into either homebrew-science or homebrew-main
+  # We have our custom formulae of arpack, openblas and suite-sparse
   if build.include? "64bit"
-    depends_on "arpack64-julia" => :build
-    depends_on "suite-sparse64-julia" => :build
-    depends_on "openblas64-julia"
+    if build.include? 'with-accelerate'
+      depends_on "arpack64-julia" => 'with-accelerate'
+      depends_on "suite-sparse64-julia" => 'with-accelerate'
+    else
+      depends_on "arpack64-julia"
+      depends_on "suite-sparse64-julia"
+      depends_on "openblas64-julia"
+    end
   else
-    depends_on "arpack-julia"
-    depends_on "suite-sparse-julia"
-    depends_on "openblas-julia"
+    if build.include? 'with-accelerate'
+      depends_on "arpack-julia" => 'with-accelerate'
+      depends_on "suite-sparse-julia" => 'with-accelerate'
+    else
+      depends_on "arpack-julia"
+      depends_on "suite-sparse-julia"
+      depends_on "openblas-julia"
+    end
   end
   
   # Because of new tk wrapper part
@@ -46,6 +56,7 @@ class Julia < Formula
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
   option "64bit", "Builds julia on top of 64-bit linear algebra libraries"
+  option "with-accelerate", "Builds julia (and dependent libraries) against Accelerate/vecLib, not OpenBLAS. Incompatible with --64bit option"
 
   # Here we build up a list of patches to be applied
   def patches
@@ -55,13 +66,25 @@ class Julia < Formula
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
     # Second patch forces us to link with OpenBLAS, not Accelerate
-    patch_list << "https://raw.github.com/gist/3806092/426a2912a0a0fec764e4048801a9427e615e33d7/make.inc.diff"
+    if !build.include? 'with-accelerate'
+      patch_list << "https://raw.github.com/gist/3806092/426a2912a0a0fec764e4048801a9427e615e33d7/make.inc.diff"
+    end
     
     return patch_list
   end
 
   def install
     ENV.fortran
+
+    # First, check to make sure we don't have impossible options passed in
+    if build.include? "64bit"
+      if Hardware.is_64_bit?
+        opoo "Cannot compile 64-bit on a 32-bit architecture!"
+      end
+      if build.include? "with-accelerate"
+        opoo "Cannot compile a 64-bit interface with the Accelerate libraries!"
+      end
+    end
     
     # Download double-conversion, then symlink it into deps/
     doubleconversion = JuliaDoubleConversion.new
@@ -84,19 +107,15 @@ class Julia < Formula
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
 
-    # If we're not building 64-bit, need to define this!
+    # Be sure to get the right library names for when we symlink later on
     openblas = 'openblas-julia'
     arpack = 'arpack-julia'
     suitesparse = 'suite-sparse-julia'
     if build.include? "64bit"
-      if Hardware.is_64_bit?
-        build_opts << "USE_LIB64=1"
-        openblas = 'openblas64-julia'
-        arpack = 'arpack64-julia'
-        suitesparse = 'suite-sparse64-julia'
-      else
-        opoo "Cannot use --64bit on 32bit hardware!"
-      end
+      build_opts << "USE_LIB64=1"
+      openblas = 'openblas64-julia'
+      arpack = 'arpack64-julia'
+      suitesparse = 'suite-sparse64-julia'
     else
       build_opts << "USE_LIB64=0"
     end
@@ -125,7 +144,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    ln_s "#{Formula.factory(openblas).opt_prefix}/lib/libopenblas.dylib", "usr/lib/"
+    ln_s "#{Formula.factory(openblas).opt_prefix}/lib/libopenblas.dylib", "usr/lib/" if !build.include? 'with-accelerate'
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
 
     # call make with the build options
@@ -136,18 +155,11 @@ class Julia < Formula
     end
     system "make", target, *build_opts
 
-    if not build.include? "build-debug"
-      # Have to actually go into deps to make install-tk-wrapper.  What's all that about, eh?
-      cd "deps"
-      system "make", "install-tk-wrapper", *build_opts
-      cd ".."
-    end
-
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
-    rm "usr/lib/libopenblas.dylib"
+    rm "usr/lib/libopenblas.dylib" if !build.include? 'with-accelerate'
     rm "usr/lib/libpcre.dylib"
     
     # Install!
@@ -155,11 +167,23 @@ class Julia < Formula
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
-    ["#{HOMEBREW_PREFIX}/lib", "#{Formula.factory(openblas).opt_prefix}/lib", "#{Formula.factory(arpack).opt_prefix}/lib",
-      "#{Formula.factory(suitesparse).opt_prefix}/lib", "/usr/X11/lib"].each do |rpath|
+    rpaths = ["#{HOMEBREW_PREFIX}/lib", "/usr/X11/lib"]
+
+    # Only add in openblas if we're not using accelerate
+    rpathFormulae = [arpack, suitesparse]
+    rpathFormulae << openblas if !build.include? 'with-accelerate'
+
+    # Add in each formula to the rpaths list
+    rpathFormulae.each do |formula|
+      rpaths << "#{Formula.factory(formula).opt_prefix}/lib"
+    end
+
+    # Add those rpaths to the binaries
+    rpaths.each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-basic"
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-readline"
     end
+    ohai "NABIL: Do I need to do this for the webserver as well?"
   end
 
   def test
@@ -169,12 +193,7 @@ class Julia < Formula
   end
   
   def caveats
-    caveat = ""
-    if build.include? "build-debug"
-      caveat += "Because this was a debug build, the tk wrapper has not been installed\n\n"
-    end
-
-    caveat + <<-EOS.undent
+    <<-EOS.undent
     Documentation and Examples have been installed into:
     #{share}/julia
     
