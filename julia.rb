@@ -11,10 +11,18 @@ class JuliaDSFMT < Formula
   url 'http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/dSFMT-src-2.2.tar.gz'
   sha1 'd64e1c1927d6532c62aff271bd1cd0d4859c3c6d'
 end
+class JuliaLibuv < Formula
+  head 'https://github.com/JuliaLang/libuv.git'
+end
+
+# This extension on the GitDownloadStrategy allows us to skip checking out submodules
+class GitNoSubmoduleDownloadStrategy < GitDownloadStrategy
+  def submodules?; false; end
+end
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/JuliaLang/julia.git'
+  head 'https://github.com/JuliaLang/julia.git', :using => GitNoSubmoduleDownloadStrategy
 
   depends_on "readline"
   depends_on "pcre"
@@ -97,6 +105,12 @@ class Julia < Formula
     dsfmt.brew{}
     ln_s dsfmt.cached_download, 'deps/random/'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
+
+    # Download libuv, then modify .gitmodules to point to it:
+    libuv = JuliaLibuv.new
+    libuv.brew{}
+    inreplace '.gitmodules', 'git://github.com/JuliaLang/libuv.git', 'git://#{libuv.cached_download}'
+    ohai "Using libuv: #{libuv.cached_download}"
     
     # This makes it easier to see what has broken
     ENV.deparallelize if build.has_option? "d"
