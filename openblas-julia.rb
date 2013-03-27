@@ -12,8 +12,8 @@ class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   # Maintainers, remember to update the LAPACK url in OpenblasLapack above.
   # See the "LAPACK_URL" in the openblas Makefile for the right version.
-  url 'http://github.com/xianyi/OpenBLAS/zipball/v0.2.5'
-  sha1 '3dabfacac02a1943dc49d5008aa44b29d930d8a2'
+  url 'http://github.com/xianyi/OpenBLAS/zipball/v0.2.6'
+  sha1 '9e74a4f2df7253217ce41943f4fc3aee0dddc27a'
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
 
   # OS X provides the Accelerate.framework, which is a BLAS/LAPACK impl.
