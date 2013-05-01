@@ -22,9 +22,6 @@ class Julia < Formula
   depends_on "llvm"
   depends_on "glpk"
   depends_on "fftw"
-
-  # This for the webserver
-  depends_on "nginx"
   
   # We have our custom formulae of arpack, openblas and suite-sparse
   if build.include? "64bit"
