@@ -186,7 +186,6 @@ class Julia < Formula
     rpaths.each do |rpath|
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-basic"
       system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-readline"
-      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-webserver"      
     end
   end
 
