@@ -20,7 +20,6 @@ class Julia < Formula
   depends_on "pcre"
   depends_on "gmp"
   depends_on "llvm"
-  depends_on "glpk"
   depends_on "fftw"
   
   # We have our custom formulae of arpack, openblas and suite-sparse
