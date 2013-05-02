@@ -12,9 +12,14 @@ class JuliaDSFMT < Formula
   sha1 'd64e1c1927d6532c62aff271bd1cd0d4859c3c6d'
 end
 
+# A download strategy which dodges some git downloading problems
+class GitNoSubmoduleDownloadStrategy < GitDownloadStrategy
+  def submodules?; false; end
+end
+
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/JuliaLang/julia.git'
+  head 'https://github.com/JuliaLang/julia.git', :using => GitNoSubmoduleDownloadStrategy
 
   depends_on "readline"
   depends_on "pcre"
