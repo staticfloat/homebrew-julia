@@ -1,6 +1,6 @@
 Known Issues
 ============
-* This formula is currently broken, and I am without access to an OSX computer with which to test.  As such, it may be a while until I am able to investigate all the [currently open issues](https://github.com/staticfloat/homebrew-julia/issues?state=open), however I can give guidance to others willing to investigate these issues.
+* 64-bit builds of Julia may not compile properly, this is being investigated.
 
 * The `--with-accelerate` option does not work due the newer BLAS functions available in OpenBLAS, relied upon by Julia. This is not being actively investigated, as usage of Accelerate is not a high priority.
 
