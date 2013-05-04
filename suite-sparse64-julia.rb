@@ -1,8 +1,8 @@
 require 'formula'
 class SuiteSparse64Julia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
-  url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.0.2.tar.gz'
-  sha1 '46b24a28eef4b040ea5a02d2c43e82e28b7d6195'
+  url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.2.1.tar.gz'
+  sha1 'ea6688bd6f6adf81e2e5aacdc71d7dcf9a5d208d'
 
   depends_on "tbb" if build.include? 'with-tbb'
   depends_on "metis" if build.include? 'with-metis'
@@ -34,6 +34,9 @@ class SuiteSparse64Julia < Formula
       # Installation
       s.change_make_var! "INSTALL_LIB", lib
       s.change_make_var! "INSTALL_INCLUDE", include
+      
+      s.change_make_var! "SPQR_CONFIG", "-DNCAMD -DNPARTITION"
+      s.change_make_var! "CHOLMOD_CONFIG", "-DNCAMD -DNPARTITION"
     end
 
     system "make library UMFPACK_CONFIG=-DLONGBLAS=\"'long long'\" CHOLMOD_CONFIG=-DLONGBLAS=\"'long long'\""
