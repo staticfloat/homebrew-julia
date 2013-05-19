@@ -26,6 +26,7 @@ class Julia < Formula
   depends_on "gmp"
   depends_on "llvm"
   depends_on "fftw"
+  depends_on "mpfr"
   
   # We have our custom formulae of arpack, openblas and suite-sparse
   if build.include? "64bit"
@@ -47,9 +48,6 @@ class Julia < Formula
       depends_on "openblas-julia"
     end
   end
-  
-  # Because of new tk wrapper part
-  depends_on :x11
   
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
@@ -76,6 +74,9 @@ class Julia < Formula
 
   def install
     ENV.fortran
+    ENV['FCFLAGS'] = ENV['FCFLAGS'].split(' ').select{|w| w != 'core2'}.join(' ')
+    ENV['FFLAGS'] = ENV['FFLAGS'].split(' ').select{|w| w != 'core2'}.join(' ')
+    ENV['PLATFORM'] = 'darwin'
 
     # First, check to make sure we don't have impossible options passed in
     if build.include? "64bit"
@@ -132,7 +133,7 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'NGINX'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
     
