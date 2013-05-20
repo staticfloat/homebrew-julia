@@ -36,10 +36,9 @@ class SuiteSparse64Julia < Formula
       s.change_make_var! "INSTALL_INCLUDE", include
       
       s.change_make_var! "SPQR_CONFIG", "-DNCAMD -DNPARTITION"
-      s.change_make_var! "CHOLMOD_CONFIG", "-DNCAMD -DNPARTITION"
     end
 
-    system "make library UMFPACK_CONFIG=-DLONGBLAS=\"'long long'\" CHOLMOD_CONFIG=-DLONGBLAS=\"'long long'\""
+    system "make library UMFPACK_CONFIG=-DLONGBLAS=\"'long long'\" CHOLMOD_CONFIG=\"-DLONGBLAS='long long' -DNCAMD -DNPARTITION\""
 
     lib.mkpath
     include.mkpath
