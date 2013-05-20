@@ -74,8 +74,6 @@ class Julia < Formula
 
   def install
     ENV.fortran
-    ENV['FCFLAGS'] = ENV['FCFLAGS'].split(' ').select{|w| w != 'core2'}.join(' ')
-    ENV['FFLAGS'] = ENV['FFLAGS'].split(' ').select{|w| w != 'core2'}.join(' ')
     ENV['PLATFORM'] = 'darwin'
 
     # First, check to make sure we don't have impossible options passed in
