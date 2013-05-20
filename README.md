@@ -1,7 +1,5 @@
 Known Issues
 ============
-* 64-bit builds of Julia may not compile properly, this is being investigated.
-
 * The `--with-accelerate` option does not work due the newer BLAS functions available in OpenBLAS, relied upon by Julia. This is not being actively investigated, as usage of Accelerate is not a high priority.
 
 
