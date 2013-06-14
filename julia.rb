@@ -19,7 +19,7 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/JuliaLang/julia.git', :using => GitNoSubmoduleDownloadStrategy
+  head 'https://github.com/staticfloat/julia.git', :using => GitNoSubmoduleDownloadStrategy
 
   depends_on "readline"
   depends_on "pcre"
@@ -112,12 +112,12 @@ class Julia < Formula
     arpack = 'arpack-julia'
     suitesparse = 'suite-sparse-julia'
     if build.include? "64bit"
-      build_opts << "USE_LIB64=1"
+      build_opts << "USE_BLAS64=1"
       openblas = 'openblas64-julia'
       arpack = 'arpack64-julia'
       suitesparse = 'suite-sparse64-julia'
     else
-      build_opts << "USE_LIB64=0"
+      build_opts << "USE_BLAS64=0"
     end
 
     # Tell julia about our gfortran 
