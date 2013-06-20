@@ -64,11 +64,6 @@ class Julia < Formula
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
-    # Second patch forces us to link with OpenBLAS, not Accelerate
-    if !build.include? 'with-accelerate'
-      patch_list << "https://raw.github.com/gist/3806092/426a2912a0a0fec764e4048801a9427e615e33d7/make.inc.diff"
-    end
-    
     return patch_list
   end
 
@@ -129,6 +124,13 @@ class Julia < Formula
 
     # Make sure Julia uses clang if the environment supports it
     build_opts << "USECLANG=1" if ENV.compiler == :clang
+
+    if !build.include? "with-accelerate"
+        build_opts << "LIBBLAS=-lopenblas"
+        build_opts << "LIBBLASNAME=libopenblas"
+        build_opts << "LIBLAPACK=-lopenblas"
+        build_opts << "LIBLAPACKNAME=libopenblas"
+    end
 
     # Kudos to @ijt for these lines of code
     ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
