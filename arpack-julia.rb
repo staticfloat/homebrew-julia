@@ -3,7 +3,7 @@ require 'formula'
 class ArpackJulia < Formula
   homepage 'http://forge.scilab.org/index.php/p/arpack-ng'
   url 'http://d304tytmzqn1fl.cloudfront.net/arpack-ng-3.1.3.tar.gz'
-  sha1 '45b282d0aee768d9504c1a8d5440d069aa39dd62'
+  sha1 'c1ac96663916a4e11618e9557636ba1bd1a7b556'
 
   depends_on 'open-mpi'
   depends_on 'openblas-julia' if !build.include? 'with-accelerate'
