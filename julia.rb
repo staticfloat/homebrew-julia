@@ -19,7 +19,7 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/staticfloat/julia.git', :using => GitNoSubmoduleDownloadStrategy
+  head 'https://github.com/JuliaLang/julia.git', :using => GitNoSubmoduleDownloadStrategy
 
   depends_on "readline"
   depends_on "pcre"
