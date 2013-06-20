@@ -2,6 +2,7 @@ require 'formula'
 class SuiteSparseJulia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.2.1.tar.gz'
+  mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.2.1.tar.gz'
   sha1 'ea6688bd6f6adf81e2e5aacdc71d7dcf9a5d208d'
 
   depends_on "tbb" if build.include? 'with-tbb'
