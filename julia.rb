@@ -1,7 +1,7 @@
 require 'formula'
 
 
-# Avoid Julia downloading these tools ondemand
+# Avoid Julia downloading these tools on demand
 # We don't have full formulae for them, as julia makes very specific use of these formulae
 class JuliaDoubleConversion < Formula
   url 'http://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz'
@@ -165,7 +165,7 @@ class Julia < Formula
     rm "usr/lib/libpcre.dylib"
     
     # Install!
-    system "make", *(build_opts + ["install"])
+    system "make", "install", *build_opts
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
