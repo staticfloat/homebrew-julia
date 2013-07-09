@@ -146,10 +146,11 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
-    # Do the same for openblas, pcre, and mpfr
+    # Do the same for openblas, pcre, mpfr, and gmp
     ln_s "#{Formula.factory(openblas).opt_prefix}/lib/libopenblas.dylib", "usr/lib/" if !build.include? 'with-accelerate'
     ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
     ln_s "#{Formula.factory('mpfr').lib}/libmpfr.dylib", "usr/lib/"
+    ln_s "#{Formula.factory('gmp').lib}/libgmp.dylib", "usr/lib/"
 
     # call make with the build options
     target = "release"
@@ -166,6 +167,7 @@ class Julia < Formula
     rm "usr/lib/libopenblas.dylib" if !build.include? 'with-accelerate'
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
+    rm "usr/lib/libgmp.dylib"
     
     # Install!
     system "make", "install", *build_opts
