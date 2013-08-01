@@ -3,7 +3,7 @@ class SuiteSparseJulia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.2.1.tar.gz'
   mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.2.1.tar.gz'
-  sha1 'ea6688bd6f6adf81e2e5aacdc71d7dcf9a5d208d'
+  sha1 '2fec3bf93314bd14cbb7470c0a2c294988096ed6'
 
   depends_on "tbb" if build.include? 'with-tbb'
   depends_on "metis" if build.include? 'with-metis'
