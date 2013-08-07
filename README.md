@@ -27,6 +27,19 @@ $ brew install --HEAD --64bit julia
 This will compile all necessary dependencies as 64-bit as well, with a `64` suffix on the name to distinguish these dependencies from their 32-bit counterparts (e.g. `openblas-julia` has the 64-bit counterpart `openblas-julia64`).  Note that it currently is not possible to install 32-bit and 64-bit julia side-by-side.
 
 
+Compiling against Accelerate
+============================
+
+Julia can use Apple's native BLAS libraries instead of OpenBLAS which may improve performance in some linear-algebra heavy tasks. To compile julia with this configuration, pass the `--with-accelerate` option to `brew install`.  Note that the `julia`, `arpack-julia` and `sauite-sparse-julia` formula all take in this option, and when switching from an OpenBLAS-backed julia to an Accelerate-backed julia, you must remove and reinstall all dependencies:
+
+```
+$ brew rm julia arpack-julia suite-sparse-julia
+$ brew install --HEAD julia --with-accelerate
+```
+
+Also note that the `--with-accelerate` option and the `--64bit` options are mutually exclusive; Accelerate does not have a 64-bit interface.
+
+
 Using OpenBLAS HEAD
 ===================
 If you wish to test the newest development version of [OpenBLAS](https://github.com/xianyi/OpenBLAS) with Julia, you can do so by manually unlinking OpenBLAS, and installing the HEAD version of the formula:
@@ -42,8 +55,3 @@ This will install the latest `develop` branch of OpenBLAS.  Julia will happily l
 $ brew rm suite-sparse-julia julia
 $ brew install --HEAD julia
 ```
-
-Known Issues
-============
-* The `--with-accelerate` option does not work due the newer BLAS functions available in OpenBLAS, relied upon by Julia. This is not being actively investigated, as usage of Accelerate is not a high priority.
-
