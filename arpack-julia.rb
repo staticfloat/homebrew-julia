@@ -21,8 +21,8 @@ class ArpackJulia < Formula
 
     configure_args = ["--disable-dependency-tracking", "--prefix=#{prefix}", "--enable-shared"]
     if build.include? "with-accelerate"
-      configure_args << "--with-blas=-framework Accelerate"
-      configure_args << "--with-lapack=-framework Accelerate"
+      configure_args << "--with-blas=-framework vecLib -lblas"
+      configure_args << "--with-lapack=-framework vecLib -lblas"
     else
       configure_args << "--with-blas=openblas"
       configure_args << "--with-lapack=openblas"
