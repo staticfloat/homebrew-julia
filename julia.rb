@@ -133,9 +133,10 @@ class Julia < Formula
     end
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
+    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
+    build_opts << "USE_SYSTEM_LAPACK=1" if !build.include? "with-accelerate"
     
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
