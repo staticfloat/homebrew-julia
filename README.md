@@ -55,3 +55,28 @@ This will install the latest `develop` branch of OpenBLAS.  Julia will happily l
 $ brew rm suite-sparse-julia julia
 $ brew install --HEAD julia
 ```
+
+Upgrading Julia
+===============
+To upgrade Julia, remove and recompile from `HEAD`.
+
+```bash
+$ brew rm julia
+$ brew install --HEAD julia
+```
+
+Run tests after upgrading to make sure everything is functioning as expected. Even when Julia is able to build, the tests might still fail because of dependencies.
+
+```bash
+$ brew test -v julia
+```
+
+If your test fail, possibly due to dependencies getting out of sync, remove the dependencies too and recompile.
+
+```bash
+$ brew rm julia arpack-julia suite-sparse-julia
+$ brew install --HEAD julia
+```
+
+Check again after each install, `brew test -v julia`.
+
