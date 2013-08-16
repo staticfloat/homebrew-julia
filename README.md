@@ -3,7 +3,7 @@ homebrew-julia
 
 A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler. After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
 
-```
+```bash
 $ brew update
 $ brew install gfortran
 $ brew tap staticfloat/julia
@@ -12,7 +12,7 @@ $ brew install --HEAD julia
 
 If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:
 
-```
+```bash
 $ brew install gnuplot --wx
 ```
 
@@ -20,7 +20,7 @@ Compiling 64-bit Julia
 ======================
 Julia and dependent libraries can be compiled in 64-bit mode, allowing for 64-bit array indexes, and therefore arrays larger than 2^32 elements along a single axis.  To compile Julia in 64-bit mode, specify the `--64bit` option when installing:
 
-```
+```bash
 $ brew install --HEAD --64bit julia
 ```
 
@@ -32,7 +32,7 @@ Compiling against Accelerate
 
 Julia can use Apple's native BLAS libraries instead of OpenBLAS which may improve performance in some linear-algebra heavy tasks. To compile julia with this configuration, pass the `--with-accelerate` option to `brew install`.  Note that the `julia`, `arpack-julia` and `sauite-sparse-julia` formula all take in this option, and when switching from an OpenBLAS-backed julia to an Accelerate-backed julia, you must remove and reinstall all dependencies:
 
-```
+```bash
 $ brew rm julia arpack-julia suite-sparse-julia
 $ brew install --HEAD julia --with-accelerate
 ```
@@ -44,39 +44,38 @@ Using OpenBLAS HEAD
 ===================
 If you wish to test the newest development version of [OpenBLAS](https://github.com/xianyi/OpenBLAS) with Julia, you can do so by manually unlinking OpenBLAS, and installing the HEAD version of the formula:
 
-```
+```bash
 $ brew unlink openblas-julia
 $ brew install openblas-julia --HEAD
 ```
 
 This will install the latest `develop` branch of OpenBLAS.  Julia will happily link against this new version, but unfortunately SuiteSparse will not, so we must recompile SuiteSparse and therefore Julia:
 
-```
+```bash
 $ brew rm suite-sparse-julia julia
 $ brew install --HEAD julia
 ```
 
 Upgrading Julia
 ===============
-To upgrade Julia, remove and recompile from `HEAD`.
+To upgrade Julia, remove and recompile from `HEAD`:
 
 ```bash
 $ brew rm julia
 $ brew install --HEAD julia
 ```
 
-Run tests after upgrading to make sure everything is functioning as expected. Even when Julia is able to build, the tests might still fail because of dependencies.
+Run tests after upgrading to make sure everything is functioning as expected. Even when Julia is able to build, the tests might still fail due to dependencies.
 
 ```bash
 $ brew test -v julia
 ```
 
-If your test fail, possibly due to dependencies getting out of sync, remove the dependencies too and recompile.
+If your tests fail, possibly due to dependencies getting out of sync, remove the dependencies and recompile:
 
 ```bash
 $ brew rm julia arpack-julia suite-sparse-julia
-$ brew install --HEAD julia
+$ brew install --HEAD julia && brew test -v julia
 ```
 
-Check again after each install, `brew test -v julia`.
-
+Note that this procedure is necessary after upgrading `gfortran`, as the location of the `gfortran` libraries changes.  If you have an idea on how to avoid this problem, I'd love to hear about it.
