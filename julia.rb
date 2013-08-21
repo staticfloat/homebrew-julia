@@ -117,7 +117,9 @@ class Julia < Formula
 
     # Tell julia about our gfortran 
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
-    build_opts << "FC=#{ENV['FC']}"
+    if ENV.has_key? 'FC'
+      build_opts << "FC=#{ENV['FC']}"
+    end
     
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
