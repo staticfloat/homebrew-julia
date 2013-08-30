@@ -194,8 +194,9 @@ class Julia < Formula
 
     # Add those rpaths to the binaries
     rpaths.each do |rpath|
-      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-basic"
-      system "install_name_tool", "-add_rpath", rpath, "#{bin}/julia-#{target}-readline"
+      Dir["#{bin}/julia-*"].each do |file|
+        quiet_system "install_name_tool", "-add_rpath", rpath, file
+      end
     end
   end
 
