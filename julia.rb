@@ -174,13 +174,16 @@ class Julia < Formula
     
     # Install!
     system "make", "install", *build_opts
+    ['amd', 'cholmod', 'colamd', 'spqr', 'umfpack'].each do |sslib|
+      cp "usr/lib/lib#{sslib}.dylib", "#{lib}/julia"
+    end
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
     rpaths = []
 
     # Only add in openblas if we're not using accelerate
-    rpathFormulae = [arpack, suitesparse]
+    rpathFormulae = [arpack]
     rpathFormulae << openblas if !build.include? 'with-accelerate'
 
     # Add in each formula to the rpaths list
