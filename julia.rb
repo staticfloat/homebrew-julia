@@ -198,6 +198,11 @@ class Julia < Formula
         quiet_system "install_name_tool", "-add_rpath", rpath, file
       end
     end
+
+    # copy over suite-sparse shlibs manually, pending discussion in https://github.com/JuliaLang/julia/commit/077c63a7164e270970de16863c7575c808a0c756#commitcomment-4128441
+    ["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
+      (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
+    end
   end
 
   def test
