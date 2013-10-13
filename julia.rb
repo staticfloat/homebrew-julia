@@ -1,5 +1,10 @@
 require 'formula'
 
+class GitNoDepthDownloadStrategy < GitDownloadStrategy
+  def host_supports_depth?
+    false
+  end
+end
 
 # Avoid Julia downloading these tools on demand
 # We don't have full formulae for them, as julia makes very specific use of these formulae
@@ -12,14 +17,9 @@ class JuliaDSFMT < Formula
   sha1 'd64e1c1927d6532c62aff271bd1cd0d4859c3c6d'
 end
 
-# A download strategy which dodges some git downloading problems
-class GitNoSubmoduleDownloadStrategy < GitDownloadStrategy
-  def submodules?; false; end
-end
-
 class Julia < Formula
   homepage 'http://julialang.org'
-  head 'https://github.com/JuliaLang/julia.git', :using => GitNoSubmoduleDownloadStrategy
+  head 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
 
   depends_on "readline"
   depends_on "pcre"
@@ -171,7 +171,7 @@ class Julia < Formula
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
-    
+
     # Install!
     system "make", "install", *build_opts
 
