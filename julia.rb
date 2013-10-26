@@ -4,6 +4,9 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
   def host_supports_depth?
     false
   end
+  def submodules?
+    false
+  end
 end
 
 # Avoid Julia downloading these tools on demand
