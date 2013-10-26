@@ -19,7 +19,7 @@ class Arpack64Julia < Formula
     if !ENV.has_key?('FFLAGS')
         ENV['FFLAGS'] = ''
     end
-    ENV['FFLAGS'] += '-fdefault-integer-8'
+    ENV['FFLAGS'] += ' -fdefault-integer-8'
 
     configure_args = ["--disable-dependency-tracking", "--prefix=#{prefix}", "--enable-shared"]
     configure_args << "--with-blas=openblas"
