@@ -76,7 +76,7 @@ class Julia < Formula
 
     # First, check to make sure we don't have impossible options passed in
     if build.include? "64bit"
-      if Hardware.is_64_bit?
+      if !Hardware.is_64_bit?
         opoo "Cannot compile 64-bit on a 32-bit architecture!"
       end
       if build.include? "with-accelerate"
