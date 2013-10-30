@@ -193,7 +193,11 @@ class Julia < Formula
 
     # Add in generic Homebrew and system paths
     rpaths << "#{HOMEBREW_PREFIX}/lib"
-    rpaths << "/usr/X11/lib"
+
+    # Only add this in if we're < 10.8, because after that libxstub makes our lives miserable
+    if MacOS.version < :mountain_lion
+      rpaths << "/usr/X11/lib"
+    end
 
     # Add those rpaths to the binaries
     rpaths.each do |rpath|
