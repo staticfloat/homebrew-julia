@@ -22,6 +22,7 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
+  url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
   head 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
 
   depends_on "readline"
