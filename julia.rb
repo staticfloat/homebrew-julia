@@ -74,6 +74,9 @@ class Julia < Formula
     ENV.fortran
     ENV['PLATFORM'] = 'darwin'
 
+    # This is necessary on mavericks so that we can link against the proper bottles
+    ENV.cxx += ' -stdlib=libstdc++' if ENV.compiler == :clang && MacOS.version >= :mavericks
+
     # First, check to make sure we don't have impossible options passed in
     if build.include? "64bit"
       if !Hardware.is_64_bit?
