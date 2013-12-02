@@ -7,7 +7,7 @@ A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to inst
 $ brew update
 $ brew install gfortran
 $ brew tap staticfloat/julia
-$ brew install --HEAD julia
+$ brew install julia
 ```
 
 If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:
@@ -21,7 +21,7 @@ Compiling 64-bit Julia
 Julia and dependent libraries can be compiled in 64-bit mode, allowing for 64-bit array indexes, and therefore arrays larger than 2^32 elements along a single axis.  To compile Julia in 64-bit mode, specify the `--64bit` option when installing:
 
 ```bash
-$ brew install --HEAD --64bit julia
+$ brew install --64bit julia
 ```
 
 This will compile all necessary dependencies as 64-bit as well, with a `64` suffix on the name to distinguish these dependencies from their 32-bit counterparts (e.g. `openblas-julia` has the 64-bit counterpart `openblas-julia64`).  Note that it currently is not possible to install 32-bit and 64-bit julia side-by-side.
@@ -34,10 +34,23 @@ Julia can use Apple's native BLAS libraries instead of OpenBLAS which may improv
 
 ```bash
 $ brew rm julia arpack-julia suite-sparse-julia
-$ brew install --HEAD julia --with-accelerate
+$ brew install julia --with-accelerate
 ```
 
 Also note that the `--with-accelerate` option and the `--64bit` options are mutually exclusive; Accelerate does not have a 64-bit interface.
+
+Building a bleeding-edge version of Julia
+=========================================
+If you wish to test the newest development version of Julia, you can build with the `--HEAD` option:
+
+```bash
+$ brew install --HEAD julia
+```
+
+Note that to run the test suite you must also pass the `--HEAD` option to `brew`:
+```bash
+$ brew test -v --HEAD julia
+```
 
 
 Using OpenBLAS HEAD
@@ -53,12 +66,12 @@ This will install the latest `develop` branch of OpenBLAS.  Julia will happily l
 
 ```bash
 $ brew rm suite-sparse-julia julia
-$ brew install --HEAD julia
+$ brew install julia
 ```
 
 Upgrading Julia
 ===============
-To upgrade Julia, remove and recompile from `HEAD`:
+To upgrade Julia, remove and recompile (Typically you will be doing this when living on the latest development version, so we have included all `--HEAD` commands here):
 
 ```bash
 $ brew rm julia
@@ -68,14 +81,14 @@ $ brew install --HEAD julia
 Run tests after upgrading to make sure everything is functioning as expected. Even when Julia is able to build, the tests might still fail due to dependencies.
 
 ```bash
-$ brew test -v julia
+$ brew test -v --HEAD julia
 ```
 
 If your tests fail, possibly due to dependencies getting out of sync, remove the dependencies and recompile:
 
 ```bash
 $ brew rm julia arpack-julia suite-sparse-julia
-$ brew install --HEAD julia && brew test -v julia
+$ brew install --HEAD julia && brew test -v --HEAD julia
 ```
 
 Note that this procedure is necessary after upgrading `gfortran`, as the location of the `gfortran` libraries changes.  If you have an idea on how to avoid this problem, I'd love to hear about it.
