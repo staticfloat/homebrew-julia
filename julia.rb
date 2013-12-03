@@ -218,8 +218,17 @@ class Julia < Formula
 
   def test
     # Run julia-provided test suite, copied over in install step
-    chdir "#{share}/julia/test"
-    system "#{bin}/julia", "runtests.jl", "all"
+    if not (share + 'julia/test').exist?
+      opoo "Error: Could not find test files directory"
+      if build.head?
+        opoo "Did you accidentally include --HEAD in the test invocation?"
+      else
+        opoo "Did you mean to include --HEAD in the test invocation?"
+      end
+    else
+      chdir "#{share}/julia/test"
+      system "#{bin}/julia", "runtests.jl", "all"
+    end
   end
   
   def caveats
