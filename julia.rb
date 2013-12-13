@@ -127,6 +127,9 @@ class Julia < Formula
     if ENV.has_key? 'FC'
       build_opts << "FC=#{ENV['FC']}"
     end
+
+    # Tell julia about our llc
+    build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
     
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
