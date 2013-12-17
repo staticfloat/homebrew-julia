@@ -128,8 +128,10 @@ class Julia < Formula
       build_opts << "FC=#{ENV['FC']}"
     end
 
-    # Tell julia about our llc
-    build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+    # Tell julia about our llc, if it's been named nonstandardly
+    if which( 'llc' ) == nil
+      build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+    end
     
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
