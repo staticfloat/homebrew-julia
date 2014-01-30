@@ -4,8 +4,14 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
   def host_supports_depth?
     false
   end
-  def submodules?
-    false
+
+  def stage
+    dst = Dir.getwd
+    @clone.cd do
+      reset
+      safe_system 'git', 'clone', '.', dst
+      checkout_submodules(dst)
+    end
   end
 end
 
@@ -100,11 +106,9 @@ class Julia < Formula
     ln_s dsfmt.cached_download, 'deps/random/'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
     
+
     # This makes it easier to see what has broken
     ENV.deparallelize if build.has_option? "d"
-
-    # Hack to allow julia to get the git version on demand
-    ENV['GIT_DIR'] = cached_download/'.git'
 
     # Build up list of build options
     build_opts = ["PREFIX=#{prefix}"]
@@ -174,6 +178,7 @@ class Julia < Formula
       target = "debug"
       ohai "Making debug build"
     end
+
     system "make", target, *build_opts
 
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
@@ -225,12 +230,13 @@ class Julia < Formula
   def test
     # Run julia-provided test suite, copied over in install step
     if not (share + 'julia/test').exist?
-      opoo "Error: Could not find test files directory"
+      err = "Could not find test files directory\n"
       if build.head?
-        opoo "Did you accidentally include --HEAD in the test invocation?"
+        err << "Did you accidentally include --HEAD in the test invocation?"
       else
-        opoo "Did you mean to include --HEAD in the test invocation?"
+        err << "Did you mean to include --HEAD in the test invocation?"
       end
+      opoo err
     else
       chdir "#{share}/julia/test"
       system "#{bin}/julia", "runtests.jl", "all"
