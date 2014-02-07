@@ -5,12 +5,12 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
     false
   end
 
+  # We need the .git folder for it's information, so we clone the whole thing
   def stage
     dst = Dir.getwd
     @clone.cd do
       reset
-      safe_system 'git', 'clone', '.', dst
-      checkout_submodules(dst)
+      safe_system 'git', 'clone', '--recursive', '.', dst
     end
   end
 end
@@ -179,7 +179,9 @@ class Julia < Formula
       ohai "Making debug build"
     end
 
-    system "make", target, *build_opts
+    build_opts << target
+    system "make", *build_opts
+    build_opts.pop
 
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
     ['', 'f', '_threads', 'f_threads'].each do |ext|
@@ -191,7 +193,8 @@ class Julia < Formula
     rm "usr/lib/libgmp.dylib"
 
     # Install!
-    system "make", "install", *build_opts
+    build_opts << "install"
+    system "make", *build_opts #@mistym, this is where the segfault happens
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
