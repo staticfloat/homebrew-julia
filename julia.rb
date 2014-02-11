@@ -111,7 +111,7 @@ class Julia < Formula
     ENV.deparallelize if build.has_option? "d"
 
     # Build up list of build options
-    build_opts = ["PREFIX=#{prefix}"]
+    build_opts = ["prefix=#{prefix}"]
 
     # Be sure to get the right library names for when we symlink later on
     openblas = 'openblas-julia'
@@ -194,7 +194,7 @@ class Julia < Formula
 
     # Install!
     build_opts << "install"
-    system "make", *build_opts #@mistym, this is where the segfault happens
+    system "make", *build_opts
 
     # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
@@ -247,6 +247,7 @@ class Julia < Formula
   end
   
   def caveats
+    head_flag = build.head? ? " --HEAD " : " "
     <<-EOS.undent
     Documentation and Examples have been installed into:
     #{share}/julia
@@ -254,7 +255,7 @@ class Julia < Formula
     Test suite has been installed into:
     #{share}/julia/test
      
-    Run the command `brew test -v julia` to run all tests.
+    Run the command `brew test#{head_flag}-v julia` to run all tests.
     EOS
   end
 end
