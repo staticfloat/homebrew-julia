@@ -142,7 +142,7 @@ class Julia < Formula
 
     # Make sure Julia uses clang if the environment supports it
     build_opts << "USECLANG=1" if ENV.compiler == :clang
-    build_opts << "VERBOSE=1" if ARGV.verbose?
+    #build_opts << "VERBOSE=1" if ARGV.verbose? # Note; this is causing errors!  Don't know why yet...
 
     if !build.include? "with-accelerate"
         build_opts << "LIBBLAS=-lopenblas"
