@@ -1,7 +1,7 @@
 require 'formula'
 
 class GitNoDepthDownloadStrategy < GitDownloadStrategy
-  def host_supports_depth?
+  def support_depth?
     false
   end
 
