@@ -41,7 +41,12 @@ class Julia < Formula
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
-  depends_on "llvm"
+
+  if build.head?
+    depends_on "llvm"
+  else
+    depends_on "llvm33"
+  end
   depends_on "fftw"
   depends_on "mpfr"
   
@@ -140,8 +145,13 @@ class Julia < Formula
     end
 
     # Tell julia about our llc, if it's been named nonstandardly
-    if which( 'llc' ) == nil
-      build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+    if build.head?
+      if which( 'llc' ) == nil
+        build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+      end
+    else
+      # Since we build off of llvm33 for v0.2.0, we need to point it directly at llvm33
+      build_opts << "LLVM_CONFIG=llvm-config-3.3"
     end
     
     # Make sure we have space to muck around with RPATHS
