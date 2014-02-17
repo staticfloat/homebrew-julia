@@ -123,7 +123,12 @@ class Julia < Formula
     ENV.deparallelize if build.has_option? "d"
 
     # Build up list of build options
-    build_opts = ["prefix=#{prefix}"]
+    build_opts = []
+    if build.head?
+      build_opts = "prefix=#{prefix}"
+    else
+      build_opts << "PREFIX=#{prefix}"
+    end
 
     # Be sure to get the right library names for when we symlink later on
     openblas = 'openblas-julia'
