@@ -125,7 +125,7 @@ class Julia < Formula
     # Build up list of build options
     build_opts = []
     if build.head?
-      build_opts = "prefix=#{prefix}"
+      build_opts << "prefix=#{prefix}"
     else
       build_opts << "PREFIX=#{prefix}"
     end
