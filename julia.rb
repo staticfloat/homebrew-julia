@@ -6,11 +6,18 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
   end
 
   # We need the .git folder for it's information, so we clone the whole thing
+  # We also want to avoid downloading all the submodules, so we clone those explicitly
   def stage
     dst = Dir.getwd
     @clone.cd do
       reset
-      safe_system 'git', 'clone', '--recursive', '.', dst
+      safe_system 'git', 'clone', '.', dst
+      # Get the deps/ submodules
+      ["Rmath", "libuv", "openlibm"].each do |subm|
+        safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
+      end
+      # Also the docs submodule
+      safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
     end
   end
 end
