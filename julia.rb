@@ -24,18 +24,20 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
-  head 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+
+  stable do
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
+    depends_on "llvm33"
+  end
+
+  head do
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+    depends_on "llvm"
+  end
 
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
-
-  if build.head?
-    depends_on "llvm"
-  else
-    depends_on "llvm33"
-  end
   depends_on "fftw"
   depends_on "mpfr"
   
