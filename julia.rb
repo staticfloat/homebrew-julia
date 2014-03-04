@@ -155,7 +155,7 @@ class Julia < Formula
     # Tell julia about our llc, if it's been named nonstandardly
     if build.head?
       if which( 'llc' ) == nil
-        build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+        build_opts << "LLVM_LLC=llc-#{Formula["llvm"].version}"
       end
     else
       # Since we build off of llvm33 for v0.2.0, we need to point it directly at llvm33
