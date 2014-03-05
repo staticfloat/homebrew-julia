@@ -27,7 +27,7 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
-    depends_on "llvm33"
+    depends_on "homebrew/versions/llvm33"
   end
 
   head do
