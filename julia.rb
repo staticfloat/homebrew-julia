@@ -22,31 +22,22 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
   end
 end
 
-# Avoid Julia downloading these tools on demand
-# We don't have full formulae for them, as julia makes very specific use of these formulae
-class JuliaDoubleConversion < Formula
-  url 'http://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz'
-  sha1 'de238c7f0ec2d28bd7c54cff05504478a7a72124'
-end
-class JuliaDSFMT < Formula
-  url 'http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/dSFMT-src-2.2.tar.gz'
-  sha1 'd64e1c1927d6532c62aff271bd1cd0d4859c3c6d'
-end
-
 class Julia < Formula
   homepage 'http://julialang.org'
-  url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
-  head 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+
+  stable do
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.0'
+    depends_on "homebrew/versions/llvm33"
+  end
+
+  head do
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+    depends_on "llvm"
+  end
 
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
-
-  if build.head?
-    depends_on "llvm"
-  else
-    depends_on "llvm33"
-  end
   depends_on "fftw"
   depends_on "mpfr"
   
@@ -79,6 +70,18 @@ class Julia < Formula
   option "64bit", "Builds julia on top of 64-bit linear algebra libraries"
   option "with-accelerate", "Builds julia (and dependent libraries) against Accelerate/vecLib, not OpenBLAS. Incompatible with --64bit option"
 
+  # Avoid Julia downloading these tools on demand
+  # We don't have full formulae for them, as julia makes very specific use of these formulae
+  resource "doubleconversion" do
+    url "http://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz"
+    sha1 "de238c7f0ec2d28bd7c54cff05504478a7a72124"
+  end
+
+  resource "dsfmt" do
+    url "http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/dSFMT-src-2.2.tar.gz"
+    sha1 "d64e1c1927d6532c62aff271bd1cd0d4859c3c6d"
+  end
+
   # Here we build up a list of patches to be applied
   def patches
     patch_list = []
@@ -105,16 +108,16 @@ class Julia < Formula
         opoo "Cannot compile a 64-bit interface with the Accelerate libraries!"
       end
     end
-    
+
     # Download double-conversion, then symlink it into deps/
-    doubleconversion = JuliaDoubleConversion.new
-    doubleconversion.brew{}
+    doubleconversion = resource("doubleconversion")
+    doubleconversion.verify_download_integrity(doubleconversion.fetch)
     ln_s doubleconversion.cached_download, 'deps/'
     ohai "Using double-conversion: #{doubleconversion.cached_download}"
-    
+
     # Download DSFMT, then symlink it into deps/random/
-    dsfmt = JuliaDSFMT.new
-    dsfmt.brew{}
+    dsfmt = resource("dsfmt")
+    dsfmt.verify_download_integrity(dsfmt.fetch)
     ln_s dsfmt.cached_download, 'deps/random/'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
     
@@ -152,7 +155,7 @@ class Julia < Formula
     # Tell julia about our llc, if it's been named nonstandardly
     if build.head?
       if which( 'llc' ) == nil
-        build_opts << "LLVM_LLC=llc-#{Formula.factory('llvm').version}"
+        build_opts << "LLVM_LLC=llc-#{Formula["llvm"].version}"
       end
     else
       # Since we build off of llvm33 for v0.2.0, we need to point it directly at llvm33

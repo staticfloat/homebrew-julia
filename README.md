@@ -6,7 +6,6 @@ A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to inst
 ```bash
 $ brew update
 $ brew install gfortran
-$ brew tap homebrew/homebrew-versions
 $ brew tap staticfloat/julia
 $ brew install julia
 ```
