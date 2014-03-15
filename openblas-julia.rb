@@ -8,14 +8,14 @@ class OpenblasJulia < Formula
   sha1 'd012ebc2b8dcd3e95f667dff08318a81479a47c3'
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
 
+  depends_on :fortran
+
   # OS X provides the Accelerate.framework, which is a BLAS/LAPACK impl.
   keg_only :provided_by_osx
 
   option "target=", "Manually override the CPU type detection and provide your own TARGET make variable"
 
   def install
-    ENV.fortran
-
     # Must call in two steps
     if ARGV.value('target')
       system "make", "FC=#{ENV['FC']}", "TARGET=#{ARGV.value('target')}"

@@ -5,8 +5,8 @@ class SuiteSparse64Julia < Formula
   mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.2.1.tar.gz'
   sha1 '2fec3bf93314bd14cbb7470c0a2c294988096ed6'
 
-  depends_on "tbb" if build.include? 'with-tbb'
-  depends_on "metis" if build.include? 'with-metis'
+  depends_on "tbb" => :optional
+  depends_on "metis" => :optional
   depends_on "openblas64-julia"
 
   option "with-metis", "Compile in metis libraries"
@@ -22,20 +22,20 @@ class SuiteSparse64Julia < Formula
       s.change_make_var! "BLAS", "-lopenblas"
       s.change_make_var! "LAPACK", "$(BLAS)"
 
-      if build.include? "with-tbb"
+      if build.with? "tbb"
         s.change_make_var! "SPQR_CONFIG", "-DHAVE_TBB"
         s.change_make_var! "TBB", "-ltbb"
       end
 
-      if build.include? "with-metis"
+      if build.with? "metis"
         s.remove_make_var! "METIS_PATH"
-        s.change_make_var! "METIS", Formula.factory("metis").lib + "libmetis.a"
+        s.change_make_var! "METIS", Formula["metis"].lib + "libmetis.a"
       end
 
       # Installation
       s.change_make_var! "INSTALL_LIB", lib
       s.change_make_var! "INSTALL_INCLUDE", include
-      
+
       s.change_make_var! "SPQR_CONFIG", "-DNCAMD -DNPARTITION"
     end
 

@@ -39,11 +39,12 @@ class Julia < Formula
   depends_on "pcre"
   depends_on "gmp"
   depends_on "fftw"
+  depends_on :fortran
   depends_on "mpfr"
-  
+
   # We have our custom formulae of arpack, openblas and suite-sparse
   if build.include? "64bit"
-    if build.include? 'with-accelerate'
+    if build.with? 'accelerate'
       depends_on "arpack64-julia" => 'with-accelerate'
       depends_on "suite-sparse64-julia" => 'with-accelerate'
     else
@@ -52,7 +53,7 @@ class Julia < Formula
       depends_on "openblas64-julia"
     end
   else
-    if build.include? 'with-accelerate'
+    if build.with? 'accelerate'
       depends_on "arpack-julia" => 'with-accelerate'
       depends_on "suite-sparse-julia" => 'with-accelerate'
     else
@@ -61,7 +62,7 @@ class Julia < Formula
       depends_on "openblas-julia"
     end
   end
-  
+
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
 
@@ -73,7 +74,7 @@ class Julia < Formula
   # Avoid Julia downloading these tools on demand
   # We don't have full formulae for them, as julia makes very specific use of these formulae
   resource "doubleconversion" do
-    url "http://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz"
+    url "https://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz"
     sha1 "de238c7f0ec2d28bd7c54cff05504478a7a72124"
   end
 
@@ -85,7 +86,7 @@ class Julia < Formula
   # Here we build up a list of patches to be applied
   def patches
     patch_list = []
-    
+
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
@@ -93,7 +94,6 @@ class Julia < Formula
   end
 
   def install
-    ENV.fortran
     ENV['PLATFORM'] = 'darwin'
 
     # This is necessary on mavericks so that we can link against the proper bottles
@@ -104,7 +104,7 @@ class Julia < Formula
       if !Hardware.is_64_bit?
         opoo "Cannot compile 64-bit on a 32-bit architecture!"
       end
-      if build.include? "with-accelerate"
+      if build.with? "accelerate"
         opoo "Cannot compile a 64-bit interface with the Accelerate libraries!"
       end
     end
@@ -120,7 +120,6 @@ class Julia < Formula
     dsfmt.verify_download_integrity(dsfmt.fetch)
     ln_s dsfmt.cached_download, 'deps/random/'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
-    
 
     # This makes it easier to see what has broken
     ENV.deparallelize if build.has_option? "d"
@@ -146,7 +145,7 @@ class Julia < Formula
       build_opts << "USE_BLAS64=0"
     end
 
-    # Tell julia about our gfortran 
+    # Tell julia about our gfortran
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
     if ENV.has_key? 'FC'
       build_opts << "FC=#{ENV['FC']}"
@@ -161,7 +160,7 @@ class Julia < Formula
       # Since we build off of llvm33 for v0.2.0, we need to point it directly at llvm33
       build_opts << "LLVM_CONFIG=llvm-config-3.3"
     end
-    
+
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
 
@@ -169,7 +168,7 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
     #build_opts << "VERBOSE=1" if ARGV.verbose? # Note; this is causing errors!  Don't know why yet...
 
-    if !build.include? "with-accelerate"
+    if build.without? "accelerate"
         build_opts << "LIBBLAS=-lopenblas"
         build_opts << "LIBBLASNAME=libopenblas"
         build_opts << "LIBLAPACK=-lopenblas"
@@ -180,8 +179,8 @@ class Julia < Formula
     ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
-    build_opts << "USE_SYSTEM_LAPACK=1" if !build.include? "with-accelerate"
-    
+    build_opts << "USE_SYSTEM_LAPACK=1" if build.without? "accelerate"
+
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
 
@@ -189,13 +188,13 @@ class Julia < Formula
     # julia's usr/lib directory and system default paths yet; the build process fixes that after the
     # install step, but the bootstrapping process requires the use of the fftw libraries before then
     ['', 'f', '_threads', 'f_threads'].each do |ext|
-      ln_s "#{Formula.factory('fftw').lib}/libfftw3#{ext}.dylib", "usr/lib/"
+      ln_s "#{Formula['fftw'].lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
     # Do the same for openblas, pcre, mpfr, and gmp
-    ln_s "#{Formula.factory(openblas).opt_prefix}/lib/libopenblas.dylib", "usr/lib/" if !build.include? 'with-accelerate'
-    ln_s "#{Formula.factory('pcre').lib}/libpcre.dylib", "usr/lib/"
-    ln_s "#{Formula.factory('mpfr').lib}/libmpfr.dylib", "usr/lib/"
-    ln_s "#{Formula.factory('gmp').lib}/libgmp.dylib", "usr/lib/"
+    ln_s "#{Formula[openblas].opt_lib}/libopenblas.dylib", "usr/lib/" if build.without? 'accelerate'
+    ln_s "#{Formula['pcre'].lib}/libpcre.dylib", "usr/lib/"
+    ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
+    ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
 
     # call make with the build options
     target = "release"
@@ -212,7 +211,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
-    rm "usr/lib/libopenblas.dylib" if !build.include? 'with-accelerate'
+    rm "usr/lib/libopenblas.dylib" if build.without? 'accelerate'
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
@@ -227,11 +226,11 @@ class Julia < Formula
 
     # Only add in openblas if we're not using accelerate
     rpathFormulae = [arpack, suitesparse]
-    rpathFormulae << openblas if !build.include? 'with-accelerate'
+    rpathFormulae << openblas if build.without? 'accelerate'
 
     # Add in each formula to the rpaths list
     rpathFormulae.each do |formula|
-      rpaths << "#{Formula.factory(formula).opt_prefix}/lib"
+      rpaths << "#{Formula[formula].opt_lib}"
     end
 
     # Add in generic Homebrew and system paths
@@ -270,16 +269,16 @@ class Julia < Formula
       system "#{bin}/julia", "runtests.jl", "all"
     end
   end
-  
+
   def caveats
     head_flag = build.head? ? " --HEAD " : " "
     <<-EOS.undent
     Documentation and Examples have been installed into:
     #{share}/julia
-    
+
     Test suite has been installed into:
     #{share}/julia/test
-     
+
     Run the command `brew test#{head_flag}-v julia` to run all tests.
     EOS
   end
