@@ -6,16 +6,14 @@ class Arpack64Julia < Formula
   mirror 'http://d304tytmzqn1fl.cloudfront.net/arpack-ng-3.1.3.tar.gz'
   sha1 'c1ac96663916a4e11618e9557636ba1bd1a7b556'
 
-  depends_on 'open-mpi'
+  depends_on :fortran
+  depends_on :mpi => :f77
   depends_on 'openblas64-julia'
 
   keg_only "Conflicts with arpack"
 
   def install
-    ENV.fortran
 
-    # Include MPIF77, as the arpack-ng build process doesn't autodetect properly
-    ENV['MPIF77'] = 'mpif77'
     if !ENV.has_key?('FFLAGS')
         ENV['FFLAGS'] = ''
     end
