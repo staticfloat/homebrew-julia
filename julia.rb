@@ -112,13 +112,13 @@ class Julia < Formula
     # Download double-conversion, then symlink it into deps/
     doubleconversion = resource("doubleconversion")
     doubleconversion.verify_download_integrity(doubleconversion.fetch)
-    ln_s doubleconversion.cached_download, 'deps/'
+    ln_s doubleconversion.cached_download, 'deps/double-conversion-1.1.1.tar.gz'
     ohai "Using double-conversion: #{doubleconversion.cached_download}"
 
-    # Download DSFMT, then symlink it into deps/random/
+    # Download DSFMT, then symlink it into deps/
     dsfmt = resource("dsfmt")
     dsfmt.verify_download_integrity(dsfmt.fetch)
-    ln_s dsfmt.cached_download, 'deps/random/'
+    ln_s dsfmt.cached_download, 'deps/dSFMT-src-2.2.tar.gz'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
 
     # This makes it easier to see what has broken
