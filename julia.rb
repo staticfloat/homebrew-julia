@@ -90,6 +90,11 @@ class Julia < Formula
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
+    # If we're installing 0.2.1, we need to patch ui/repl-readline.c
+    if !build.head?
+      patch_list << "https://gist.githubusercontent.com/staticfloat/11153142/raw/7866673a1e8790bdc6f3887e78a14bc3cc1c287d/readline-6.3.patch"
+    end
+
     return patch_list
   end
 
