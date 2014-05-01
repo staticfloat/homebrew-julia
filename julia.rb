@@ -27,14 +27,13 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.1'
-    depends_on "homebrew/versions/llvm33"
   end
 
   head do
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
-    depends_on "llvm"
   end
 
+  depends_on "homebrew/versions/llvm33"
   depends_on "readline"
   depends_on "pcre"
   depends_on "gmp"
@@ -156,15 +155,8 @@ class Julia < Formula
       build_opts << "FC=#{ENV['FC']}"
     end
 
-    # Tell julia about our llc, if it's been named nonstandardly
-    if build.head?
-      if which( 'llc' ) == nil
-        build_opts << "LLVM_LLC=llc-#{Formula["llvm"].version}"
-      end
-    else
-      # Since we build off of llvm33 for v0.2.0, we need to point it directly at llvm33
-      build_opts << "LLVM_CONFIG=llvm-config-3.3"
-    end
+    # Tell julia about our llc, since it's been named nonstandardly
+    build_opts << "LLVM_CONFIG=llvm-config-3.3"
 
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
