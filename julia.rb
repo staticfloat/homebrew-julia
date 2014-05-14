@@ -44,21 +44,21 @@ class Julia < Formula
   # We have our custom formulae of arpack, openblas and suite-sparse
   if build.include? "64bit"
     if build.with? 'accelerate'
-      depends_on "arpack64-julia" => 'with-accelerate'
-      depends_on "suite-sparse64-julia" => 'with-accelerate'
+      depends_on "staticfloat/julia/arpack64-julia" => 'with-accelerate'
+      depends_on "staticfloat/julia/suite-sparse64-julia" => 'with-accelerate'
     else
-      depends_on "arpack64-julia"
-      depends_on "suite-sparse64-julia"
-      depends_on "openblas64-julia"
+      depends_on "staticfloat/julia/arpack64-julia"
+      depends_on "staticfloat/julia/suite-sparse64-julia"
+      depends_on "staticfloat/julia/openblas64-julia"
     end
   else
     if build.with? 'accelerate'
-      depends_on "arpack-julia" => 'with-accelerate'
-      depends_on "suite-sparse-julia" => 'with-accelerate'
+      depends_on "staticfloat/julia/arpack-julia" => 'with-accelerate'
+      depends_on "staticfloat/julia/suite-sparse-julia" => 'with-accelerate'
     else
-      depends_on "arpack-julia"
-      depends_on "suite-sparse-julia"
-      depends_on "openblas-julia"
+      depends_on "staticfloat/julia/arpack-julia"
+      depends_on "staticfloat/julia/suite-sparse-julia"
+      depends_on "staticfloat/julia/openblas-julia"
     end
   end
 
