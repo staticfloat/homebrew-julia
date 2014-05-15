@@ -8,7 +8,7 @@ class ArpackJulia < Formula
 
   depends_on :fortran
   depends_on :mpi => :f77
-  depends_on 'openblas-julia' if build.without? 'accelerate'
+  depends_on 'staticfloat/julia/openblas-julia' if build.without? 'accelerate'
 
   keg_only "Conflicts with arpack"
 

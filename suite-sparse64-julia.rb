@@ -7,7 +7,7 @@ class SuiteSparse64Julia < Formula
 
   depends_on "tbb" => :optional
   depends_on "metis" => :optional
-  depends_on "openblas64-julia"
+  depends_on "staticfloat/julia/openblas64-julia"
 
   option "with-metis", "Compile in metis libraries"
 

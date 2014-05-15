@@ -8,7 +8,7 @@ class Arpack64Julia < Formula
 
   depends_on :fortran
   depends_on :mpi => :f77
-  depends_on 'openblas64-julia'
+  depends_on 'staticfloat/julia/openblas64-julia'
 
   keg_only "Conflicts with arpack"
 

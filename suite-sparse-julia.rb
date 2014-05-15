@@ -7,7 +7,7 @@ class SuiteSparseJulia < Formula
 
   depends_on "tbb" => :optional
   depends_on "metis" => :optional
-  depends_on "openblas-julia" if build.without? 'accelerate'
+  depends_on "staticfloat/julia/openblas-julia" if build.without? 'accelerate'
 
   option "with-metis", "Compile in metis libraries"
   option 'with-accelerate', 'Compile against Accelerate/vecLib instead of OpenBLAS'
