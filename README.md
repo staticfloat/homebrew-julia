@@ -1,11 +1,11 @@
 homebrew-julia
 ==============
 
-A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler. After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
+A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler (e.g. gfortran, provided by the gcc formula). After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
 
 ```bash
 $ brew update
-$ brew install gfortran
+$ brew install gcc
 $ brew tap staticfloat/julia
 $ brew tap homebrew/versions
 $ brew install julia
