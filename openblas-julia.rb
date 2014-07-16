@@ -23,5 +23,10 @@ class OpenblasJulia < Formula
       system "make", "FC=#{ENV['FC']}"
     end
     system "make", "PREFIX=#{prefix}", "install"
+    cd "#{lib}" do
+      dylib = Dir.glob("libopenblas_*.dylib")
+      system "ln", "-sf", dylib, "libopenblas.dylib"
+      system "strip", "-S", dylib
+    end
   end
 end
