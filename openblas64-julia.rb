@@ -4,8 +4,8 @@ class Openblas64Julia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   # Maintainers, remember to update the LAPACK url in OpenblasLapack above.
   # See the "LAPACK_URL" in the openblas Makefile for the right version.
-  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.9.tar.gz'
-  sha1 'e8197711c4fe43ac286366693bd7c1683003c894'
+  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.10.tar.gz'
+  sha1 'c4a5ca4cb9876a90193f81a0c38f4abccdf2944d'
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
 
   depends_on :fortran
@@ -23,5 +23,10 @@ class Openblas64Julia < Formula
       system "make", "FC=#{ENV['FC']}", "INTERFACE64=1"
     end
     system "make", "PREFIX=#{prefix}", "install"
+    cd "#{lib}" do
+      dylib = Dir.glob("libopenblas_*.dylib")[0]
+      system "ln", "-sf", dylib, "libopenblas.dylib"
+      system "strip", "-S", "libopenblas.dylib"
+    end
   end
 end
