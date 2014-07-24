@@ -11,9 +11,10 @@ class Gmp4Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 '46f28ff28ebeb0a62266b428c4d8de28f1137040' => :lion
-    sha1 'fbd4610fb57cae7d20b53b9b64a7d725ed308c8d' => :mavericks
-    sha1 '6a7381a8fa011334d1724395a78939868f54beee' => :mountain_lion
+    revision 1
+    sha1 '627289818d185c949a1313fbd52c5472631e75d6' => :lion
+    sha1 '46f5b391f57012301da0ecab317989fb52ad31c4' => :mavericks
+    sha1 '7d389346de35a8fd729d09d23a2e944df11f18cb' => :mountain_lion
   end
 
   keg_only "Conflicts with gmp in main repository."
