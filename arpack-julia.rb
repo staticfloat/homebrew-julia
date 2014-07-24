@@ -9,9 +9,10 @@ class ArpackJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 '0d2494af7d16f42ff9c27806a73005594ab55564' => :lion
-    sha1 'a6994b96ec9ff02684e35335ba5dd3aeeea9ab80' => :mavericks
-    sha1 '423337e210f1d3e050212986810d8604a49cddfa' => :mountain_lion
+    revision 1
+    sha1 '7281e6d141b62234d924fcf8611754b8ee381ba4' => :lion
+    sha1 '6f6d4c1eba46f1f3422887ba68fdd4ddc436b397' => :mavericks
+    sha1 'eaf3b90d69d4b2ef754eb34b591390739c282d45' => :mountain_lion
   end
 
   depends_on :fortran
