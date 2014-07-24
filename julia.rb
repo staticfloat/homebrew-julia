@@ -27,6 +27,7 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.1'
+    depends_on "readline"
   end
 
   head do
@@ -34,10 +35,8 @@ class Julia < Formula
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
-  #depends_on "llvm"
-  #depends_on "readline"
   depends_on "pcre"
-  #depends_on "gmp"
+  depends_on "gmp"
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
@@ -174,8 +173,11 @@ class Julia < Formula
     end
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'READLINE', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
+    ['ZLIB', 'FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
+    end
+    if !build.head?
+      build_opts << "USE_SYSTEM_READLINE=1"
     end
     build_opts << "USE_SYSTEM_LAPACK=1" if build.without? "accelerate"
 
