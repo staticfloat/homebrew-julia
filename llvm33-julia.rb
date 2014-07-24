@@ -58,12 +58,14 @@ class Llvm33Julia < Formula
     end
   end
 
+
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 'd5c556b2c9a208cc7157e15311de78bd41c03ec1' => :lion
-    sha1 'b276478674f032219b83fc5ab2ab3af637265b2a' => :mavericks
-    sha1 '1f2baef6169d3c721ed6a991344bfbf6dfeaf463' => :mountain_lion
+    revision 1
+    sha1 'e694e0a3315f0351ec0343ef8ae26dfc487d638d' => :lion
+    sha1 'c33c68a1f0381ddb8319788028fa731f126cb0cb' => :mavericks
+    sha1 'c326a227f238421e8e7832d90fa285849c2a1a2b' => :mountain_lion
   end
 
   if MacOS.version <= :snow_leopard
