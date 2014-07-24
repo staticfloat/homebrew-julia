@@ -10,9 +10,10 @@ class Isl011Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 'c739e018126b7e5674bdbd1e1c19f2d6abd4b4ff' => :lion
-    sha1 'fc962814b005bdea1945f72fef405fb53e88984e' => :mavericks
-    sha1 '402a78ecb734c30508dbe3733135547542520e4d' => :mountain_lion
+    revision 1
+    sha1 '9887c5b8388ffa65dbd12ed2d1e3cc4936225544' => :lion
+    sha1 'd6b2f3f0e616e945791506ead488d640bfc2927a' => :mavericks
+    sha1 '50a608cf43e181a99a1ed1c39b8b978314698d87' => :mountain_lion
   end
 
   keg_only 'Conflicts with isl in main repository.'
