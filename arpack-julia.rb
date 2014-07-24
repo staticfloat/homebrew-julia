@@ -15,7 +15,6 @@ class ArpackJulia < Formula
   end
 
   depends_on :fortran
-  depends_on :mpi => :f77
   depends_on 'staticfloat/julia/openblas-julia' if build.without? 'accelerate'
 
   option 'with-accelerate', 'Compile against Accelerate/vecLib instead of OpenBLAS'
