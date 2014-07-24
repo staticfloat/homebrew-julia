@@ -33,10 +33,11 @@ class Julia < Formula
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
   end
 
-  depends_on "homebrew/versions/llvm33"
-  depends_on "readline"
+  depends_on "staticfloat/julia/llvm33-julia"
+  #depends_on "llvm"
+  #depends_on "readline"
   depends_on "pcre"
-  depends_on "gmp"
+  #depends_on "gmp"
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
