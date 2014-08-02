@@ -125,9 +125,6 @@ class Julia < Formula
     ln_s dsfmt.cached_download, 'deps/dSFMT-src-2.2.tar.gz'
     ohai "Using DSFMT: #{dsfmt.cached_download}"
 
-    # This makes it easier to see what has broken
-    ENV.deparallelize if build.has_option? "d"
-
     # Build up list of build options
     build_opts = []
     if build.head?
