@@ -13,7 +13,7 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
       reset
       safe_system 'git', 'clone', '.', dst
       # Get the deps/ submodules
-      ["Rmath", "libuv", "openlibm"].each do |subm|
+      ["Rmath", "libuv", "openlibm","libmojibake"].each do |subm|
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
       # Also the docs submodule
@@ -26,8 +26,8 @@ class Julia < Formula
   homepage 'http://julialang.org'
 
   stable do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.2.1'
-    depends_on "readline"
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.3.0-rc4'
+    version '0.3.0-rc4'
   end
 
   head do
@@ -89,11 +89,6 @@ class Julia < Formula
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
-    # If we're installing 0.2.1, we need to patch ui/repl-readline.c
-    if !build.head?
-      patch_list << "https://gist.githubusercontent.com/staticfloat/11153142/raw/7866673a1e8790bdc6f3887e78a14bc3cc1c287d/readline-6.3.patch"
-    end
-
     return patch_list
   end
 
@@ -123,12 +118,7 @@ class Julia < Formula
     ohai "Using DSFMT: #{dsfmt.cached_download}"
 
     # Build up list of build options
-    build_opts = []
-    if build.head?
-      build_opts << "prefix=#{prefix}"
-    else
-      build_opts << "PREFIX=#{prefix}"
-    end
+    build_opts = ["prefix=#{prefix}"]
 
     # Be sure to get the right library names for when we symlink later on
     openblas = 'openblas-julia'
@@ -157,7 +147,7 @@ class Julia < Formula
 
     # Make sure Julia uses clang if the environment supports it
     build_opts << "USECLANG=1" if ENV.compiler == :clang
-    #build_opts << "VERBOSE=1" if ARGV.verbose? # Note; this is causing errors!  Don't know why yet...
+    build_opts << "VERBOSE=1" if ARGV.verbose?
 
     if build.without? "accelerate"
         build_opts << "LIBBLAS=-lopenblas"
@@ -169,9 +159,6 @@ class Julia < Formula
     # Kudos to @ijt for these lines of code
     ['ZLIB', 'FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
-    end
-    if !build.head?
-      build_opts << "USE_SYSTEM_READLINE=1"
     end
     build_opts << "USE_SYSTEM_LAPACK=1" if build.without? "accelerate"
 
