@@ -42,33 +42,15 @@ class Julia < Formula
   depends_on "mpfr"
 
   # We have our custom formulae of arpack, openblas and suite-sparse
-  if build.include? "64bit"
-    if build.with? 'accelerate'
-      depends_on "staticfloat/julia/arpack64-julia" => 'with-accelerate'
-      depends_on "staticfloat/julia/suite-sparse64-julia" => 'with-accelerate'
-    else
-      depends_on "staticfloat/julia/arpack64-julia"
-      depends_on "staticfloat/julia/suite-sparse64-julia"
-      depends_on "staticfloat/julia/openblas64-julia"
-    end
-  else
-    if build.with? 'accelerate'
-      depends_on "staticfloat/julia/arpack-julia" => 'with-accelerate'
-      depends_on "staticfloat/julia/suite-sparse-julia" => 'with-accelerate'
-    else
-      depends_on "staticfloat/julia/arpack-julia"
-      depends_on "staticfloat/julia/suite-sparse-julia"
-      depends_on "staticfloat/julia/openblas-julia"
-    end
-  end
+  depends_on "staticfloat/julia/arpack-julia"
+  depends_on "staticfloat/julia/suite-sparse-julia"
+  depends_on "staticfloat/julia/openblas-julia"
 
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
 
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
-  option "64bit", "Builds julia on top of 64-bit linear algebra libraries"
-  option "with-accelerate", "Builds julia (and dependent libraries) against Accelerate/vecLib, not OpenBLAS. Incompatible with --64bit option"
 
   # Avoid Julia downloading these tools on demand
   # We don't have full formulae for them, as julia makes very specific use of these formulae
@@ -95,16 +77,6 @@ class Julia < Formula
   def install
     ENV['PLATFORM'] = 'darwin'
 
-    # First, check to make sure we don't have impossible options passed in
-    if build.include? "64bit"
-      if !Hardware.is_64_bit?
-        opoo "Cannot compile 64-bit on a 32-bit architecture!"
-      end
-      if build.with? "accelerate"
-        opoo "Cannot compile a 64-bit interface with the Accelerate libraries!"
-      end
-    end
-
     # Download double-conversion, then symlink it into deps/
     doubleconversion = resource("doubleconversion")
     doubleconversion.verify_download_integrity(doubleconversion.fetch)
@@ -124,14 +96,7 @@ class Julia < Formula
     openblas = 'openblas-julia'
     arpack = 'arpack-julia'
     suitesparse = 'suite-sparse-julia'
-    if build.include? "64bit"
-      build_opts << "USE_BLAS64=1"
-      openblas = 'openblas64-julia'
-      arpack = 'arpack64-julia'
-      suitesparse = 'suite-sparse64-julia'
-    else
-      build_opts << "USE_BLAS64=0"
-    end
+    build_opts << "USE_BLAS64=0"
 
     # Tell julia about our gfortran
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
@@ -149,18 +114,15 @@ class Julia < Formula
     build_opts << "USECLANG=1" if ENV.compiler == :clang
     build_opts << "VERBOSE=1" if ARGV.verbose?
 
-    if build.without? "accelerate"
-        build_opts << "LIBBLAS=-lopenblas"
-        build_opts << "LIBBLASNAME=libopenblas"
-        build_opts << "LIBLAPACK=-lopenblas"
-        build_opts << "LIBLAPACKNAME=libopenblas"
-    end
+    build_opts << "LIBBLAS=-lopenblas"
+    build_opts << "LIBBLASNAME=libopenblas"
+    build_opts << "LIBLAPACK=-lopenblas"
+    build_opts << "LIBLAPACKNAME=libopenblas"
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
+    ['ZLIB', 'FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
-    build_opts << "USE_SYSTEM_LAPACK=1" if build.without? "accelerate"
 
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
@@ -172,7 +134,9 @@ class Julia < Formula
       ln_s "#{Formula['fftw'].lib}/libfftw3#{ext}.dylib", "usr/lib/"
     end
     # Do the same for openblas, pcre, mpfr, and gmp
-    ln_s "#{Formula[openblas].opt_lib}/libopenblas.dylib", "usr/lib/" if build.without? 'accelerate'
+    ln_s "#{Formula['openblas-julia'].opt_lib}/libopenblas.dylib", "usr/lib/"
+    ln_s "#{Formula['arpack-julia'].opt_lib}/libarpack.dylib", "usr/lib/"
+    ln_s "#{Formula['suite-sparse-julia'].opt_lib}/libsuitesparse.dylib", "usr/lib/"
     ln_s "#{Formula['pcre'].lib}/libpcre.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
@@ -192,7 +156,7 @@ class Julia < Formula
     ['', 'f', '_threads', 'f_threads'].each do |ext|
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
-    rm "usr/lib/libopenblas.dylib" if build.without? 'accelerate'
+    rm "usr/lib/libopenblas.dylib"
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
@@ -205,12 +169,8 @@ class Julia < Formula
     # as well as any keg-only libraries that they need.
     rpaths = []
 
-    # Only add in openblas if we're not using accelerate
-    rpathFormulae = [arpack, suitesparse]
-    rpathFormulae << openblas if build.without? 'accelerate'
-
     # Add in each formula to the rpaths list
-    rpathFormulae.each do |formula|
+    ['arpack-julia', 'suite-sparse-julia', 'openblas-julia'].each do |formula|
       rpaths << "#{Formula[formula].opt_lib}"
     end
 
@@ -246,8 +206,7 @@ class Julia < Formula
       end
       opoo err
     else
-      chdir "#{share}/julia/test"
-      system "#{bin}/julia", "runtests.jl", "all"
+      system "#{bin}/julia", "-e", "Base.runtests()"
     end
   end
 

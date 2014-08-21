@@ -68,6 +68,8 @@ class Llvm33Julia < Formula
     sha1 'c326a227f238421e8e7832d90fa285849c2a1a2b' => :mountain_lion
   end
 
+  keg_only 'Conflicts with llvm33 in homebrew-versions.'
+
   # Fix Makefile bug concerning MacOSX >= 10.10
   # See: http://llvm.org/bugs/show_bug.cgi?id=19951
   if MacOS.version >= "10.10"

@@ -8,17 +8,19 @@ class SuiteSparseJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 'f7111df67b8162ee10ca4cc84431153304dfd8f3' => :lion
-    sha1 '44a9726dae5bc711a9734d5e8b23c9301d86ce05' => :mavericks
-    sha1 '16db0dd7fc69a535e7bed985db90be29c2febd29' => :mountain_lion
+    revision 1
+    sha1 '53fc536adf45972847a8ff34b5f79d892cb8cae4' => :lion
+    sha1 '478990d2959994670c8ca26ceed99bc2a2f1aef4' => :mavericks
+    sha1 '426089b0c19e896e8c15cacb8006245f156f6d27' => :mountain_lion
   end
+
+  keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
   depends_on "tbb" => :optional
   depends_on "metis" => :optional
-  depends_on "staticfloat/julia/openblas-julia" if build.without? 'accelerate'
+  depends_on "staticfloat/julia/openblas-julia"
 
   option "with-metis", "Compile in metis libraries"
-  option 'with-accelerate', 'Compile against Accelerate/vecLib instead of OpenBLAS'
 
   def install
     # SuiteSparse doesn't like to build in parallel
@@ -26,14 +28,8 @@ class SuiteSparseJulia < Formula
 
     inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
       # Put in the proper libraries
-      s.change_make_var! "BLAS", "-lopenblas" if build.without? 'accelerate'
-      s.change_make_var! "BLAS", "-Wl,-framework -Wl,Accelerate" if build.with? 'accelerate'
+      s.change_make_var! "BLAS", "-lopenblas"
       s.change_make_var! "LAPACK", "$(BLAS)"
-
-      if build.with? "tbb"
-        s.change_make_var! "SPQR_CONFIG", "-DHAVE_TBB"
-        s.change_make_var! "TBB", "-ltbb"
-      end
 
       if build.with? "metis"
         s.remove_make_var! "METIS_PATH"

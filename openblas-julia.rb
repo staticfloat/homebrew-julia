@@ -14,9 +14,12 @@ class OpenblasJulia < Formula
     sha1 '6f9673f7241f7e3fa0f1b84d93ac89f0781035a7' => :mountain_lion
   end
 
+
   depends_on :fortran
 
-  option "target=", "Manually override the CPU type detection and provide your own TARGET make variable"
+  keg_only 'Conflicts with openblas in homebrew-science.'
+
+  option "target", "Manually override the CPU type detection and provide your own TARGET make variable"
 
   def install
     # Must call in two steps
@@ -25,9 +28,12 @@ class OpenblasJulia < Formula
     else
       system "make", "FC=#{ENV['FC']}"
     end
+
     system "make", "PREFIX=#{prefix}", "install"
     cd "#{lib}" do
       dylib = Dir.glob("libopenblas_*.dylib")[0]
+
+      # Explicitly add libopenblas.dylib
       system "ln", "-sf", dylib, "libopenblas.dylib"
       system "strip", "-S", "libopenblas.dylib"
     end

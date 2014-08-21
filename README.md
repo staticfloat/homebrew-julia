@@ -1,44 +1,14 @@
 homebrew-julia
 ==============
 
-A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). After installing Homebrew, you must install a fortran compiler (e.g. gfortran, provided by the gcc formula). After that, all other dependencies will automatically be downloaded and compiled followed by Julia herself:
+A small tap for the [Homebrew project](http://mxcl.github.com/homebrew/) to install [Julia](http://julialang.org/). Installation instructions:
 
 ```bash
 $ brew update
-$ brew install gcc
 $ brew tap staticfloat/julia
-$ brew tap homebrew/versions
 $ brew install julia
 ```
 
-If you want to use [Gaston](https://bitbucket.org/mbaz/gaston) for plotting, install gnuplot with the optional `wxmac` included before trying to plot with Gaston:
-
-```bash
-$ brew install gnuplot --wx
-```
-
-Compiling 64-bit Julia
-======================
-Julia and dependent libraries can be compiled in 64-bit mode, allowing for 64-bit array indexes, and therefore arrays larger than 2^32 elements along a single axis.  To compile Julia in 64-bit mode, specify the `--64bit` option when installing:
-
-```bash
-$ brew install --64bit julia
-```
-
-This will compile all necessary dependencies as 64-bit as well, with a `64` suffix on the name to distinguish these dependencies from their 32-bit counterparts (e.g. `openblas-julia` has the 64-bit counterpart `openblas-julia64`).  Note that it currently is not possible to install 32-bit and 64-bit julia side-by-side.
-
-
-Compiling against Accelerate
-============================
-
-Julia can use Apple's native BLAS libraries instead of OpenBLAS which may improve performance in some linear-algebra heavy tasks. To compile julia with this configuration, pass the `--with-accelerate` option to `brew install`.  Note that the `julia`, `arpack-julia` and `sauite-sparse-julia` formula all take in this option, and when switching from an OpenBLAS-backed julia to an Accelerate-backed julia, you must remove and reinstall all dependencies:
-
-```bash
-$ brew rm julia arpack-julia suite-sparse-julia
-$ brew install julia --with-accelerate
-```
-
-Also note that the `--with-accelerate` option and the `--64bit` options are mutually exclusive; Accelerate does not have a 64-bit interface.
 
 Building a bleeding-edge version of Julia
 =========================================
@@ -54,8 +24,8 @@ $ brew test -v --HEAD julia
 ```
 
 
-Using OpenBLAS HEAD
-===================
+Using OpenBLAS HEAD or specifying CPU targets
+=============================================
 If you wish to test the newest development version of [OpenBLAS](https://github.com/xianyi/OpenBLAS) with Julia, you can do so by manually unlinking OpenBLAS, and installing the HEAD version of the formula:
 
 ```bash
@@ -70,9 +40,14 @@ $ brew rm suite-sparse-julia julia
 $ brew install julia
 ```
 
+When installing OpenBLAS on that shiny new piece of hardware that just came out, note that OpenBLAS may not have the software available to autodetect your processor type.  You can manually specify a CPU target architecture by specifying `--target` when building OpenBLAS.  For instance, to specify the Sandybridge archiceture (a good fallback for most modern macs):
+``` bash
+$ brew install openblas-julia --target=SANDYBRIDGE
+```
+
 Upgrading Julia
 ===============
-To upgrade Julia, remove and recompile (Typically you will be doing this when living on the latest development version, so we have included all `--HEAD` commands here):
+To upgrade Julia, remove and reinstall (Typically you will be doing this when living on the latest development version, so we have included all `--HEAD` commands here):
 
 ```bash
 $ brew rm julia
@@ -89,7 +64,7 @@ If your tests fail, possibly due to dependencies getting out of sync, remove the
 
 ```bash
 $ brew rm julia arpack-julia suite-sparse-julia
-$ brew install --HEAD julia && brew test -v --HEAD julia
+$ brew install -v --HEAD julia && brew test -v --HEAD julia
 ```
 
-Note that this procedure is necessary after upgrading `gfortran`, as the location of the `gfortran` libraries changes.  If you have an idea on how to avoid this problem, I'd love to hear about it.
+Note that this procedure is necessary after upgrading `gcc`, as the location of the `gfortran` libraries changes.

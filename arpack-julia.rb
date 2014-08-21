@@ -9,29 +9,24 @@ class ArpackJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 1
-    sha1 '7281e6d141b62234d924fcf8611754b8ee381ba4' => :lion
-    sha1 '6f6d4c1eba46f1f3422887ba68fdd4ddc436b397' => :mavericks
-    sha1 'eaf3b90d69d4b2ef754eb34b591390739c282d45' => :mountain_lion
+    revision 2
+    sha1 '494100140043f5ad407e51a54f7b65140b4f8f92' => :lion
+    sha1 'b1b2b9417c051b2003ca6e00165c017e10aa4548' => :mavericks
+    sha1 '307b279c9037604cc8678404f7db9fc83b6cf0ba' => :mountain_lion
   end
 
-  depends_on :fortran
-  depends_on 'staticfloat/julia/openblas-julia' if build.without? 'accelerate'
+  keg_only 'Conflicts with arpack in homebrew-science.'
 
-  option 'with-accelerate', 'Compile against Accelerate/vecLib instead of OpenBLAS'
+  depends_on :fortran
+  depends_on 'staticfloat/julia/openblas-julia'
 
   def install
-    configure_args = ["--disable-dependency-tracking", "--prefix=#{prefix}", "--enable-shared"]
-    if build.with? "accelerate"
-      configure_args << "--with-blas=-framework vecLib -lblas"
-      configure_args << "--with-lapack=-framework vecLib -lblas"
-    else
-      configure_args << "--with-blas=openblas"
-      configure_args << "--with-lapack=openblas"
-    end
-
+    configure_args = ["--disable-dependency-tracking",
+                      "--prefix=#{prefix}",
+                      "--enable-shared",
+                      "--with-blas=openblas",
+                      "--with-lapack=openblas"]
     system "./configure", *configure_args
-
     system "make install"
   end
 end
