@@ -60,11 +60,11 @@ Run tests after upgrading to make sure everything is functioning as expected. Ev
 $ brew test -v --HEAD julia
 ```
 
-If your tests fail, possibly due to dependencies getting out of sync, remove the dependencies and recompile:
+If compilation of Julia fails, or the tests fail, you may have to remove these dependencies and recompile:
 
 ```bash
-$ brew rm julia arpack-julia suite-sparse-julia
+$ brew rm julia arpack-julia suite-sparse-julia openblas-julia
 $ brew install -v --HEAD julia && brew test -v --HEAD julia
 ```
 
-Note that this procedure is necessary after upgrading `gcc`, as the location of the `gfortran` libraries changes.
+This procedure is necessary after upgrading `gcc`, as the location of the `gfortran` libraries changes.
