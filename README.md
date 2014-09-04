@@ -63,7 +63,7 @@ $ brew test -v --HEAD julia
 If compilation of Julia fails, or the tests fail, you may have to remove these dependencies and recompile:
 
 ```bash
-$ brew rm julia arpack-julia suite-sparse-julia openblas-julia
+$ brew rm julia arpack-julia suite-sparse-julia openblas-julia cloog018-julia gmp4-julia isl011-julia llvm33-julia
 $ brew install -v --HEAD julia && brew test -v --HEAD julia
 ```
 
