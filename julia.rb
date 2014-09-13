@@ -91,11 +91,6 @@ class Julia < Formula
 
     # Build up list of build options
     build_opts = ["prefix=#{prefix}"]
-
-    # Be sure to get the right library names for when we symlink later on
-    openblas = 'openblas-julia'
-    arpack = 'arpack-julia'
-    suitesparse = 'suite-sparse-julia'
     build_opts << "USE_BLAS64=0"
 
     # Tell julia about our gfortran
@@ -120,7 +115,7 @@ class Julia < Formula
     build_opts << "LIBLAPACKNAME=libopenblas"
 
     # Kudos to @ijt for these lines of code
-    ['ZLIB', 'FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
+    ['FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
 
@@ -206,7 +201,7 @@ class Julia < Formula
       end
       opoo err
     else
-      system "#{bin}/julia", "-e", "Base.runtests()"
+      system "#{bin}/julia", "-e", "Base.runtests(\"core\")"
     end
   end
 
@@ -219,7 +214,11 @@ class Julia < Formula
     Test suite has been installed into:
     #{share}/julia/test
 
-    Run the command `brew test#{head_flag}-v julia` to run all tests.
+    To perform a quick sanity check, run the command:
+    brew test#{head_flag}-v julia
+
+    To crunch through the full test suite, run the command:
+    #{bin}/julia -e "Base.runtests()"
     EOS
   end
 end
