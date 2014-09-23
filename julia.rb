@@ -26,8 +26,8 @@ class Julia < Formula
   homepage 'http://julialang.org'
 
   stable do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.3.0'
-    version '0.3.0'
+    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.3.1'
+    version '0.3.1'
   end
 
   head do
