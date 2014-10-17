@@ -6,6 +6,14 @@ class OpenblasJulia < Formula
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
   sha1 '2bdedca65e29186d1ecaaed45cb6c9b1f3f1c868'
 
+  bottle do
+    root_url 'https://juliabottles.s3.amazonaws.com'
+    cellar :any
+    sha1 '27188727be28ad839e147199531ef35152f0aa64' => :lion
+    sha1 '37c5a008dcd76b568167216979abd784a9e28f6d' => :mavericks
+    sha1 '11c092d0cf7667dcfa1f0cddd558ac6f7e2cfbd8' => :mountain_lion
+  end
+
   depends_on :fortran
 
   keg_only 'Conflicts with openblas in homebrew-science.'
