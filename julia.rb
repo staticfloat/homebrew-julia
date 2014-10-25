@@ -52,6 +52,9 @@ class Julia < Formula
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
 
+  # The location of the userimg.jl file, if any
+  option "userimg=", "Use the given file as base/userimg.jl"
+
   # Avoid Julia downloading these tools on demand
   # We don't have full formulae for them, as julia makes very specific use of these formulae
   resource "doubleconversion" do
@@ -76,6 +79,12 @@ class Julia < Formula
 
   def install
     ENV['PLATFORM'] = 'darwin'
+
+    # Get the userimg.jl file, if any
+    userimg = ARGV.value('userimg')
+    if userimg
+      system "cp", userimg, "base/userimg.jl"
+    end
 
     # Download double-conversion, then symlink it into deps/
     doubleconversion = resource("doubleconversion")

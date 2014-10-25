@@ -45,6 +45,27 @@ When installing OpenBLAS on that shiny new piece of hardware that just came out,
 $ brew install openblas-julia --target=SANDYBRIDGE
 ```
 
+
+Providing your own userimg.jl
+=============================
+
+When building Julia, the file `base/userimg.jl`, if it exists, will be included in the cached of compiled code. If there are large libraries that you use often, it can be useful to [`require` those in this file](https://github.com/JuliaLang/Gtk.jl/blob/master/doc/precompilation.md), for example:
+
+```julia
+require("Gtk")
+require("DataFrames")
+require("JuMP")
+```
+
+By default, the `userimg.jl` file does not exist, but you can provide it yourself, using the `--userimg` option:
+
+```bash
+$ brew install julia --userimg=$HOME/julia/myuserimg.jl
+```
+
+The file will then be copied and renamed before the main build, potentially leading to significant speedups when loading the specified modules.
+
+
 Upgrading Julia
 ===============
 To upgrade Julia, remove and reinstall (Typically you will be doing this when living on the latest development version, so we have included all `--HEAD` commands here):
