@@ -25,7 +25,7 @@ class Isl011Julia < Formula
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
                           "--with-gmp=system",
-                          "--with-gmp-prefix=#{Formula["gmp4"].opt_prefix}"
+                          "--with-gmp-prefix=#{Formula["gmp4-julia"].opt_prefix}"
     system "make install"
     (share/"gdb/auto-load").install Dir["#{lib}/*-gdb.py"]
   end
