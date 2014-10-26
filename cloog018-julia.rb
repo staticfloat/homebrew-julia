@@ -27,8 +27,8 @@ class Cloog018Julia < Formula
       "--prefix=#{prefix}",
       "--disable-dependency-tracking",
       "--disable-silent-rules",
-      "--with-gmp-prefix=#{Formula["gmp4"].opt_prefix}",
-      "--with-isl-prefix=#{Formula["isl011"].opt_prefix}"
+      "--with-gmp-prefix=#{Formula["gmp4-julia"].opt_prefix}",
+      "--with-isl-prefix=#{Formula["isl011-julia"].opt_prefix}"
     ]
 
     system "./configure", *args
