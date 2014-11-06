@@ -40,6 +40,7 @@ class Julia < Formula
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
+  depends_on "libgit2" if build.head?
 
   # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
@@ -124,7 +125,7 @@ class Julia < Formula
     build_opts << "LIBLAPACKNAME=libopenblas"
 
     # Kudos to @ijt for these lines of code
-    ['FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
+    ['FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR', 'LIBGIT2'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
 
