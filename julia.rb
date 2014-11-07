@@ -51,6 +51,7 @@ class Julia < Formula
 
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
+  option "system-libm", "Use system's libm instead of openlibm"
 
   # The location of the userimg.jl file, if any
   option "userimg=", "Use the given file as base/userimg.jl"
@@ -127,6 +128,8 @@ class Julia < Formula
     ['FFTW', 'GLPK', 'GMP', 'LLVM', 'PCRE', 'BLAS', 'LAPACK', 'SUITESPARSE', 'ARPACK', 'MPFR'].each do |dep|
       build_opts << "USE_SYSTEM_#{dep}=1"
     end
+
+    build_opts << "USE_SYSTEM_LIBM=1" if build.include? "system-libm"
 
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
