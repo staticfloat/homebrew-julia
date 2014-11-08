@@ -9,12 +9,10 @@ class ArpackJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 5
-    sha1 '3e89ea9679001f90e3efe62e8861cfb9ad877f97' => :lion
-    sha1 '2b74476e124ddecc7edfa03136c130774fc25d1e' => :mavericks
-    sha1 'fbc37a09be8b88d54f6fc938e5ff7086466c0945' => :mountain_lion
+    revision 6
+    sha1 'd2bc49ea07be77d74eef93d7a2c1d1627acef549' => :mavericks
+    sha1 '347f2dfc4b370389d01fe1b3ba7856fac189e6ee' => :mountain_lion
   end
-
   keg_only 'Conflicts with arpack in homebrew-science.'
 
   depends_on :fortran

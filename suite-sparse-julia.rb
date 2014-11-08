@@ -9,7 +9,6 @@ class SuiteSparseJulia < Formula
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
     revision 5
-    sha1 '5b7c823bf6d8ce668a6c4d6007bd7b047a4d1c9a' => :lion
     sha1 'db6b702f0a4a9b92022a8a7c6c3dc928e97c4333' => :mavericks
     sha1 '452890ce4456fe220bff071f8f58c2b9453bf613' => :mountain_lion
   end
