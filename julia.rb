@@ -34,6 +34,13 @@ class Julia < Formula
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
   end
 
+  bottle do
+    root_url 'https://juliabottles.s3.amazonaws.com'
+    sha1 "1015cb9939efc5c053903193782035bf1734639f" => :mountain_lion
+    sha1 "ef30ee54d9cae88eb1f6182ee68b06e93f0517bd" => :mavericks
+    sha1 "68c4851881bae2e07f5f625bd844341e1faf086d" => :yosemite
+  end
+
   depends_on "staticfloat/julia/llvm33-julia"
   depends_on "pcre"
   depends_on "gmp"
