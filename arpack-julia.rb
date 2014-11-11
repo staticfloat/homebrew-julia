@@ -12,6 +12,7 @@ class ArpackJulia < Formula
     revision 6
     sha1 'd2bc49ea07be77d74eef93d7a2c1d1627acef549' => :mavericks
     sha1 '347f2dfc4b370389d01fe1b3ba7856fac189e6ee' => :mountain_lion
+    sha1 "a583389ad4f27dfb80f37230e59d64263eaa36e5" => :yosemite
   end
   keg_only 'Conflicts with arpack in homebrew-science.'
 
