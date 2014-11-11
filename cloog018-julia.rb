@@ -14,6 +14,7 @@ class Cloog018Julia < Formula
     sha1 'ef93a3f89ec912781315fa206e2731dc2d65bae6' => :lion
     sha1 'e2ee2363aa35d3e02e47b0f81a727dde031fac32' => :mavericks
     sha1 '243b762581c65cb9414f9e7ac7d284d78301bcc2' => :mountain_lion
+    sha1 "fab85e4b7244f9ed7c92b0cbbde53cd75c99bfd0" => :yosemite
   end
 
   keg_only 'Conflicts with cloog in main repository.'

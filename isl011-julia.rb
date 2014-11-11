@@ -14,6 +14,7 @@ class Isl011Julia < Formula
     sha1 '9887c5b8388ffa65dbd12ed2d1e3cc4936225544' => :lion
     sha1 'd6b2f3f0e616e945791506ead488d640bfc2927a' => :mavericks
     sha1 '50a608cf43e181a99a1ed1c39b8b978314698d87' => :mountain_lion
+    sha1 '8f5bb617370255fc040afcfd772cf83ab3352313' => :yosemite
   end
 
   keg_only 'Conflicts with isl in main repository.'

@@ -12,6 +12,7 @@ class OpenblasJulia < Formula
     revision 1
     sha1 '820d7a691df2aa3ba569aa5456d7b116b7627916' => :mavericks
     sha1 '2a82f3fa4cc97d8a5dce5d2413ffc1b03533813a' => :mountain_lion
+    sha1 "1b5d2f66a979fd442d202eea754d623ee7bf6682" => :yosemite
   end
 
   depends_on :fortran

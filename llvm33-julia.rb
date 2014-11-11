@@ -66,6 +66,7 @@ class Llvm33Julia < Formula
     sha1 'e694e0a3315f0351ec0343ef8ae26dfc487d638d' => :lion
     sha1 'c33c68a1f0381ddb8319788028fa731f126cb0cb' => :mavericks
     sha1 'c326a227f238421e8e7832d90fa285849c2a1a2b' => :mountain_lion
+    sha1 "af38a85fcb27c729353fba07ef7821b59133ab66" => :yosemite
   end
 
   keg_only 'Conflicts with llvm33 in homebrew-versions.'

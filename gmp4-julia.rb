@@ -15,6 +15,7 @@ class Gmp4Julia < Formula
     sha1 '627289818d185c949a1313fbd52c5472631e75d6' => :lion
     sha1 '46f5b391f57012301da0ecab317989fb52ad31c4' => :mavericks
     sha1 '7d389346de35a8fd729d09d23a2e944df11f18cb' => :mountain_lion
+    sha1 '92352c7657d48b844dabb0fdea91a49ce7f0b46f' => :yosemite
   end
 
   keg_only "Conflicts with gmp in main repository."
