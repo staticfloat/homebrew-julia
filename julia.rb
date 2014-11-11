@@ -99,13 +99,11 @@ class Julia < Formula
     doubleconversion = resource("doubleconversion")
     doubleconversion.verify_download_integrity(doubleconversion.fetch)
     ln_s doubleconversion.cached_download, 'deps/double-conversion-1.1.1.tar.gz'
-    ohai "Using double-conversion: #{doubleconversion.cached_download}"
 
     # Download DSFMT, then symlink it into deps/
     dsfmt = resource("dsfmt")
     dsfmt.verify_download_integrity(dsfmt.fetch)
     ln_s dsfmt.cached_download, 'deps/dSFMT-src-2.2.tar.gz'
-    ohai "Using DSFMT: #{dsfmt.cached_download}"
 
     # Build up list of build options
     build_opts = ["prefix=#{prefix}"]
@@ -138,6 +136,11 @@ class Julia < Formula
     end
 
     build_opts << "USE_SYSTEM_LIBM=1" if build.include? "system-libm"
+
+    # If we're building a bottle, cut back on fancy CPU instructions
+    if ARGV.build_bottle?
+      build_opts << "MARCH=core2"
+    end
 
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
