@@ -16,8 +16,10 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
       ["Rmath", "libuv", "openlibm"].each do |subm|
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
-      # Also the docs submodule
-      safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
+      # Also the docs submodule, if we're not building a --HEAD version
+      if !ARGV.build_head?
+        safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
+      end
     end
   end
 end
