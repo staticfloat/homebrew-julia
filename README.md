@@ -9,6 +9,16 @@ $ brew tap staticfloat/julia
 $ brew install julia
 ```
 
+Common Issues
+=============
+
+If you are building Julia from source and you see errors about `libgfortran.dylib`, you most likely need to reinstall the latest `gcc`, `openblas-julia`, `suite-sparse-julia` and `arpack-julia`:
+
+```
+$ brew update
+$ brew rm gcc openblas-julia suite-sparse-julia arpack-julia
+$ brew install gcc openblas-julia suite-sparse-julia arpack-julia 
+```
 
 Building a bleeding-edge version of Julia
 =========================================
