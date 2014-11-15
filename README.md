@@ -60,7 +60,7 @@ require("JuMP")
 By default, the `userimg.jl` file does not exist, but you can provide it yourself, using the `--userimg` option (using `reinstall` rather than `install` if Julia is already installed):
 
 ```bash
-$ brew install julia --build-from-source --userimg=$HOME/julia/myuserimg.jl
+$ brew install julia --userimg=$HOME/julia/myuserimg.jl
 ```
 
 The file will then be copied and renamed before the main build, potentially leading to significant speedups when loading the specified modules.
