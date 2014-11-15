@@ -67,7 +67,7 @@ require("DataFrames")
 require("JuMP")
 ```
 
-By default, the `userimg.jl` file does not exist, but you can provide it yourself, using the `--userimg` option:
+By default, the `userimg.jl` file does not exist, but you can provide it yourself, using the `--userimg` option (using `reinstall` rather than `install` if Julia is already installed):
 
 ```bash
 $ brew install julia --userimg=$HOME/julia/myuserimg.jl
