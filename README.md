@@ -20,6 +20,8 @@ $ brew rm gcc openblas-julia suite-sparse-julia arpack-julia
 $ brew install gcc openblas-julia suite-sparse-julia arpack-julia 
 ```
 
+See [this thread](https://github.com/Homebrew/homebrew/issues/33948) for technical details as to why `gfortran` dependencies require this treatment.
+
 Building a bleeding-edge version of Julia
 =========================================
 If you wish to test the newest development version of Julia, you can build with the `--HEAD` option:
