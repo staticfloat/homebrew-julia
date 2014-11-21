@@ -19,15 +19,21 @@ class OpenblasJulia < Formula
 
   keg_only 'Conflicts with openblas in homebrew-science.'
 
-  option "target", "Manually override the CPU type detection and provide your own TARGET make variable"
+  option "target", "Manually override the CPU type detection and provide your own TARGET make variable (ignored when building a bottle in lieu of DYNAMIC_ARCH)"
 
   def install
-    # Must call in two steps
-    if ARGV.value('target')
-      system "make", "FC=#{ENV['FC']}", "TARGET=#{ARGV.value('target')}"
+    # Build up our list of build options
+    buildopts = []
+    if ARGV.build_bottle?
+      buildopts << "DYNAMIC_ARCH=1"
     else
-      system "make", "FC=#{ENV['FC']}"
+      # Ignore --target if building a bottle
+      if ARGV.value('target')
+        buildopts << "TARGET=#{ARGV.value('target')}"
+      end
     end
+
+    system "make", "FC=#{ENV['FC']}", *buildopts
 
     system "make", "PREFIX=#{prefix}", "install"
     cd "#{lib}" do
