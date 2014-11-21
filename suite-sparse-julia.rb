@@ -8,10 +8,10 @@ class SuiteSparseJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 5
-    sha1 'db6b702f0a4a9b92022a8a7c6c3dc928e97c4333' => :mavericks
-    sha1 '452890ce4456fe220bff071f8f58c2b9453bf613' => :mountain_lion
-    sha1 "96aa2caa192098f0923ca89fe9328398948ca903" => :yosemite
+    revision 6
+    sha1 "fbeb58cef0775360388acd9243f9e3ff0555978e" => :mountain_lion
+    sha1 "27afea150ad9b336ed7f7bd4726e34f010a80f0d" => :mavericks
+    sha1 "7cf59ffc1dd0a2a9f0427e463a1afb9da2ca6b52" => :yosemite
   end
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
