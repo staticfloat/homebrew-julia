@@ -23,8 +23,8 @@ class SuiteSparseJulia < Formula
 
     inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
       # Put in the proper libraries
-      s.change_make_var! "BLAS", "-lopenblas"
-      s.change_make_var! "LAPACK", "$(BLAS)"
+      s.change_make_var! "  BLAS", "-lopenblas"
+      s.change_make_var! "  LAPACK", "$(BLAS)"
 
       if build.with? "metis"
         s.remove_make_var! "METIS_PATH"
