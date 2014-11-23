@@ -1,7 +1,7 @@
 require 'formula'
 class SuiteSparseJulia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
-  url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.4.1.tar.gz'
+  url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.4.1.tar.gz'
   mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.4.1.tar.gz'
   sha1 '2fec3bf93314bd14cbb7470c0a2c294988096ed6'
 
