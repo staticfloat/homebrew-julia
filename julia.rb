@@ -34,6 +34,7 @@ class Julia < Formula
 
   head do
     url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+    depends_on "libgit2"
   end
 
   bottle do
@@ -49,7 +50,6 @@ class Julia < Formula
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
-  depends_on "libgit2" if build.head?
 
   # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
