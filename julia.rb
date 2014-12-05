@@ -13,7 +13,7 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
       # Also the docs submodule, if we're not building a --HEAD version
-      if !ARGV.build_head?
+      if head?
         safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
       end
     end
@@ -138,9 +138,7 @@ class Julia < Formula
     build_opts << "USE_SYSTEM_LIBM=1" if build.include? "system-libm"
 
     # If we're building a bottle, cut back on fancy CPU instructions
-    if ARGV.build_bottle?
-      build_opts << "MARCH=core2"
-    end
+    build_opts << "MARCH=core2" if build.bottle?
 
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts

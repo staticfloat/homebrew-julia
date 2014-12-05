@@ -24,7 +24,7 @@ class OpenblasJulia < Formula
   def install
     # Build up our list of build options
     buildopts = []
-    if ARGV.build_bottle?
+    if build.bottle?
       buildopts << "DYNAMIC_ARCH=1"
     else
       # Ignore --target if building a bottle
