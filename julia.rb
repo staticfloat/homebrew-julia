@@ -1,10 +1,6 @@
 require 'formula'
 
 class GitNoDepthDownloadStrategy < GitDownloadStrategy
-  def support_depth?
-    false
-  end
-
   # We need the .git folder for it's information, so we clone the whole thing
   # We also want to avoid downloading all the submodules, so we clone those explicitly
   def stage
@@ -28,12 +24,14 @@ class Julia < Formula
   homepage 'http://julialang.org'
 
   stable do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.3.3'
+    url 'https://github.com/JuliaLang/julia.git',
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.3'
     version '0.3.3'
   end
 
   head do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+    url 'https://github.com/JuliaLang/julia.git',
+      :using => GitNoDepthDownloadStrategy, :shallow => false
     depends_on "libgit2"
   end
 
