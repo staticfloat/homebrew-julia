@@ -1,10 +1,6 @@
 require 'formula'
 
 class GitNoDepthDownloadStrategy < GitDownloadStrategy
-  def support_depth?
-    false
-  end
-
   # We need the .git folder for it's information, so we clone the whole thing
   # We also want to avoid downloading all the submodules, so we clone those explicitly
   def stage
@@ -17,7 +13,7 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
       # Also the docs submodule, if we're not building a --HEAD version
-      if !ARGV.build_head?
+      if head?
         safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
       end
     end
@@ -28,12 +24,15 @@ class Julia < Formula
   homepage 'http://julialang.org'
 
   stable do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy, :tag => 'v0.3.3'
+    url 'https://github.com/JuliaLang/julia.git',
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.3'
     version '0.3.3'
   end
 
   head do
-    url 'https://github.com/JuliaLang/julia.git', :using => GitNoDepthDownloadStrategy
+    url 'https://github.com/JuliaLang/julia.git',
+      :using => GitNoDepthDownloadStrategy, :shallow => false
+    depends_on "libgit2"
   end
 
   bottle do
@@ -49,7 +48,6 @@ class Julia < Formula
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
-  depends_on "libgit2" if build.head?
 
   # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
@@ -140,9 +138,7 @@ class Julia < Formula
     build_opts << "USE_SYSTEM_LIBM=1" if build.include? "system-libm"
 
     # If we're building a bottle, cut back on fancy CPU instructions
-    if ARGV.build_bottle?
-      build_opts << "MARCH=core2"
-    end
+    build_opts << "MARCH=core2" if build.bottle?
 
     # call makefile to grab suitesparse libraries
     system "make", "-C", "contrib", "-f", "repackage_system_suitesparse4.make", *build_opts
