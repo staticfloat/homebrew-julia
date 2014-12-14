@@ -4,14 +4,14 @@ class SuiteSparseJulia < Formula
   url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.2.1.tar.gz'
   mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.2.1.tar.gz'
   sha1 '2fec3bf93314bd14cbb7470c0a2c294988096ed6'
+  revision 1
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 6
-    sha1 "fbeb58cef0775360388acd9243f9e3ff0555978e" => :mountain_lion
-    sha1 "27afea150ad9b336ed7f7bd4726e34f010a80f0d" => :mavericks
-    sha1 "7cf59ffc1dd0a2a9f0427e463a1afb9da2ca6b52" => :yosemite
+    sha1 "e17848e31eba3a47b6a4acb6a7ce74c9d5b45df5" => :yosemite
+    sha1 "2d4d552cfca0fef0297fb43bc0dec9a625a62857" => :mavericks
+    sha1 "b0f74447eb7d56e81418c69119462b600796c1c1" => :mountain_lion
   end
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 

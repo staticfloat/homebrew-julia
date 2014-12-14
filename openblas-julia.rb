@@ -5,14 +5,14 @@ class OpenblasJulia < Formula
   url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.12.tar.gz'
   head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
   sha1 '2bdedca65e29186d1ecaaed45cb6c9b1f3f1c868'
+  revision 1
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 2
-    sha1 "adf133d8f7734366004387d75f38d0f0819ee0d1" => :mountain_lion
-    sha1 "eab5bb9497a2d515555e949f15dbf0f69c7de9f1" => :mavericks
-    sha1 "e0d249b4cc21f8a6f31c898ffa1aeeb7eb4870e0" => :yosemite
+    sha1 "c7230019325a21028d4c289033199a1e3c93a38e" => :mountain_lion
+    sha1 "663640c80f97517e77300c68b0dc36a152851db1" => :mavericks
+    sha1 "6aa3ffc4e8f00bcbe30e488865a9143a23af7e9c" => :yosemite
   end
 
   depends_on :fortran
