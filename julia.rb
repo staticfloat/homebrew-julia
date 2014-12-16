@@ -13,7 +13,7 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
       # Also the docs submodule, if we're not building a --HEAD version
-      if head?
+      if not head?
         safe_system 'git', 'clone', 'doc/juliadoc', "#{dst}/doc/juliadoc"
       end
     end
