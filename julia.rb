@@ -35,8 +35,6 @@ class Julia < Formula
     depends_on "libgit2"
   end
 
-  revision 1
-
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
   end
