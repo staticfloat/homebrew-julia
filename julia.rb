@@ -25,8 +25,8 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.4'
-    version '0.3.4'
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.5'
+    version '0.3.5'
   end
 
   head do
@@ -37,10 +37,9 @@ class Julia < Formula
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
-    revision 1
-    sha1 "c1e114389fc3918d7bbbcaba7ebfeb4241fe418b" => :yosemite
-    sha1 "36fff9412f1cf47893c367ed493abaefee5b7edf" => :mavericks
-    sha1 "2ffaba53bf6b88de277f4bc0ee9e5ddae1b8b713" => :mountain_lion
+    sha1 "8d5f83b762f9ec0c72fa362486f99e2b213ed37c" => :yosemite
+    sha1 "ff63f43d0ff44f0c2860a15130cbaa40c94315ee" => :mavericks
+    sha1 "7566edca700b6f105b7a2e0896da84a269af838b" => :mountain_lion
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
