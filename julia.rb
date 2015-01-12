@@ -22,17 +22,22 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
+  revision 1
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
       :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.5'
     version '0.3.5'
+
+    # Need suite-sparse 4.2.X on stable branch
+    depends_on "staticfloat/julia/suite-sparse42-julia"
   end
 
   head do
     url 'https://github.com/JuliaLang/julia.git',
       :using => GitNoDepthDownloadStrategy, :shallow => false
     depends_on "libgit2"
+    depends_on "staticfloat/julia/suite-sparse-julia"
   end
 
   bottle do
@@ -49,9 +54,8 @@ class Julia < Formula
   depends_on :fortran
   depends_on "mpfr"
 
-  # We have our custom formulae of arpack, openblas and suite-sparse
+  # We have our custom formulae of arpack and openblas
   depends_on "staticfloat/julia/arpack-julia"
-  depends_on "staticfloat/julia/suite-sparse-julia"
   depends_on "staticfloat/julia/openblas-julia"
 
   # Need this as Julia's build process is quite messy with respect to env variables
