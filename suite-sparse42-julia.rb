@@ -1,16 +1,16 @@
 require 'formula'
-class SuiteSparseJulia < Formula
+class SuiteSparse42Julia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
-  url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.4.2.tar.gz'
-  mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.4.2.tar.gz'
-  sha1 'dd5a264b76e51c073f0ac837f5e13971226510f4'
+  url 'http://www.cise.ufl.edu/research/sparse/SuiteSparse/SuiteSparse-4.2.1.tar.gz'
+  mirror 'http://d304tytmzqn1fl.cloudfront.net/SuiteSparse-4.2.1.tar.gz'
+  sha1 '2fec3bf93314bd14cbb7470c0a2c294988096ed6'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha1 "ea678e09438b081e9dbc15a000ec15c29d9983ed" => :mavericks
-    sha1 "34ae58f3284e41133e9640080bf31994af101b18" => :mountain_lion
-    sha1 "a25a7b2dbbd58e2a04391058aff7b4c6b797a8fd" => :yosemite
+    sha1 "04269cc8e2e475731d0ebb118199b7cf9eceace4" => :yosemite
+    sha1 "c1bf6b93e637cddcde54ab8fa2a31b086a5319a8" => :mavericks
+    sha1 "0995fcbcb7b324dce8c4b2cf2ac295f394380185" => :mountain_lion
   end
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
@@ -26,8 +26,8 @@ class SuiteSparseJulia < Formula
 
     inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
       # Put in the proper libraries
-      s.change_make_var! "  BLAS", "-lopenblas"
-      s.change_make_var! "  LAPACK", "$(BLAS)"
+      s.change_make_var! "BLAS", "-lopenblas"
+      s.change_make_var! "LAPACK", "$(BLAS)"
 
       if build.with? "metis"
         s.remove_make_var! "METIS_PATH"
