@@ -26,8 +26,8 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.5'
-    version '0.3.5'
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.6'
+    version '0.3.6'
 
     # Need suite-sparse 4.2.X on stable branch
     depends_on "staticfloat/julia/suite-sparse42-julia"
@@ -42,9 +42,9 @@ class Julia < Formula
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
-    sha1 "7d372eda2a10ba3dafd6a16a7e86745b30d3477c" => :yosemite
-    sha1 "9086227678b5befef4442b10e0710ef1fb304a38" => :mavericks
-    sha1 "03a826d3682001e01d0094bcef23d0bebd144150" => :mountain_lion
+    sha1 "560a76bdbb64db5b3937c44079fe2975bca17837" => :mavericks
+    sha1 "ff0ec0c5ec00f3eb3099c029adf8fb0668bc8e07" => :yosemite
+    sha1 "4ff9204f356ed2ecdde9bb0107354640b49935f7" => :mountain_lion
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
