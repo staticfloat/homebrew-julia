@@ -9,7 +9,12 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
       reset
       safe_system 'git', 'clone', '.', dst
       # Get the deps/ submodules
-      ["Rmath", "libuv", "openlibm"].each do |subm|
+      if head?
+          deps = ["libmojibake", "openspecfun", "libuv", "openlibm"]
+      else
+          deps = ["Rmath", "libuv", "openlibm"]
+      end
+      deps.each do |subm|
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
       end
       # Also the docs submodule, if we're not building a --HEAD version
