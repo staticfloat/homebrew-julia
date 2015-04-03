@@ -41,6 +41,9 @@ class Julia < Formula
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
+    sha256 "0c79d672877310ad5725a40349dbfe78af11657edf4dc3aa4bb3edc996f8f170" => :mountain_lion
+    sha256 "086011383dc07327c049c6f342c13f64cf7b0a1250b19a4dbdea27d0b7f9f248" => :mavericks
+    sha256 "03e05d7b60c0d15db5b35c331e87508f74c9051b57fb60e5f2f4fef33749290e" => :yosemite
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
