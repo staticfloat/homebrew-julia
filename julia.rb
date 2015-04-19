@@ -10,9 +10,9 @@ class GitNoDepthDownloadStrategy < GitDownloadStrategy
       safe_system 'git', 'clone', '.', dst
       # Get the deps/ submodules
       if head?
-          deps = ["utf8proc", "openspecfun", "libuv", "openlibm"]
+        deps = []
       else
-          deps = ["Rmath", "libuv", "openlibm"]
+        deps = ["Rmath", "libuv", "openlibm"]
       end
       deps.each do |subm|
         safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
@@ -66,18 +66,6 @@ class Julia < Formula
   option "build-debug", "Builds julia with debugging information included"
   option "system-libm", "Use system's libm instead of openlibm"
 
-  # Avoid Julia downloading these tools on demand
-  # We don't have full formulae for them, as julia makes very specific use of these formulae
-  resource "doubleconversion" do
-    url "https://double-conversion.googlecode.com/files/double-conversion-1.1.1.tar.gz"
-    sha1 "de238c7f0ec2d28bd7c54cff05504478a7a72124"
-  end
-
-  resource "dsfmt" do
-    url "http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/dSFMT-src-2.2.tar.gz"
-    sha1 "d64e1c1927d6532c62aff271bd1cd0d4859c3c6d"
-  end
-
   # Here we build up a list of patches to be applied
   def patches
     patch_list = []
@@ -90,16 +78,6 @@ class Julia < Formula
 
   def install
     ENV['PLATFORM'] = 'darwin'
-
-    # Download double-conversion, then symlink it into deps/
-    doubleconversion = resource("doubleconversion")
-    doubleconversion.verify_download_integrity(doubleconversion.fetch)
-    ln_s doubleconversion.cached_download, 'deps/double-conversion-1.1.1.tar.gz'
-
-    # Download DSFMT, then symlink it into deps/
-    dsfmt = resource("dsfmt")
-    dsfmt.verify_download_integrity(dsfmt.fetch)
-    ln_s dsfmt.cached_download, 'deps/dSFMT-src-2.2.tar.gz'
 
     # Build up list of build options
     build_opts = ["prefix=#{prefix}"]
@@ -177,7 +155,7 @@ class Julia < Formula
     build_opts << "install"
     system "make", *build_opts
 
-    # Add in rpath's into the julia executables so that they can find the homebrew lib folder,
+    # Add in rpaths into the julia executables so that they can find the homebrew lib folder,
     # as well as any keg-only libraries that they need.
     rpaths = []
 
