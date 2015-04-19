@@ -42,6 +42,7 @@ class Julia < Formula
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
+    # Remember to clear "revision" above when prepping for new bottles, if it exists
     sha256 "0c79d672877310ad5725a40349dbfe78af11657edf4dc3aa4bb3edc996f8f170" => :mountain_lion
     sha256 "086011383dc07327c049c6f342c13f64cf7b0a1250b19a4dbdea27d0b7f9f248" => :mavericks
     sha256 "03e05d7b60c0d15db5b35c331e87508f74c9051b57fb60e5f2f4fef33749290e" => :yosemite
@@ -64,9 +65,6 @@ class Julia < Formula
   # Options that can be passed to the build process
   option "build-debug", "Builds julia with debugging information included"
   option "system-libm", "Use system's libm instead of openlibm"
-
-  # The location of the userimg.jl file, if any
-  option "userimg=", "Use the given file as base/userimg.jl"
 
   # Avoid Julia downloading these tools on demand
   # We don't have full formulae for them, as julia makes very specific use of these formulae
@@ -92,12 +90,6 @@ class Julia < Formula
 
   def install
     ENV['PLATFORM'] = 'darwin'
-
-    # Get the userimg.jl file, if any
-    userimg = ARGV.value('userimg')
-    if userimg
-      system "cp", userimg, "base/userimg.jl"
-    end
 
     # Download double-conversion, then symlink it into deps/
     doubleconversion = resource("doubleconversion")
@@ -212,6 +204,13 @@ class Julia < Formula
     # copy over suite-sparse shlibs manually, pending discussion in https://github.com/JuliaLang/julia/commit/077c63a7164e270970de16863c7575c808a0c756#commitcomment-4128441
     ["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
       (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
+    end
+  end
+
+  def post_install
+    # Change the permissions of lib/julia/sys.* so that build_sysimg.jl can edit them
+    Dir["#{lib}/julia/sys.*"].each do |file|
+      chmod 0644, file
     end
   end
 
