@@ -58,8 +58,8 @@ $ brew install openblas-julia --target=SANDYBRIDGE
 ```
 
 
-Providing your own userimg.jl
-=============================
+Rebuilding the system image
+===========================
 
 When building Julia, the file `base/userimg.jl`, if it exists, will be included in the cached of compiled code. If there are large libraries that you use often, it can be useful to [`require` those in this file](https://github.com/JuliaLang/Gtk.jl/blob/master/doc/precompilation.md), for example:
 
@@ -69,13 +69,11 @@ require("DataFrames")
 require("JuMP")
 ```
 
-By default, the `userimg.jl` file does not exist, but you can provide it yourself, using the `--userimg` option (using `reinstall` rather than `install` if Julia is already installed):
+By default, the `userimg.jl` file does not exist, but you can create it yourself and then rebuild the Julia system image.  Place a `userimg.jl` file into `/usr/local/Cellar/julia/<julia version>/share/julia/base` (Assuming Homebrew has been installed to `/usr/local`), then run `build_sysimg.jl` (located in the folder immediatebly above the `base` directory) to rebuild the system image.  The script has many options, to see them all run `./build_sysimg.jl --help`, but if you just want to replace the current system image with the new one you're about to build (and most people do just want that) simply run:
 
 ```bash
-$ brew install julia --userimg=$HOME/julia/myuserimg.jl
+$ ./build_sysimg.jl --force
 ```
-
-The file will then be copied and renamed before the main build, potentially leading to significant speedups when loading the specified modules.
 
 
 Upgrading Julia
