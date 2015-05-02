@@ -78,6 +78,7 @@ class Julia < Formula
 
   def install
     ENV['PLATFORM'] = 'darwin'
+    ENV['PYTHONPATH'] = ""
 
     # Build up list of build options
     build_opts = ["prefix=#{prefix}"]
