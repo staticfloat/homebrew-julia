@@ -49,7 +49,8 @@ class Julia < Formula
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
-  depends_on "pcre"
+  depends_on "pcre" if not build.head?
+  depends_on "pcre2" if build.head?
   depends_on "gmp"
   depends_on "fftw"
   depends_on :fortran
