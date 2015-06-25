@@ -13,7 +13,7 @@ class OpenblasJulia < Formula
     cellar :any
     sha256 "0078f9e4263b31ee90a9397890eddee3bbd25e438fb142abc1fb646a6ae81ef2" => :mavericks
     sha256 "e54b900019bce9fc095af9b1c124191dd0e2165220a2db5c53256eb75617b833" => :yosemite
-    sha256 "62c8930f090f9fe75e0c16f65b3896ad113ea3687c8399858139225362c0415b" => :mountain_lion
+    sha256 "735852acea8b6e2635c7860cd06734c595087323ac3f6b26488ffe0f07527553" => :mountain_lion
   end
 
   depends_on :fortran
