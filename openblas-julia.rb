@@ -8,7 +8,7 @@ class OpenblasJulia < Formula
   revision 1
 
   bottle do
-    revision 1
+    revision 2
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
     sha256 "0078f9e4263b31ee90a9397890eddee3bbd25e438fb142abc1fb646a6ae81ef2" => :mavericks
