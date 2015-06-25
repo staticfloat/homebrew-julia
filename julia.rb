@@ -26,7 +26,7 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.9'
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.10'
     version '0.3.10'
 
     # Need suite-sparse 4.2.X on stable branch
