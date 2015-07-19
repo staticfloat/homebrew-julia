@@ -64,7 +64,6 @@ class Julia < Formula
   env :std
 
   # Options that can be passed to the build process
-  option "build-debug", "Builds julia with debugging information included"
   option "system-libm", "Use system's libm instead of openlibm"
 
   # Here we build up a list of patches to be applied
@@ -133,14 +132,12 @@ class Julia < Formula
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
 
-    # call make with the build options
-    target = "release"
-    if build.include? "build-debug"
-      target = "debug"
-      ohai "Making debug build"
-    end
+    # make both release and debug
+    build_opts << "release"
+    system "make", *build_opts
+    build_opts.pop
 
-    build_opts << target
+    build_opts << "debug"
     system "make", *build_opts
     build_opts.pop
 
