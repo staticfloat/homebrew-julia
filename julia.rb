@@ -64,7 +64,6 @@ class Julia < Formula
   env :std
 
   # Options that can be passed to the build process
-  option "build-debug", "Builds julia with debugging information included"
   option "system-libm", "Use system's libm instead of openlibm"
 
   # Here we build up a list of patches to be applied
@@ -73,6 +72,9 @@ class Julia < Formula
 
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
+
+    # Second patch fixes suitesparse shenanigans
+    patch_list << "https://gist.github.com/staticfloat/4f8248add3ed27ba250c/raw/0d180c11d4131a53c3361d71ba21aac3f0ef343e/Makefile.diff"
 
     return patch_list
   end
@@ -128,19 +130,16 @@ class Julia < Formula
     # Do the same for openblas, pcre, mpfr, and gmp
     ln_s "#{Formula['openblas-julia'].opt_lib}/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula['arpack-julia'].opt_lib}/libarpack.dylib", "usr/lib/"
-    ln_s "#{Formula['suite-sparse-julia'].opt_lib}/libsuitesparse.dylib", "usr/lib/"
     ln_s "#{Formula['pcre'].lib}/libpcre.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
 
-    # call make with the build options
-    target = "release"
-    if build.include? "build-debug"
-      target = "debug"
-      ohai "Making debug build"
-    end
+    # make both release and debug
+    build_opts << "release"
+    system "make", *build_opts
+    build_opts.pop
 
-    build_opts << target
+    build_opts << "debug"
     system "make", *build_opts
     build_opts.pop
 
@@ -149,6 +148,7 @@ class Julia < Formula
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
     rm "usr/lib/libopenblas.dylib"
+    rm "usr/lib/libarpack.dylib"
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
