@@ -26,8 +26,8 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.9'
-    version '0.3.9'
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => 'v0.3.10'
+    version '0.3.10'
 
     # Need suite-sparse 4.2.X on stable branch
     depends_on "staticfloat/julia/suite-sparse42-julia"
@@ -43,13 +43,14 @@ class Julia < Formula
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
-    sha256 "48b6cc5b5f144dd4fa7ea4373eb728084f6e3f45270e2a923d7b1a99272c1631" => :mountain_lion
-    sha256 "0228d89ba21a4a0c97d7f885e85f2a35c7676c65acca7003df3a7b4576cca96f" => :mavericks
-    sha256 "53fb7a0ab70c2f5120e639261c22a5565915b09b0f5a6f09789bff965b3bda48" => :yosemite
+    sha256 "1bf87b0be8dd90180f2e03bc3dabc1f9f45be86928ae09388523813f49ea00dc" => :mountain_lion
+    sha256 "91cc8413344f19d400f6a6a27fb12da3f457d509d699743890994c8d6f9e83a0" => :mavericks
+    sha256 "de782980fb0ce6bd5272f9db05de51df5302b80861a23d8dbcf88f39cdca57c6" => :yosemite
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
-  depends_on "pcre"
+  depends_on "pcre" if not build.head?
+  depends_on "pcre2" if build.head?
   depends_on "gmp"
   depends_on "fftw"
   depends_on :fortran
@@ -63,7 +64,6 @@ class Julia < Formula
   env :std
 
   # Options that can be passed to the build process
-  option "build-debug", "Builds julia with debugging information included"
   option "system-libm", "Use system's libm instead of openlibm"
 
   # Here we build up a list of patches to be applied
@@ -72,6 +72,9 @@ class Julia < Formula
 
     # First patch fixes hardcoded paths to deps in deps/Makefile
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
+
+    # Second patch fixes suitesparse shenanigans
+    patch_list << "https://gist.github.com/staticfloat/4f8248add3ed27ba250c/raw/0d180c11d4131a53c3361d71ba21aac3f0ef343e/Makefile.diff"
 
     return patch_list
   end
@@ -127,19 +130,16 @@ class Julia < Formula
     # Do the same for openblas, pcre, mpfr, and gmp
     ln_s "#{Formula['openblas-julia'].opt_lib}/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula['arpack-julia'].opt_lib}/libarpack.dylib", "usr/lib/"
-    ln_s "#{Formula['suite-sparse-julia'].opt_lib}/libsuitesparse.dylib", "usr/lib/"
     ln_s "#{Formula['pcre'].lib}/libpcre.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
 
-    # call make with the build options
-    target = "release"
-    if build.include? "build-debug"
-      target = "debug"
-      ohai "Making debug build"
-    end
+    # make both release and debug
+    build_opts << "release"
+    system "make", *build_opts
+    build_opts.pop
 
-    build_opts << target
+    build_opts << "debug"
     system "make", *build_opts
     build_opts.pop
 
@@ -148,6 +148,7 @@ class Julia < Formula
       rm "usr/lib/libfftw3#{ext}.dylib"
     end
     rm "usr/lib/libopenblas.dylib"
+    rm "usr/lib/libarpack.dylib"
     rm "usr/lib/libpcre.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
