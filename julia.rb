@@ -71,8 +71,10 @@ class Julia < Formula
     patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
 
     # Second patch fixes suitesparse shenanigans
-    patch_list << "https://gist.github.com/staticfloat/4f8248add3ed27ba250c/raw/0d180c11d4131a53c3361d71ba21aac3f0ef343e/Makefile.diff"
-
+    if build.head?
+      patch_list << "https://gist.github.com/staticfloat/4f8248add3ed27ba250c/raw/0d180c11d4131a53c3361d71ba21aac3f0ef343e/Makefile.diff"
+    end
+    
     return patch_list
   end
 
