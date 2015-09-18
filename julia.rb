@@ -70,12 +70,14 @@ class Julia < Formula
   def patches
     patch_list = []
 
-    # First patch fixes hardcoded paths to deps in deps/Makefile
-    patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
-
-    # Second patch fixes suitesparse shenanigans
     if build.head?
-      patch_list << "https://gist.github.com/staticfloat/4f8248add3ed27ba250c/raw/0d180c11d4131a53c3361d71ba21aac3f0ef343e/Makefile.diff"
+      # This patch fixes hardcoded paths to deps in deps/Makefile
+      patch_list << "https://gist.githubusercontent.com/timxzl/acbe3404c4bdb30e1aa9/raw/6a612309ebaac7829e6c138a35e43ea0a49fa994/deps.Makefile.diff"
+      # Second patch fixes suitesparse shenanigans
+      patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
+    else
+      # This patch fixes hardcoded paths to deps in deps/Makefile, but it's for 0.3
+      patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
     end
     
     return patch_list
