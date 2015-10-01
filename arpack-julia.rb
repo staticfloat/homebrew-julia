@@ -3,7 +3,7 @@ require 'formula'
 class ArpackJulia < Formula
   homepage 'http://forge.scilab.org/index.php/p/arpack-ng'
   url 'https://github.com/opencollab/arpack-ng/archive/3.2.0.tar.gz'
-  sha1 'c1ac96663916a4e11618e9557636ba1bd1a7b556'
+  sha256 'ce6de85d8de6ae3a741fb9d6169c194ff1b2ffdab289f7af8e41d71bb7818cbb'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
