@@ -2,21 +2,11 @@ require 'formula'
 
 class GitNoDepthDownloadStrategy < GitDownloadStrategy
   # We need the .git folder for it's information, so we clone the whole thing
-  # We also want to avoid downloading all the submodules, so we clone those explicitly
   def stage
     dst = Dir.getwd
     @clone.cd do
       reset
       safe_system 'git', 'clone', '.', dst
-      # Get the deps/ submodules
-      if head?
-        deps = []
-      else
-        deps = ["Rmath", "libuv", "openlibm"]
-      end
-      deps.each do |subm|
-        safe_system 'git', 'clone', "deps/#{subm}", "#{dst}/deps/#{subm}"
-      end
     end
   end
 end
@@ -26,26 +16,19 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.3.11"
-    version "0.3.11"
-
-    # Need suite-sparse 4.2.X on stable branch
-    depends_on "staticfloat/julia/suite-sparse42-julia"
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.4.0"
+    version "0.4.0"
   end
 
   head do
     url 'https://github.com/JuliaLang/julia.git',
       :using => GitNoDepthDownloadStrategy, :shallow => false
     depends_on "libgit2"
-    depends_on "staticfloat/julia/suite-sparse-julia"
   end
 
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "f4254cb2cf956830037a6c5b0074eea5f26e775d3fc9c6505977b794cc569640" => :mountain_lion
-    sha256 "aaae51b6af16e37bf6fe558d5cc820e85fe36f26a453b18414ec1540c8c79205" => :mavericks
-    sha256 "7b83d8966da2be9ecf44a48b8c8f39a4c7db22982c609f25e6c1f6ca27dcc11c" => :yosemite
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
@@ -56,9 +39,10 @@ class Julia < Formula
   depends_on :fortran
   depends_on "mpfr"
 
-  # We have our custom formulae of arpack and openblas
+  # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
   depends_on "staticfloat/julia/openblas-julia"
+  depends_on "staticfloat/julia/suite-sparse-julia"
 
   # Need this as Julia's build process is quite messy with respect to env variables
   env :std
@@ -76,10 +60,8 @@ class Julia < Formula
       # Second patch fixes suitesparse shenanigans
       patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
     else
-      # This patch fixes hardcoded paths to deps in deps/Makefile, but it's for 0.3
       patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
     end
-    
     return patch_list
   end
 
