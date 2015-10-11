@@ -26,11 +26,11 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.3.11"
-    version "0.3.11"
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.4.0"
+    version "0.4.0"
 
-    # Need suite-sparse 4.2.X on stable branch
-    depends_on "staticfloat/julia/suite-sparse42-julia"
+    depends_on "libgit2"
+    depends_on "staticfloat/julia/suite-sparse-julia"
   end
 
   head do
@@ -79,7 +79,7 @@ class Julia < Formula
       # This patch fixes hardcoded paths to deps in deps/Makefile, but it's for 0.3
       patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
     end
-    
+
     return patch_list
   end
 
