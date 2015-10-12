@@ -32,8 +32,7 @@ class Julia < Formula
   end
 
   depends_on "staticfloat/julia/llvm33-julia"
-  depends_on "pcre" if not build.head?
-  depends_on "pcre2" if build.head?
+  depends_on "pcre2"
   depends_on "gmp"
   depends_on "fftw"
   depends_on :fortran
@@ -116,7 +115,7 @@ class Julia < Formula
     # Do the same for openblas, pcre, mpfr, and gmp
     ln_s "#{Formula['openblas-julia'].opt_lib}/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula['arpack-julia'].opt_lib}/libarpack.dylib", "usr/lib/"
-    ln_s "#{Formula['pcre'].lib}/libpcre.dylib", "usr/lib/"
+    ln_s "#{Formula['pcre2'].lib}/libpcre2-8.0.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
 
@@ -135,7 +134,7 @@ class Julia < Formula
     end
     rm "usr/lib/libopenblas.dylib"
     rm "usr/lib/libarpack.dylib"
-    rm "usr/lib/libpcre.dylib"
+    rm "usr/lib/libpcre2-8.0.dylib"
     rm "usr/lib/libmpfr.dylib"
     rm "usr/lib/libgmp.dylib"
 
