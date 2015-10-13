@@ -5,7 +5,7 @@ class Gmp4Julia < Formula
   # Track gcc infrastructure releases.
   url 'ftp://ftp.gmplib.org/pub/gmp-4.3.2/gmp-4.3.2.tar.bz2'
   mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/gmp-4.3.2.tar.bz2'
-  mirror 'http://mirror.anl.gov/pub/gnu/gmp/gmp-4.3.2.tar.bz2'
+  mirror 'http://mirrors.kernel.org/gnu/gmp/gmp-4.3.2.tar.bz2'
   sha1 'c011e8feaf1bb89158bd55eaabd7ef8fdd101a2c'
 
   bottle do
