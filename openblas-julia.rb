@@ -3,7 +3,8 @@ require 'formula'
 class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.15.tar.gz'
-  head "https://github.com/xianyi/OpenBLAS.git", :branch => "develop"
+  head 'https://github.com/xianyi/OpenBLAS.git', :branch => 'develop'
+  sha256 '73c40ace5978282224e5e122a41c8388c5a19e65a6f2329c2b7c0b61bacc9044'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
