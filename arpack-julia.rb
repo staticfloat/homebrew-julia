@@ -15,6 +15,7 @@ class ArpackJulia < Formula
   depends_on 'staticfloat/julia/openblas-julia'
 
   def install
+    system "./bootstrap"
     configure_args = ["--disable-dependency-tracking",
                       "--prefix=#{prefix}",
                       "--enable-shared",
