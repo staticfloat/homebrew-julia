@@ -14,6 +14,7 @@ class ArpackJulia < Formula
   depends_on :fortran
   depends_on 'staticfloat/julia/openblas-julia'
   depends_on 'autoconf' => :build
+  depends_on 'automake' => :build
 
   def install
     system "./bootstrap"
