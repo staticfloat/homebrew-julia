@@ -3,18 +3,12 @@ require 'formula'
 class Isl011Julia < Formula
   homepage 'http://freecode.com/projects/isl'
   # Track gcc infrastructure releases.
-  url 'http://isl.gforge.inria.fr/isl-0.11.1.tar.bz2'
-  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.11.1.tar.bz2'
-  sha1 'd7936929c3937e03f09b64c3c54e49422fa8ddb3'
+  url 'http://isl.gforge.inria.fr/isl-0.11.2.tar.bz2'
+  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/isl-0.11.2.tar.bz2'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 1
-    sha1 '9887c5b8388ffa65dbd12ed2d1e3cc4936225544' => :lion
-    sha1 'd6b2f3f0e616e945791506ead488d640bfc2927a' => :mavericks
-    sha1 '50a608cf43e181a99a1ed1c39b8b978314698d87' => :mountain_lion
-    sha1 '8f5bb617370255fc040afcfd772cf83ab3352313' => :yosemite
   end
 
   keg_only 'Conflicts with isl in main repository.'
