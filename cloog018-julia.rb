@@ -3,8 +3,9 @@ require 'formula'
 class Cloog018Julia < Formula
   homepage 'http://www.cloog.org/'
   # Track gcc infrastructure releases.
-  url 'http://www.bastoul.net/cloog/pages/download/count.php3?url=./cloog-0.18.4.tar.gz'
-  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.4.tar.gz'
+  url 'http://www.bastoul.net/cloog/pages/download/count.php3?url=./cloog-0.18.1.tar.gz'
+  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz'
+  sha256 '02500a4edd14875f94fe84cbeda4290425cb0c1c2474c6f75d75a303d64b4196'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
