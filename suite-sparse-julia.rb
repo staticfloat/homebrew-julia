@@ -2,6 +2,7 @@ require 'formula'
 class SuiteSparseJulia < Formula
   homepage 'http://www.cise.ufl.edu/research/sparse/SuiteSparse'
   url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.4.5.tar.gz'
+  sha256 '83f4b88657c7dc57681633e8ca6835ddb12c146bc51af77b6494972ed1ea8bc9'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
