@@ -3,18 +3,16 @@ require 'formula'
 class Cloog018Julia < Formula
   homepage 'http://www.cloog.org/'
   # Track gcc infrastructure releases.
-  url 'http://www.bastoul.net/cloog/pages/download/count.php3?url=./cloog-0.18.0.tar.gz'
-  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.0.tar.gz'
-  sha1 '85f620a26aabf6a934c44ca40a9799af0952f863'
+  url 'http://www.bastoul.net/cloog/pages/download/count.php3?url=./cloog-0.18.1.tar.gz'
+  mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/cloog-0.18.1.tar.gz'
+  sha256 '02500a4edd14875f94fe84cbeda4290425cb0c1c2474c6f75d75a303d64b4196'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 1
-    sha1 'ef93a3f89ec912781315fa206e2731dc2d65bae6' => :lion
-    sha1 'e2ee2363aa35d3e02e47b0f81a727dde031fac32' => :mavericks
-    sha1 '243b762581c65cb9414f9e7ac7d284d78301bcc2' => :mountain_lion
-    sha1 "fab85e4b7244f9ed7c92b0cbbde53cd75c99bfd0" => :yosemite
+    sha256 "a1e3c84d1ae82a1e49ae2443972d228de3cfbaef826f0803d2932caff09b4c11" => :mavericks
+    sha256 "1492ba002895f52ab8eb76b23cf722245b47b95ea201611789ae708a7eff084f" => :yosemite
+    sha256 "9f1b9c1b7cae97e88179b19c29e2d49b970ae9f5e8111235f89ecbd5e1811f0c" => :el_capitan
   end
 
   keg_only 'Conflicts with cloog in main repository.'
