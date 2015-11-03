@@ -15,6 +15,7 @@ class ArpackJulia < Formula
   depends_on 'staticfloat/julia/openblas-julia'
   depends_on 'autoconf' => :build
   depends_on 'automake' => :build
+  depends_on 'libtool' => :build
 
   def install
     system "./bootstrap"
