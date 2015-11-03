@@ -7,11 +7,13 @@ class SuiteSparseJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
+    sha256 "432986f1f8c4646a9b59a1505dc156eee79ed323f2a06b8a8b7be83d6d3be67a" => :mavericks
+    sha256 "226fc10718a7b7baa4de7a70e64cce10bb4d50a1d48cd621edc583cc3928e806" => :yosemite
+    sha256 "54bcd010eaf372435b2ce32542ad67d200879291c0c9bae9ab03a698dafcb286" => :el_capitan
   end
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
   depends_on "tbb" => :optional
-  depends_on "metis" => :optional
   depends_on "staticfloat/julia/openblas-julia"
 
   option "with-metis", "Compile in metis libraries"
