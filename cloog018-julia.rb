@@ -10,6 +10,9 @@ class Cloog018Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
+    sha256 "a1e3c84d1ae82a1e49ae2443972d228de3cfbaef826f0803d2932caff09b4c11" => :mavericks
+    sha256 "1492ba002895f52ab8eb76b23cf722245b47b95ea201611789ae708a7eff084f" => :yosemite
+    sha256 "9f1b9c1b7cae97e88179b19c29e2d49b970ae9f5e8111235f89ecbd5e1811f0c" => :el_capitan
   end
 
   keg_only 'Conflicts with cloog in main repository.'
