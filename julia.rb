@@ -57,12 +57,13 @@ class Julia < Formula
   def patches
     patch_list = []
 
+    # This patch ensures that suitesparse libraries are installed
+    patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
+
+    # This patch fixes hardcoded paths to deps in deps/Makefile, but has to be changed depending on the version of julia
     if build.head?
-      # This patch fixes hardcoded paths to deps in deps/Makefile
       patch_list << "https://gist.githubusercontent.com/timxzl/acbe3404c4bdb30e1aa9/raw/6a612309ebaac7829e6c138a35e43ea0a49fa994/deps.Makefile.diff"
     else
-      # This patch ensures that suitesparse libraries are installed
-      patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
       patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
     end
     return patch_list
