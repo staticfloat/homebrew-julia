@@ -23,7 +23,6 @@ class Julia < Formula
   head do
     url 'https://github.com/JuliaLang/julia.git',
       :using => GitNoDepthDownloadStrategy, :shallow => false
-    depends_on "libgit2"
   end
 
   # Remember to clear "revision" above when prepping for new bottles, if it exists
@@ -40,6 +39,7 @@ class Julia < Formula
   depends_on "fftw"
   depends_on :fortran
   depends_on "mpfr"
+  depends_on "libgit2"
 
   # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
