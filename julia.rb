@@ -33,7 +33,11 @@ class Julia < Formula
     sha256 "e1b44905b14191ed5b50ff117df4520f94cb4ed6707a4fad740a262f6bd55d9e" => :mavericks
   end
 
-  depends_on "staticfloat/julia/llvm33-julia"
+  if build.head?
+    depends_on "staticfloat/julia/llvm37-julia"
+  else
+    depends_on "staticfloat/julia/llvm33-julia"
+  end
   depends_on "pcre2"
   depends_on "gmp"
   depends_on "fftw"
@@ -83,7 +87,11 @@ class Julia < Formula
     end
 
     # Tell julia about our llc, since it's been named nonstandardly
-    build_opts << "LLVM_CONFIG=llvm-config-3.3"
+    if build.head?
+      build_opts << "LLVM_CONFIG=llvm-config-3.7.1"
+    else
+      build_opts << "LLVM_CONFIG=llvm-config-3.3"
+    end
 
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
