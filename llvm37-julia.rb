@@ -107,6 +107,14 @@ class Llvm37Julia < Formula
     end
   end
 
+  bottle do
+    root_url 'https://juliabottles.s3.amazonaws.com'
+    cellar :any
+    sha256 "5140b3239f0c957abdc73a11dcfc18b502f26ad7f1c91c899f3cbcec8a9c0268" => :mavericks
+    sha256 "a575807844eb387700cb55493f9c9dca6f053c2a54b96342677b7851db7bb26c" => :yosemite
+    sha256 "0683b9fdf80d759db1467e53063d44c8f02c165f44c7f4015559760a732e2d7a" => :el_capitan
+  end
+
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
 
   def patches
