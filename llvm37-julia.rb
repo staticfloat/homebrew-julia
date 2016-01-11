@@ -110,9 +110,10 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "5140b3239f0c957abdc73a11dcfc18b502f26ad7f1c91c899f3cbcec8a9c0268" => :mavericks
-    sha256 "a575807844eb387700cb55493f9c9dca6f053c2a54b96342677b7851db7bb26c" => :yosemite
-    sha256 "0683b9fdf80d759db1467e53063d44c8f02c165f44c7f4015559760a732e2d7a" => :el_capitan
+    revision 1
+    sha256 "20da3f806dfe48c742c3add9de64d652328b6cacc6664f4afc07d66d494830e9" => :mavericks
+    sha256 "836ed3323073e1acdf99eb7d2cce2dc9d4809f0c6849c9658b18ba56f98d371c" => :yosemite
+    sha256 "aa41f1fba5fa2006e70fab26e5589a7f19944df44aa4133bc82be1b0728ec01f" => :el_capitan
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
@@ -122,6 +123,7 @@ class Llvm37Julia < Formula
 
     # Backported patches to support julia's use of ORC jit
     patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/bc1c18ec2f3452de4b5cb714191478e02bb3847a/deps/llvm-3.7.1.patch"
+    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/bcfc9673357df5d4dbeef84bc51099ff743e3757/deps/llvm-3.7.1_2.patch"
 
     return patch_list
   end
