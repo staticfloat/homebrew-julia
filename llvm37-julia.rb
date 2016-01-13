@@ -110,10 +110,10 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 1
-    sha256 "20da3f806dfe48c742c3add9de64d652328b6cacc6664f4afc07d66d494830e9" => :mavericks
-    sha256 "836ed3323073e1acdf99eb7d2cce2dc9d4809f0c6849c9658b18ba56f98d371c" => :yosemite
-    sha256 "aa41f1fba5fa2006e70fab26e5589a7f19944df44aa4133bc82be1b0728ec01f" => :el_capitan
+    revision 2
+    sha256 "dbcdb4fc95eef4fdad80ffb94cc753a79ae08b747c4627a4b458579d1e56c4c5" => :mavericks
+    sha256 "8dfb7c375f278b05062d457d80966fc72514c8819e297ce6c92d38c7b0cab48d" => :yosemite
+    sha256 "b772ea89f0ec19a89684b790735ce341c5d817d0c04d5b78f7e7ebfcf31f8ca2" => :el_capitan
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
@@ -136,7 +136,7 @@ class Llvm37Julia < Formula
   option "with-all-targets", "Build all target backends"
   option "with-python", "Build lldb bindings against the python in PATH instead of system Python"
   option "without-shared", "Don't build LLVM as a shared library"
-  option "without-assertions", "Speeds up LLVM, but provides less debug information"
+  option "with-assertions", "Slows down LLVM, but provides more debug information"
 
   depends_on "gmp"
   depends_on "libffi" => :recommended
