@@ -16,8 +16,8 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.4.2"
-    version "0.4.2"
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.4.3"
+    version "0.4.3"
   end
 
   head do
@@ -28,9 +28,6 @@ class Julia < Formula
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "b1a0502640d86596e03c442dd2276b4d03304be80e49af47011977130e0df3d9" => :el_capitan
-    sha256 "6955a4687df35a0e076494604730bed3873bf225c0032d56c13551d93ae6c2d2" => :yosemite
-    sha256 "e1b44905b14191ed5b50ff117df4520f94cb4ed6707a4fad740a262f6bd55d9e" => :mavericks
   end
 
   if build.head?
