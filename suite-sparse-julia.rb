@@ -24,10 +24,10 @@ class SuiteSparseJulia < Formula
     makevars << "SPQR_CONFIG='-DNCAMD -DNPARTITION'"
     makevars << "CHOLMOD_CONFIG='-DNCAMD -DNPARTITION'"
 
-    system "make", "library", makevars
+    system "make", "library", *makevars
 
     lib.mkpath
     include.mkpath
-    system "make", "install", makevars
+    system "make", "install", *makevars
   end
 end
