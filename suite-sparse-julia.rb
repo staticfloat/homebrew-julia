@@ -14,34 +14,20 @@ class SuiteSparseJulia < Formula
   depends_on "tbb" => :optional
   depends_on "staticfloat/julia/openblas-julia"
 
-  option "with-metis", "Compile in metis libraries"
-
   def install
     # SuiteSparse doesn't like to build in parallel
     ENV.j1
 
-    inreplace 'SuiteSparse_config/SuiteSparse_config.mk' do |s|
-      # Put in the proper libraries
-      s.change_make_var! "  BLAS", "-lopenblas"
-      s.change_make_var! "  LAPACK", "$(BLAS)"
+    makevars = ["BLAS=-lopenblas", "LAPACK=-lopenblas"]
+    makevars << "INSTALL_LIB='#{lib}'"
+    makevars << "INSTALL_INCLUDE='#{include}'"
+    makevars << "SPQR_CONFIG='-DNCAMD -DNPARTITION'"
+    makevars << "CHOLMOD_CONFIG='-DNCAMD -DNPARTITION'"
 
-      if build.with? "metis"
-        s.remove_make_var! "METIS_PATH"
-        s.change_make_var! "METIS", Formula["metis"].lib + "libmetis.a"
-      end
-
-      # Installation
-      s.change_make_var! "INSTALL_LIB", lib
-      s.change_make_var! "INSTALL_INCLUDE", include
-
-      s.change_make_var! "SPQR_CONFIG", "-DNCAMD -DNPARTITION"
-      s.change_make_var! "CHOLMOD_CONFIG", "-DNCAMD -DNPARTITION"
-    end
-
-    system "make library"
+    system "make", "library", makevars
 
     lib.mkpath
     include.mkpath
-    system "make install"
+    system "make", "install", makevars
   end
 end
