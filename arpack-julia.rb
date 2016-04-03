@@ -3,7 +3,7 @@ require 'formula'
 class ArpackJulia < Formula
   homepage 'https://github.com/opencollab/arpack-ng'
   url 'https://github.com/opencollab/arpack-ng/archive/3.3.0.tar.gz'
-  sha256 'ad59811e7d79d50b8ba19fd908f92a3683d883597b2c7759fdcc38f6311fe5b3'i
+  sha256 'ad59811e7d79d50b8ba19fd908f92a3683d883597b2c7759fdcc38f6311fe5b3'
   revision 1
 
   bottle do
