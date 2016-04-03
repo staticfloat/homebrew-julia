@@ -1,8 +1,8 @@
 require 'formula'
 class SuiteSparseJulia < Formula
   homepage 'http://faculty.cse.tamu.edu/davis/suitesparse.html'
-  url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.5.1.tar.gz'
-  sha256 'ac4524b9f69c4f8c2652d720b146c92a414c1943f86d46df49b4ff8377ae8752'
+  url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.4.6.tar.gz'
+  sha256 '7f22509d87ada8506580d537efde79cf90e28e228355c18b8bf603aad1a2d7b6'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
