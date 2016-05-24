@@ -65,7 +65,7 @@ class Julia < Formula
 
     # This patch fixes hardcoded paths to deps in deps/Makefile, but has to be changed depending on the version of julia
     if build.head?
-      patch_list << "https://gist.githubusercontent.com/timxzl/acbe3404c4bdb30e1aa9/raw/6a612309ebaac7829e6c138a35e43ea0a49fa994/deps.Makefile.diff"
+      patch_list << "https://gist.githubusercontent.com/staticfloat/cfad1fe4f69e88ec5731e5f3fd91b946/raw/22a164a7cf7c7cf2a64a089d5bfa47e25292deb2/suitesparse.mk.diff"
     else
       patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
     end
