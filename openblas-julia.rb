@@ -2,17 +2,14 @@ require 'formula'
 
 class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
-  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.17.tar.gz'
+  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.18.tar.gz'
   head 'https://github.com/xianyi/OpenBLAS.git', :branch => 'develop'
   sha256 '0fe836dfee219ff4cadcc3567fb2223d9e0da5f60c7382711fb9e2c35ecf0dbf'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
-    sha256 "9688e22d55459194ff52c5d1a7638996d309f9611349a3dbcb56523dc50dcc1b" => :mavericks
-    sha256 "6ec4f344c233e9a068190d9463751da280456b8813d6fd0bad10765f3baa3c2e" => :yosemite
-    sha256 "20b584e87be5fef72f3c6e113f26be9094af4dcfd1cef7e0e7d8d7215e9c553a" => :el_capitan
     cellar :any
- end
+  end
 
   depends_on :fortran
 
