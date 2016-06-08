@@ -4,7 +4,7 @@ class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
   url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.18.tar.gz'
   head 'https://github.com/xianyi/OpenBLAS.git', :branch => 'develop'
-  sha256 '0fe836dfee219ff4cadcc3567fb2223d9e0da5f60c7382711fb9e2c35ecf0dbf'
+  sha256 '7d9f8d4ea4a65ab68088f3bb557f03a7ac9cb5036ef2ba30546c3a28774a4112'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
