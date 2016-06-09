@@ -13,6 +13,7 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
+  revision 1
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
@@ -28,10 +29,7 @@ class Julia < Formula
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "04714e24224ad4a168c8402c2d0c53d44f58aa6f6f9c03ed47928b735dc389c2" => :el_capitan
-    sha256 "79a19ebb6c54da45ae0c75cb587f357b535492380f3ec15fc237f89cc2160a9a" => :yosemite
-    sha256 "46684ab4dd7864f8b78c14ddda2017cf0c7673b05735fb6beda9d07c6943495f" => :mavericks
-  end
+ end
 
   if build.head?
     depends_on "staticfloat/julia/llvm37-julia"
