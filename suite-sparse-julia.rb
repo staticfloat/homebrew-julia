@@ -3,15 +3,15 @@ class SuiteSparseJulia < Formula
   homepage 'http://faculty.cse.tamu.edu/davis/suitesparse.html'
   url 'http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-4.4.6.tar.gz'
   sha256 '7f22509d87ada8506580d537efde79cf90e28e228355c18b8bf603aad1a2d7b6'
+  revision 1
 
   bottle do
-    revision 1
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any_skip_relocation
-    sha256 "b5d1c6cc44aa84ee3afdd2f53e0417a7822794e152a6a83b85616bbc7382aff4" => :mavericks
-    sha256 "40915d5410aa86defd31dc37da9052a7a63ce1cebfafdcde3efbea01fbf1c1f0" => :yosemite
-    sha256 "25445feb003d31eb437cafe5941f8e483f2ca4587d62647115ec62c4cffed608" => :el_capitan
-  end
+    sha256 "8ccda16edde2c8f67361c61404e39d08553feded0ae5a262525a19c0ba733f75" => :mavericks
+    sha256 "2adb96fa54c46cc9098c2a2a3c147be4495e9267caecaaf5358be2ba67e5075b" => :yosemite
+    sha256 "c13e552af6350f0ac838939342e9cb1872745df18c0199e2394e727131d4b9a5" => :el_capitan
+  end 
 
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
