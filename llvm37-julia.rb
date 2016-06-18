@@ -110,10 +110,7 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 3
-    sha256 "8e5be77ccaa41da69db76d4c752092d1db44ef53f27c35c6913f1e7355c8a0c9" => :mavericks
-    sha256 "2a4176d7f1d8294029da58d981b7b59cbb597b7f49fe4afc2a30ddda247ffa67" => :yosemite
-    sha256 "5a843ff699060dd452998763f1cb20c60e2148505568171eac4259b31822360b" => :el_capitan
+    revision 4
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
@@ -126,6 +123,8 @@ class Llvm37Julia < Formula
     patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/bcfc9673357df5d4dbeef84bc51099ff743e3757/deps/llvm-3.7.1_2.patch"
     # PR 14830
     patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/cf93d6fa9544995f1c402734894e99397167bf50/deps/llvm-3.7.1_3.patch"
+    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/59b253031af87f62e7d70a7d8848cdfd4a84288b/deps/patches/llvm-D14260.patch"
+    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/7ea3fb509fd02fae657490dd95c3cf5f903acb89/deps/patches/llvm-D21271-instcombine-tbaa-3.7.patch"
 
     return patch_list
   end
