@@ -186,8 +186,8 @@ class Julia < Formula
   end
 
   def post_install
-    # Change the permissions of lib/julia/sys.* so that build_sysimg.jl can edit them
-    Dir["#{lib}/julia/sys.*"].each do |file|
+    # Change the permissions of lib/julia/sys.{dylib,ji} so that build_sysimg.jl can edit them
+    Dir["#{lib}/julia/sys*.{dylib,ji}"].each do |file|
       chmod 0644, file
     end
   end
