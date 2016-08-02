@@ -6,14 +6,14 @@ class Gmp4Julia < Formula
   url 'ftp://ftp.gmplib.org/pub/gmp-4.3.2/gmp-4.3.2.tar.bz2'
   mirror 'ftp://gcc.gnu.org/pub/gcc/infrastructure/gmp-4.3.2.tar.bz2'
   mirror 'http://mirrors.kernel.org/gnu/gmp/gmp-4.3.2.tar.bz2'
-  sha1 'c011e8feaf1bb89158bd55eaabd7ef8fdd101a2c'
+  sha256 '936162c0312886c21581002b79932829aa048cfaf9937c6265aeaa14f1cd1775'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
     revision 1
-    sha1 '46f5b391f57012301da0ecab317989fb52ad31c4' => :mavericks
-    sha1 '92352c7657d48b844dabb0fdea91a49ce7f0b46f' => :yosemite
+    sha256 'afb3e45728caf001c23f61001b9ef99032c1cba6cf4282fe425e14e35ce7660a' => :mavericks
+    sha256 'ba0e659992293be8f28eb4b5c6f865ed8befb5f8be1b6ec3836fb79069e74dee' => :yosemite
     sha256 "bc28d363ecd584f878cf47f308cafb4bbfb491de64a1089f7e572846975c7493" => :el_capitan
   end
 
