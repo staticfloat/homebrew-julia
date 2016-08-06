@@ -6,31 +6,31 @@ class Llvm33Julia < Formula
 
   stable do
     url 'http://llvm.org/releases/3.3/llvm-3.3.src.tar.gz'
-    sha1 'c6c22d5593419e3cb47cbcf16d967640e5cce133'
+    sha256 '68766b1e70d05a25e2f502e997a3cb3937187a3296595cf6e0977d5cd6727578'
 
     resource 'clang' do
       url 'http://llvm.org/releases/3.3/cfe-3.3.src.tar.gz'
-      sha1 'ccd6dbf2cdb1189a028b70bcb8a22509c25c74c8'
+      sha256 'b1b55de4ab3a57d3e0331a83e0284610191c77d924e3446498d9113d08dfb996'
     end
 
     resource 'clang-tools-extra' do
       url 'http://llvm.org/releases/3.3/clang-tools-extra-3.3.src.tar.gz'
-      sha1 '6f7af9ba8014f7e286a02e4ae2e3f2017b8bfac2'
+      sha256 '728210c389dd03b8dd4d7a81c41a973c971d52c25b2f9b8996eb701ee8daf998'
     end
 
     resource 'compiler-rt' do
       url 'http://llvm.org/releases/3.3/compiler-rt-3.3.src.tar.gz'
-      sha1 '745386ec046e3e49742e1ecb6912c560ccd0a002'
+      sha256 '0e2f3180d6316e6c43f064fdd406c5c6515e682c5f31c57c28335b68c7525423'
     end
 
     resource 'polly' do
       url 'http://llvm.org/releases/3.3/polly-3.3.src.tar.gz'
-      sha1 'eb75f5674fedf77425d16c9c0caec04961f03e04'
+      sha256 '89e1f0b510a2cd02c4a0ed447bc68fb93229a7a9dbcd587c882596fc5a09c413'
     end
 
     resource 'libcxx' do
       url 'http://llvm.org/releases/3.3/libcxx-3.3.src.tar.gz'
-      sha1 '7bea00bc1031bf3bf6c248e57c1f4e0874c18c04'
+      sha256 'c403ed18d2992719c794cdd760dc87a948b62a7c2a07beb39eb984dfeb1679f1'
     end
   end
 
@@ -63,8 +63,8 @@ class Llvm33Julia < Formula
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
     revision 1
-    sha1 'c33c68a1f0381ddb8319788028fa731f126cb0cb' => :mavericks
-    sha1 "af38a85fcb27c729353fba07ef7821b59133ab66" => :yosemite
+    sha256 'f5183558e900b6ad10ae9bb42adb22efcc9a80f998039fca07ebc6f1ded6959c' => :mavericks
+    sha256 "3080eff112265626e3569453a9888f4615aef38f82da45b991576e45363ec59f" => :yosemite
     sha256 "2189721677158ecbc4ec04f570328b271d26689f754016ff548d3c9df4a8cddd" => :el_capitan
   end
 
@@ -84,7 +84,7 @@ class Llvm33Julia < Formula
 
     resource 'clang-unwind-patch' do
       url 'http://llvm.org/viewvc/llvm-project/cfe/trunk/lib/Headers/unwind.h?r1=172666&r2=189535&view=patch', :using => :nounzip
-      sha1 'b40f6dba4928add36945c50e5b89ca0988147cd2'
+      sha256 '3e54779e8764cd6c8c4547fbea23838d4af7f3da5eee214e361db4c13d715456'
     end
   end
 
@@ -294,6 +294,6 @@ index f0c542b..ec05ac3 100644
    # Get "4" out of 10.4 for later pieces in the makefile.
 -  DARWIN_MAJVERS := $(shell echo $(DARWIN_VERSION)| sed -E 's/10.([0-9]).*/\1/')
 +  DARWIN_MAJVERS := $(shell echo $(DARWIN_VERSION)| sed -E 's/10.([0-9]+).*/\1/')
- 
+
    LoadableModuleOptions := -Wl,-flat_namespace -Wl,-undefined,suppress
    SharedLinkOptions := -dynamiclib
