@@ -118,7 +118,7 @@ class Llvm37Julia < Formula
     patch_list = []
 
     # LLVM 3.7.1 patches
-    for patch_name in ["llvm-3.7.1", "llvm-3.7.1_2", "llvm-3.7.1_3", "llvm-3.8.0_bindir", "llvm-D14260", "llvm-nodllalias", "llvm-D21271-instcombine-tbaa-3.7", "llvm-win64-reloc-dwarf"]
+    for patch_name in ["llvm-3.7.1", "llvm-3.7.1_2", "llvm-3.7.1_3", "llvm-D14260", "llvm-nodllalias", "llvm-D21271-instcombine-tbaa-3.7"]
       patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/v0.5.0-rc2/deps/patches/#{patch_name}.patch"
     end
     return patch_list
