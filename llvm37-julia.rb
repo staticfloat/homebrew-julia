@@ -20,7 +20,7 @@ end
 class Llvm37Julia < Formula
   desc "The LLVM Compiler Infrastructure"
   homepage "http://llvm.org/"
-  revision 2
+  revision 3
 
   stable do
     url "http://llvm.org/releases/3.7.1/llvm-3.7.1.src.tar.xz"
@@ -110,8 +110,6 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    rebuild 4
-    sha256 "2d5901f5340f4524ef17750df31b638fae4a208e3d9c5103bb91b16ed4c51536" => :yosemite
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
