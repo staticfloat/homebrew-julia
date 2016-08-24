@@ -110,6 +110,8 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
+    rebuild 4
+    sha256 "2d5901f5340f4524ef17750df31b638fae4a208e3d9c5103bb91b16ed4c51536" => :yosemite
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
@@ -121,6 +123,10 @@ class Llvm37Julia < Formula
     for patch_name in ["llvm-3.7.1", "llvm-3.7.1_2", "llvm-3.7.1_3", "llvm-D14260", "llvm-nodllalias", "llvm-D21271-instcombine-tbaa-3.7"]
       patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/v0.5.0-rc2/deps/patches/#{patch_name}.patch"
     end
+
+    # Add Homebrew's llvm37 patch
+    patch_list << "https://gist.githubusercontent.com/staticfloat/a430de88fefffcf79d1a75d7b8362aab/raw/142ac6885a438eb5555ed38f1359193ebf588b7a/homebrew-llvm37.patch"
+
     return patch_list
   end
 
@@ -134,6 +140,7 @@ class Llvm37Julia < Formula
   option "without-shared", "Don't build LLVM as a shared library"
   option "with-assertions", "Slows down LLVM, but provides more debug information"
 
+  depends_on "gnu-sed" => :build
   depends_on "gmp"
   depends_on "libffi" => :recommended
   depends_on :python => :optional
@@ -145,7 +152,7 @@ class Llvm37Julia < Formula
 
   # version suffix
   def ver
-    "3.7.1"
+    "3.7"
   end
 
   # LLVM installs its own standard library which confuses stdlib checking.
@@ -156,6 +163,8 @@ class Llvm37Julia < Formula
   fails_with :llvm
 
   def install
+    # One of llvm makefiles relies on gnu sed behavior to generate CMake modules correctly
+    ENV.prepend_path "PATH", "#{Formula["gnu-sed"].opt_libexec}/gnubin"
     # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
 
@@ -181,11 +190,11 @@ class Llvm37Julia < Formula
 
     install_prefix = lib/"llvm-#{ver}"
 
-    args = [
-      "--prefix=#{install_prefix}",
-      "--enable-optimized",
-      "--disable-bindings",
-      "--with-gmp=#{Formula["gmp"].opt_prefix}",
+    args = %W[
+      --prefix=#{install_prefix}
+      --enable-optimized
+      --disable-bindings
+      --with-gmp=#{Formula["gmp"].opt_prefix}
     ]
 
     if build.with? "all-targets"
@@ -286,6 +295,9 @@ class Llvm37Julia < Formula
   end
 
   test do
+    # test for sed errors since some llvm makefiles assume that sed
+    # understands '\n' which is true for gnu sed and not for bsd sed.
+    assert_no_match /PATH\)n/, (lib/"llvm-3.7/share/llvm/cmake/LLVMConfig.cmake").read
     system "#{bin}/llvm-config-#{ver}", "--version"
   end
 end
