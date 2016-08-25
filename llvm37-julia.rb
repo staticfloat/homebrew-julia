@@ -20,7 +20,7 @@ end
 class Llvm37Julia < Formula
   desc "The LLVM Compiler Infrastructure"
   homepage "http://llvm.org/"
-  revision 1
+  revision 3
 
   stable do
     url "http://llvm.org/releases/3.7.1/llvm-3.7.1.src.tar.xz"
@@ -110,10 +110,9 @@ class Llvm37Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    revision 3
-    sha256 "8e5be77ccaa41da69db76d4c752092d1db44ef53f27c35c6913f1e7355c8a0c9" => :mavericks
-    sha256 "2a4176d7f1d8294029da58d981b7b59cbb597b7f49fe4afc2a30ddda247ffa67" => :yosemite
-    sha256 "5a843ff699060dd452998763f1cb20c60e2148505568171eac4259b31822360b" => :el_capitan
+    sha256 "64a396ee4133f9e5b911e88e2b4ba0d370a40894c2d65beb7bbf6016bee6fcd4" => :mavericks
+    sha256 "73661c5c2b221c71f50f26e1a520be9559f2fe088b3f8d3457ae4ad241cafba6" => :el_capitan
+    sha256 "cf4011885f555dbb9b3bf799dce19d35f3608d0c420b050bc0cb5dc1436298b2" => :yosemite
   end
 
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
@@ -121,11 +120,13 @@ class Llvm37Julia < Formula
   def patches
     patch_list = []
 
-    # Backported patches to support julia's use of ORC jit
-    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/bc1c18ec2f3452de4b5cb714191478e02bb3847a/deps/llvm-3.7.1.patch"
-    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/bcfc9673357df5d4dbeef84bc51099ff743e3757/deps/llvm-3.7.1_2.patch"
-    # PR 14830
-    patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/cf93d6fa9544995f1c402734894e99397167bf50/deps/llvm-3.7.1_3.patch"
+   # LLVM 3.7.1 patches
+    for patch_name in ["llvm-3.7.1", "llvm-3.7.1_2", "llvm-3.7.1_3", "llvm-D14260", "llvm-nodllalias", "llvm-D21271-instcombine-tbaa-3.7"]
+      patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/v0.5.0-rc2/deps/patches/#{patch_name}.patch"
+    end
+
+    # Add Homebrew's llvm37 patch
+    patch_list << "https://gist.githubusercontent.com/staticfloat/a430de88fefffcf79d1a75d7b8362aab/raw/142ac6885a438eb5555ed38f1359193ebf588b7a/homebrew-llvm37.patch"
 
     return patch_list
   end
@@ -140,6 +141,7 @@ class Llvm37Julia < Formula
   option "without-shared", "Don't build LLVM as a shared library"
   option "with-assertions", "Slows down LLVM, but provides more debug information"
 
+  depends_on "gnu-sed" => :build
   depends_on "gmp"
   depends_on "libffi" => :recommended
   depends_on :python => :optional
@@ -151,7 +153,7 @@ class Llvm37Julia < Formula
 
   # version suffix
   def ver
-    "3.7.1"
+    "3.7"
   end
 
   # LLVM installs its own standard library which confuses stdlib checking.
@@ -162,6 +164,8 @@ class Llvm37Julia < Formula
   fails_with :llvm
 
   def install
+    # One of llvm makefiles relies on gnu sed behavior to generate CMake modules correctly
+    ENV.prepend_path "PATH", "#{Formula["gnu-sed"].opt_libexec}/gnubin"
     # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
 
@@ -187,11 +191,11 @@ class Llvm37Julia < Formula
 
     install_prefix = lib/"llvm-#{ver}"
 
-    args = [
-      "--prefix=#{install_prefix}",
-      "--enable-optimized",
-      "--disable-bindings",
-      "--with-gmp=#{Formula["gmp"].opt_prefix}",
+    args = %W[
+      --prefix=#{install_prefix}
+      --enable-optimized
+      --disable-bindings
+      --with-gmp=#{Formula["gmp"].opt_prefix}
     ]
 
     if build.with? "all-targets"
@@ -237,6 +241,12 @@ class Llvm37Julia < Formula
       # include path as libc++ uses a custom build script, so just
       # symlink the needed header here.
       ln_s libcxxabi_buildpath/"include/cxxabi.h", libcxx_buildpath/"include"
+    end
+
+    if MacOS.version >= :el_capitan
+      inreplace "#{libcxx_buildpath}/include/string",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
     end
 
     # Putting libcxx in projects only ensures that headers are installed.
@@ -286,6 +296,9 @@ class Llvm37Julia < Formula
   end
 
   test do
+    # test for sed errors since some llvm makefiles assume that sed
+    # understands '\n' which is true for gnu sed and not for bsd sed.
+    assert_no_match /PATH\)n/, (lib/"llvm-3.7/share/llvm/cmake/LLVMConfig.cmake").read
     system "#{bin}/llvm-config-#{ver}", "--version"
   end
 end

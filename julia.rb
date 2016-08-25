@@ -87,9 +87,10 @@ class Julia < Formula
       build_opts << "FC=#{ENV['FC']}"
     end
 
-    # Tell julia about our llc, since it's been named nonstandardly
+    # Tell julia about our llvm-config, since it's been named nonstandardly
     if build.head?
-      build_opts << "LLVM_CONFIG=llvm-config-3.7.1"
+      build_opts << "LLVM_CONFIG=llvm-config-3.7"
+      ENV["CPPFLAGS"] += " -DUSE_ORCJIT "
     else
       build_opts << "LLVM_CONFIG=llvm-config-3.3"
     end
