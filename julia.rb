@@ -45,6 +45,7 @@ class Julia < Formula
   depends_on :fortran
   depends_on "mpfr"
   depends_on "libgit2"
+  depends_on "cmake" => :build
 
   # We have our custom formulae of arpack, openblas and suite-sparse
   depends_on "staticfloat/julia/arpack-julia"
