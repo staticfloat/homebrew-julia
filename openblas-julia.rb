@@ -2,16 +2,16 @@ require 'formula'
 
 class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
-  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.18.tar.gz'
+  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.19.tar.gz'
   head 'https://github.com/xianyi/OpenBLAS.git', :branch => 'develop'
-  sha256 '7d9f8d4ea4a65ab68088f3bb557f03a7ac9cb5036ef2ba30546c3a28774a4112'
+  sha256 '9c40b5e4970f27c5f6911cb0a28aa26b6c83f17418b69f8e5a116bb983ca8557'
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "0b14cfe94f91394a1721933f6a0ef16aa163baf092271ba688d588db1dbf145b" => :el_capitan
-    sha256 "9e0a659e4a9089e5c6f60e06afd079e6c13cf34392b1ee8978998a967a027790" => :yosemite
-    sha256 "134f088e4e8e9d31b8fc47714405b5085e118a7c048646f59b909ccf6a6b2f67" => :mavericks
+    sha256 "bacadc04c86395457632374877ec9f2cb5f189c311adc56a076b132d027200f8" => :mavericks
+    sha256 "c17d10efb51679f320ab52ce2300cca2dc027cb3405c5c6426608097070099e4" => :yosemite
+    sha256 "0df26a818ad0bdd19eec1a8f038776f26362e60bc6e75baac15158294c702ae9" => :el_capitan
   end
 
   depends_on :fortran

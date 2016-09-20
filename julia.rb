@@ -13,12 +13,11 @@ end
 
 class Julia < Formula
   homepage 'http://julialang.org'
-  revision 1
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.4.6"
-    version "0.4.6"
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.5.0"
+    version "0.5.0"
   end
 
   head do
@@ -29,16 +28,12 @@ class Julia < Formula
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "3ce5045fe9c59d745b4eedf545ea881b7449d4014c8324c57966891726f7fa0c" => :yosemite
-    sha256 "995a0039fa627c1bd3f5f297ed42e2a25b33288acfc24a3675c9f239b295c3d7" => :el_capitan
-    sha256 "9f665666d413f93cf9ec7c9578744646c386587e9288da4603b6b54effe06bee" => :mavericks
+    sha256 "ee6a3a3b4c0f8153067bb2b2b0c090da3d5ebda0faf2aeadadc5be8df0b6e052" => :mavericks
+    sha256 "0dae311b3b874d16f18d33ad7977934075772dccefc796e4fcfbd337bd9dbb41" => :yosemite
+    sha256 "7795e23cac3138fb1755905fb0065b3502a23ea74b5cdc9e9903525c3c0c284b" => :el_capitan
   end
 
-  if build.head?
-    depends_on "staticfloat/julia/llvm37-julia"
-  else
-    depends_on "staticfloat/julia/llvm33-julia"
-  end
+  depends_on "staticfloat/julia/llvm37-julia"
   depends_on "pcre2"
   depends_on "gmp"
   depends_on "fftw"
@@ -65,12 +60,8 @@ class Julia < Formula
     # This patch ensures that suitesparse libraries are installed
     patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
 
-    # This patch fixes hardcoded paths to deps in deps/Makefile, but has to be changed depending on the version of julia
-    if build.head?
-      patch_list << "https://gist.githubusercontent.com/staticfloat/cfad1fe4f69e88ec5731e5f3fd91b946/raw/22a164a7cf7c7cf2a64a089d5bfa47e25292deb2/suitesparse.mk.diff"
-    else
-      patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
-    end
+    # This patch fixes hardcoded paths to deps in deps/Makefile
+    patch_list << "https://gist.githubusercontent.com/staticfloat/cfad1fe4f69e88ec5731e5f3fd91b946/raw/22a164a7cf7c7cf2a64a089d5bfa47e25292deb2/suitesparse.mk.diff"
     return patch_list
   end
 
@@ -89,12 +80,8 @@ class Julia < Formula
     end
 
     # Tell julia about our llvm-config, since it's been named nonstandardly
-    if build.head?
-      build_opts << "LLVM_CONFIG=llvm-config-3.7"
-      ENV["CPPFLAGS"] += " -DUSE_ORCJIT "
-    else
-      build_opts << "LLVM_CONFIG=llvm-config-3.3"
-    end
+    build_opts << "LLVM_CONFIG=llvm-config-3.7"
+    ENV["CPPFLAGS"] += " -DUSE_ORCJIT "
 
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
