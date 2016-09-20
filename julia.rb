@@ -58,7 +58,7 @@ class Julia < Formula
     patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
 
     # This patch fixes hardcoded paths to deps in deps/Makefile
-    patch_list << "https://gist.github.com/staticfloat/3806093/raw/cb34c7262b9130f0e9e07641a66fccaa0d08b5d2/deps.Makefile.diff"
+    patch_list << "https://gist.githubusercontent.com/staticfloat/cfad1fe4f69e88ec5731e5f3fd91b946/raw/22a164a7cf7c7cf2a64a089d5bfa47e25292deb2/suitesparse.mk.diff"
     return patch_list
   end
 
