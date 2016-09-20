@@ -28,6 +28,9 @@ class Julia < Formula
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
     root_url "https://juliabottles.s3.amazonaws.com"
+    sha256 "ee6a3a3b4c0f8153067bb2b2b0c090da3d5ebda0faf2aeadadc5be8df0b6e052" => :mavericks
+    sha256 "0dae311b3b874d16f18d33ad7977934075772dccefc796e4fcfbd337bd9dbb41" => :yosemite
+    sha256 "7795e23cac3138fb1755905fb0065b3502a23ea74b5cdc9e9903525c3c0c284b" => :el_capitan
   end
 
   depends_on "staticfloat/julia/llvm37-julia"
