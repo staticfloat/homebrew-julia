@@ -4,14 +4,14 @@ class ArpackJulia < Formula
   homepage 'https://github.com/opencollab/arpack-ng'
   url 'https://github.com/opencollab/arpack-ng/archive/3.3.0.tar.gz'
   sha256 'ad59811e7d79d50b8ba19fd908f92a3683d883597b2c7759fdcc38f6311fe5b3'
-  revision 3
+  revision 4
 
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "2d79d6c92ece1e1034a0502add1e4e0d6495a4ea54776ff0200ee6d9a4a73411" => :mavericks
-    sha256 "ea2f58568a8b892b188663f129bc21468aa3332d2921c5b5f8cc179a63e9134c" => :yosemite
-    sha256 "b4a6f5cc1215e5ed622857e795f20a7a72373b0ade585281a2725de2cc953373" => :el_capitan
+    sha256 "78e9679556e7f46e8b5c2a23afeb82d50c199e5007123a11da08b88e0ddeac67" => :mavericks
+    sha256 "a4658f6e86a44edf45f36bca6ff497e943fa366a5203a00da7130edec62f9237" => :yosemite
+    sha256 "d8296a483d095c17d594aae11fab62f2a8d50d95697b91df82a7bcfb61bc013a" => :el_capitan
   end
 
   keg_only 'Conflicts with arpack in homebrew-science.'
