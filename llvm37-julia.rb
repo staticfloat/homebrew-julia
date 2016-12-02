@@ -107,11 +107,6 @@ class Llvm37Julia < Formula
     end
   end
 
-  bottle do
-    root_url 'https://juliabottles.s3.amazonaws.com'
-    cellar :any
-  end
-
   keg_only 'Conflicts with llvm37 in homebrew-versions.'
 
   def patches

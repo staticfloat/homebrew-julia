@@ -5,11 +5,6 @@ class SuiteSparseJulia < Formula
   sha256 '7f22509d87ada8506580d537efde79cf90e28e228355c18b8bf603aad1a2d7b6'
   revision 2
 
-  bottle do
-    root_url 'https://juliabottles.s3.amazonaws.com'
-    cellar :any_skip_relocation
-  end 
-
   keg_only 'Conflicts with suite-sparse in homebrew-science.'
 
   depends_on "tbb" => :optional
