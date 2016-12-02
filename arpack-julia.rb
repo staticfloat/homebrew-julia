@@ -9,9 +9,6 @@ class ArpackJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "78e9679556e7f46e8b5c2a23afeb82d50c199e5007123a11da08b88e0ddeac67" => :mavericks
-    sha256 "a4658f6e86a44edf45f36bca6ff497e943fa366a5203a00da7130edec62f9237" => :yosemite
-    sha256 "d8296a483d095c17d594aae11fab62f2a8d50d95697b91df82a7bcfb61bc013a" => :el_capitan
   end
 
   keg_only 'Conflicts with arpack in homebrew-science.'
