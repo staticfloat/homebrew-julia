@@ -9,9 +9,11 @@ class OpenblasJulia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "bacadc04c86395457632374877ec9f2cb5f189c311adc56a076b132d027200f8" => :mavericks
-    sha256 "c17d10efb51679f320ab52ce2300cca2dc027cb3405c5c6426608097070099e4" => :yosemite
-    sha256 "0df26a818ad0bdd19eec1a8f038776f26362e60bc6e75baac15158294c702ae9" => :el_capitan
+    rebuild 1
+    sha256 "8660959f1b5c4907b26ad719f22a6946983e6845109a056c5c6cc15d4e96785e" => :mavericks
+    sha256 "eac5cd4f0bd509f58faca8006910ab0daa302cafcc72813a306b634d23f52539" => :el_capitan
+    sha256 "607948b2c706b9e4d4926f2a5a90b69bf25edbe8078b26905d12730a87a81bce" => :yosemite
+    sha256 "3c0bd462ac422352318462bcb679f4d465a399f62815fecad5f152a8648fe99c" => :sierra
   end
 
   depends_on :fortran
