@@ -116,7 +116,7 @@ class Llvm39Julia < Formula
   def patches
     patch_list = []
 
-    for patch_name in ["PR22923", "arm-fix-prel31", "D25865-cmakeshlib", "3.9.0_threads", "3.9.0_win64-reloc-dwarf", "3.9.0_D27296-libssp", "D27609-AArch64-UABS_G3", "D27629-AArch64-large_model", "D9168_argument_alignment", "D23597_sdag_names", "D24300_ptx_intrinsics"]
+    for patch_name in ["PR22923", "arm-fix-prel31", "D25865-cmakeshlib", "3.9.0_win64-reloc-dwarf", "3.9.0_D27296-libssp", "D27609-AArch64-UABS_G3", "D27629-AArch64-large_model", "D9168_argument_alignment", "D23597_sdag_names", "D24300_ptx_intrinsics"]
       patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/51b6b06fb42b19d4204358ef0b216da2bf561502/deps/patches/llvm-#{patch_name}.patch"
     end
     return patch_list
