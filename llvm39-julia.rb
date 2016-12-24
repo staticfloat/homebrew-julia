@@ -121,7 +121,7 @@ class Llvm39Julia < Formula
     sha256 "f7fe9e8c1fdfb20510e38c34c3d3ad2c70e6bf3f95448b86fa91d3eebc31d78b" => :el_capitan
     sha256 "5b7787e5659cbe20e3f09d264455a1b8cdd60cb935641399fb117998e0b3352f" => :sierra
   end
-  
+
   def patches
     patch_list = []
 
