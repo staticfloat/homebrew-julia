@@ -75,6 +75,7 @@ class Julia < Formula
     # Build up list of build options
     build_opts = ["prefix=#{prefix}"]
     build_opts << "USE_BLAS64=0"
+    build_opts << "TAGGED_RELEASE_BANNER=\"homebrew-julia release\""
 
     # Tell julia about our gfortran
     # (this enables use of gfortran-4.7 from the tap homebrew-dupes/gcc.rb)
