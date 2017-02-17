@@ -62,9 +62,6 @@ class Julia < Formula
 
     # This patch ensures that suitesparse libraries are installed
     patch_list << "https://gist.githubusercontent.com/timxzl/c6f474fa387382267723/raw/2ecb0270d83f0a167358ff2a396cd6004e1b02a0/Makefile.diff"
-
-    # This patch fixes hardcoded paths to deps in deps/Makefile
-    patch_list << "https://gist.githubusercontent.com/staticfloat/cfad1fe4f69e88ec5731e5f3fd91b946/raw/22a164a7cf7c7cf2a64a089d5bfa47e25292deb2/suitesparse.mk.diff"
     return patch_list
   end
 
@@ -84,7 +81,11 @@ class Julia < Formula
 
     # Tell julia about our llvm-config, since it's been named nonstandardly
     build_opts << "LLVM_CONFIG=llvm-config-3.7"
+    build_opts << "LLVM_VER=3.7.1"
     ENV["CPPFLAGS"] += " -DUSE_ORCJIT "
+
+    # Tell julia where the default software base is, mostly for suitesparse
+    build_opts << "LOCALBASE=#{prefix}"
 
     # Make sure we have space to muck around with RPATHS
     ENV['LDFLAGS'] += " -headerpad_max_install_names"
