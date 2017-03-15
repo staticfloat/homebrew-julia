@@ -125,6 +125,7 @@ class Julia < Formula
     ln_s "#{Formula['pcre2'].lib}/libpcre2-8.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
+    ln_s "#{Formula['libgit2'].lib}/libgit2.dylib", "usr/lib/"
 
     # make both release and debug
     build_opts << "release"
@@ -136,14 +137,15 @@ class Julia < Formula
     build_opts.pop
 
     # Remove the fftw symlinks again, so we don't have conflicts when installing julia
-    ['', 'f', '_threads', 'f_threads'].each do |ext|
-      rm "usr/lib/libfftw3#{ext}.dylib"
-    end
-    rm "usr/lib/libopenblas.dylib"
-    rm "usr/lib/libarpack.dylib"
-    rm "usr/lib/libpcre2-8.dylib"
-    rm "usr/lib/libmpfr.dylib"
-    rm "usr/lib/libgmp.dylib"
+    #['', 'f', '_threads', 'f_threads'].each do |ext|
+    #  rm "usr/lib/libfftw3#{ext}.dylib"
+    #end
+    #rm "usr/lib/libopenblas.dylib"
+    #rm "usr/lib/libarpack.dylib"
+    #rm "usr/lib/libpcre2-8.dylib"
+    #rm "usr/lib/libmpfr.dylib"
+    #rm "usr/lib/libgmp.dylib"
+    #rm "usr/lib/libgit2.dylib"
 
     # Install!
     build_opts << "install"
