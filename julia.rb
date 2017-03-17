@@ -17,7 +17,7 @@ class Julia < Formula
   stable do
     url 'https://github.com/JuliaLang/julia.git',
       :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.5.0"
-    version "0.5.0"
+    version "0.5.1"
   end
 
   head do
@@ -27,12 +27,7 @@ class Julia < Formula
 
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
-    rebuild 1
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "2c84a32f9643c4e1fb6f595dd8a8efc27c65c4099c57de54e85d9241cba5c909" => :yosemite
-    sha256 "8deb7c38c66d1375c4c35d31937375d7dc2898023f02ef01e71620fb86197b73" => :el_capitan
-    sha256 "1012570911683472f74b9de42e788f599075d03d0c3b21644d37f2d07d044ff8" => :sierra
-    sha256 "457000821f25bb58b0bbc035f0660d92dd9450a0159215222a1dced702aa42c4" => :mavericks
   end
 
   depends_on "staticfloat/julia/llvm37-julia"
@@ -129,36 +124,17 @@ class Julia < Formula
 
     # make both release and debug
     build_opts << "release"
-    system "make", *build_opts
-    build_opts.pop
-
     build_opts << "debug"
     system "make", *build_opts
     build_opts.pop
-
-    # Remove the fftw symlinks again, so we don't have conflicts when installing julia
-    #['', 'f', '_threads', 'f_threads'].each do |ext|
-    #  rm "usr/lib/libfftw3#{ext}.dylib"
-    #end
-    #rm "usr/lib/libopenblas.dylib"
-    #rm "usr/lib/libarpack.dylib"
-    #rm "usr/lib/libpcre2-8.dylib"
-    #rm "usr/lib/libmpfr.dylib"
-    #rm "usr/lib/libgmp.dylib"
-    #rm "usr/lib/libgit2.dylib"
+    build_opts.pop
 
     # Install!
     build_opts << "install"
     system "make", *build_opts
 
-    # Add in rpaths into the julia executables so that they can find the homebrew lib folder,
-    # as well as any keg-only libraries that they need.
+    # We add in some custom RPATHs to julia
     rpaths = []
-
-    # Add in each formula to the rpaths list
-    ['arpack-julia', 'suite-sparse-julia', 'openblas-julia'].each do |formula|
-      rpaths << "#{Formula[formula].opt_lib}"
-    end
 
     # Add in generic Homebrew and system paths
     rpaths << "#{HOMEBREW_PREFIX}/lib"
@@ -176,9 +152,9 @@ class Julia < Formula
     end
 
     # copy over suite-sparse shlibs manually, pending discussion in https://github.com/JuliaLang/julia/commit/077c63a7164e270970de16863c7575c808a0c756#commitcomment-4128441
-    ["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
-      (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
-    end
+    #["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
+    #  (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
+    #end
   end
 
   def post_install
