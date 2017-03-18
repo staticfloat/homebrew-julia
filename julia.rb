@@ -16,8 +16,8 @@ class Julia < Formula
 
   stable do
     url 'https://github.com/JuliaLang/julia.git',
-      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.5.0"
-    version "0.5.0"
+      :using => GitNoDepthDownloadStrategy, :shallow => false, :tag => "v0.5.1"
+    version "0.5.1"
   end
 
   head do
@@ -27,12 +27,10 @@ class Julia < Formula
 
   # Remember to clear "revision" above when prepping for new bottles, if it exists
   bottle do
-    rebuild 1
     root_url "https://juliabottles.s3.amazonaws.com"
-    sha256 "2c84a32f9643c4e1fb6f595dd8a8efc27c65c4099c57de54e85d9241cba5c909" => :yosemite
-    sha256 "8deb7c38c66d1375c4c35d31937375d7dc2898023f02ef01e71620fb86197b73" => :el_capitan
-    sha256 "1012570911683472f74b9de42e788f599075d03d0c3b21644d37f2d07d044ff8" => :sierra
-    sha256 "457000821f25bb58b0bbc035f0660d92dd9450a0159215222a1dced702aa42c4" => :mavericks
+    sha256 "8cae718dcd22ad8db08e138ea334f94afcfb565584c5ddb6337bee8d5c7a0562" => :yosemite
+    sha256 "27e299747972fa2e93eca2d82314339fd3db75cbf76c9fd31bf1e472102a3f63" => :sierra
+    sha256 "a58c5edf56c1136b326a5f06bdf77217e93f012c2d9dbabafe2311bf0e2a8e3c" => :el_capitan
   end
 
   depends_on "staticfloat/julia/llvm37-julia"
@@ -122,43 +120,32 @@ class Julia < Formula
     # Do the same for openblas, pcre, mpfr, and gmp
     ln_s "#{Formula['openblas-julia'].opt_lib}/libopenblas.dylib", "usr/lib/"
     ln_s "#{Formula['arpack-julia'].opt_lib}/libarpack.dylib", "usr/lib/"
-    ln_s "#{Formula['pcre2'].lib}/libpcre2-8.0.dylib", "usr/lib/"
+    ln_s "#{Formula['pcre2'].lib}/libpcre2-8.dylib", "usr/lib/"
     ln_s "#{Formula['mpfr'].lib}/libmpfr.dylib", "usr/lib/"
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
+    ln_s "#{Formula['libgit2'].lib}/libgit2.dylib", "usr/lib/"
 
-    # make both release and debug
     build_opts << "release"
-    system "make", *build_opts
-    build_opts.pop
-
     build_opts << "debug"
     system "make", *build_opts
     build_opts.pop
-
-    # Remove the fftw symlinks again, so we don't have conflicts when installing julia
-    ['', 'f', '_threads', 'f_threads'].each do |ext|
-      rm "usr/lib/libfftw3#{ext}.dylib"
-    end
-    rm "usr/lib/libopenblas.dylib"
-    rm "usr/lib/libarpack.dylib"
-    rm "usr/lib/libpcre2-8.0.dylib"
-    rm "usr/lib/libmpfr.dylib"
-    rm "usr/lib/libgmp.dylib"
+    build_opts.pop
 
     # Install!
     build_opts << "install"
     system "make", *build_opts
+  end
 
-    # Add in rpaths into the julia executables so that they can find the homebrew lib folder,
-    # as well as any keg-only libraries that they need.
+  def post_install
+    # We add in some custom RPATHs to julia
     rpaths = []
 
-    # Add in each formula to the rpaths list
+    # Add in each key-only formula to the rpaths list
     ['arpack-julia', 'suite-sparse-julia', 'openblas-julia'].each do |formula|
       rpaths << "#{Formula[formula].opt_lib}"
     end
 
-    # Add in generic Homebrew and system paths
+    # Add in generic Homebrew and system paths, as it might not be standard system paths
     rpaths << "#{HOMEBREW_PREFIX}/lib"
 
     # Only add this in if we're < 10.8, because after that libxstub makes our lives miserable
@@ -169,17 +156,12 @@ class Julia < Formula
     # Add those rpaths to the binaries
     rpaths.each do |rpath|
       Dir["#{bin}/julia*"].each do |file|
+        chmod 0755, file
         quiet_system "install_name_tool", "-add_rpath", rpath, file
+        chmod 0555, file
       end
     end
 
-    # copy over suite-sparse shlibs manually, pending discussion in https://github.com/JuliaLang/julia/commit/077c63a7164e270970de16863c7575c808a0c756#commitcomment-4128441
-    ["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
-      (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
-    end
-  end
-
-  def post_install
     # Change the permissions of lib/julia/sys.{dylib,ji} so that build_sysimg.jl can edit them
     Dir["#{lib}/julia/sys*.{dylib,ji}"].each do |file|
       chmod 0644, file
