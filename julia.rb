@@ -122,7 +122,6 @@ class Julia < Formula
     ln_s "#{Formula['gmp'].lib}/libgmp.dylib", "usr/lib/"
     ln_s "#{Formula['libgit2'].lib}/libgit2.dylib", "usr/lib/"
 
-    # make both release and debug
     build_opts << "release"
     build_opts << "debug"
     system "make", *build_opts
@@ -132,11 +131,18 @@ class Julia < Formula
     # Install!
     build_opts << "install"
     system "make", *build_opts
+  end
 
+  def post_install
     # We add in some custom RPATHs to julia
     rpaths = []
 
-    # Add in generic Homebrew and system paths
+    # Add in each key-only formula to the rpaths list
+    ['arpack-julia', 'suite-sparse-julia', 'openblas-julia'].each do |formula|
+      rpaths << "#{Formula[formula].opt_lib}"
+    end
+
+    # Add in generic Homebrew and system paths, as it might not be standard system paths
     rpaths << "#{HOMEBREW_PREFIX}/lib"
 
     # Only add this in if we're < 10.8, because after that libxstub makes our lives miserable
@@ -147,17 +153,12 @@ class Julia < Formula
     # Add those rpaths to the binaries
     rpaths.each do |rpath|
       Dir["#{bin}/julia*"].each do |file|
+        chmod 0755, file
         quiet_system "install_name_tool", "-add_rpath", rpath, file
+        chmod 0555, file
       end
     end
 
-    # copy over suite-sparse shlibs manually, pending discussion in https://github.com/JuliaLang/julia/commit/077c63a7164e270970de16863c7575c808a0c756#commitcomment-4128441
-    #["spqr", "umfpack", "colamd", "cholmod", "amd", "suitesparse_wrapper"].each do |f|
-    #  (lib + 'julia/').install "usr/lib/lib#{f}.dylib"
-    #end
-  end
-
-  def post_install
     # Change the permissions of lib/julia/sys.{dylib,ji} so that build_sysimg.jl can edit them
     Dir["#{lib}/julia/sys*.{dylib,ji}"].each do |file|
       chmod 0644, file
