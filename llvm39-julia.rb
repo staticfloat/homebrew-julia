@@ -124,9 +124,33 @@ class Llvm39Julia < Formula
 
   def patches
     patch_list = []
-
-    for patch_name in ["PR22923", "arm-fix-prel31", "D25865-cmakeshlib", "3.9.0_win64-reloc-dwarf", "3.9.0_D27296-libssp", "D27609-AArch64-UABS_G3", "D27629-AArch64-large_model", "D9168_argument_alignment", "D23597_sdag_names", "D24300_ptx_intrinsics"]
-      patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/51b6b06fb42b19d4204358ef0b216da2bf561502/deps/patches/llvm-#{patch_name}.patch"
+    for patch_name in ["PR22923",
+                       "arm-fix-prel31",
+                       "D25865-cmakeshlib",
+                       "3.9.0_threads",
+                       "3.9.0_win64-reloc-dwarf",
+                       "3.9.0_D27296-libssp",
+                       "D27609-AArch64-UABS_G3",
+                       "D27629-AArch64-large_model",
+                       "D9168_argument_alignment",
+                       "D23597_sdag_names",
+                       "D24300_ptx_intrinsics",
+                       "D27389",
+                       "D27397",
+                       "D28009",
+                       "D28215_FreeBSD_shlib",
+                       "D28221-avx512",
+                       "PR276266",
+                       "PR278088",
+                       "PR277939",
+                       "PR278321",
+                       "PR278923",
+                       "D28759-loopclearance",
+                       "D28786-callclearance",
+                       "rL293230-icc17-cmake",
+                       "D32593",
+                       "D33179"]
+      patch_list << "https://raw.githubusercontent.com/JuliaLang/julia/9e3318c9840e7a9e387582ba861408cefe5a4f75/deps/patches/llvm-#{patch_name}.patch"
     end
     return patch_list
   end
