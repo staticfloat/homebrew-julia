@@ -54,6 +54,10 @@ class Llvm39Julia < Formula
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
+    sha256 "3ac3290a24931a6ddff686d8d695e4436920d008b49677473e739bfd4c4badbf" => :mavericks
+    sha256 "29a4b522e4ec3e4a30c3446ae801d288939cd37e3ab227c55c1e2bf13a8651c2" => :yosemite
+    sha256 "95ff13a6a74d39aae4392f4e6e527c70d8dad8422177538e5365a98fae1c0278" => :el_capitan
+    sha256 "1a63528a2050471cd7b4eddb2e69eb0b8cb8b30bfa74a45954a81485e8eec2c5" => :sierra
   end
 
   def patches
