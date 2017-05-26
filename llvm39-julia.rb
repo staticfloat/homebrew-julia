@@ -52,11 +52,6 @@ class Llvm39Julia < Formula
       sha256 "0b0bc73264d7ab77d384f8a7498729e3c4da8ffee00e1c85ad02a2f85e91f0e6"
     end
 
-    resource "lld" do
-      url "http://llvm.org/releases/3.9.1/lld-3.9.1.src.tar.xz"
-      sha256 "48e128fabb2ddaee64ecb8935f7ac315b6e68106bc48aeaf655d179c65d87f34"
-    end
-
     resource "lldb" do
       url "http://llvm.org/releases/3.9.1/lldb-3.9.1.src.tar.xz"
       sha256 "7e3311b2a1f80f4d3426e09f9459d079cab4d698258667e50a46dccbaaa460fc"
@@ -94,10 +89,6 @@ class Llvm39Julia < Formula
 
     resource "libunwind" do
       url "http://llvm.org/git/libunwind.git"
-    end
-
-    resource "lld" do
-      url "http://llvm.org/git/lld.git"
     end
 
     resource "lldb" do
@@ -205,7 +196,6 @@ class Llvm39Julia < Formula
     (buildpath/"projects/openmp").install resource("openmp")
     (buildpath/"projects/libcxx").install resource("libcxx") if build_libcxx?
     (buildpath/"projects/libunwind").install resource("libunwind")
-    (buildpath/"tools/lld").install resource("lld")
     (buildpath/"tools/polly").install resource("polly")
 
     if build.with? "lldb"
