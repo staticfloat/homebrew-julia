@@ -25,21 +25,6 @@ class Llvm39Julia < Formula
     url "http://llvm.org/releases/3.9.1/llvm-3.9.1.src.tar.xz"
     sha256 "1fd90354b9cf19232e8f168faf2220e79be555df3aa743242700879e8fd329ee"
 
-    resource "clang" do
-      url "http://llvm.org/releases/3.9.1/cfe-3.9.1.src.tar.xz"
-      sha256 "e6c4cebb96dee827fa0470af313dff265af391cb6da8d429842ef208c8f25e63"
-    end
-
-    resource "clang-extra-tools" do
-      url "http://llvm.org/releases/3.9.1/clang-tools-extra-3.9.1.src.tar.xz"
-      sha256 "29a5b65bdeff7767782d4427c7c64d54c3a8684bc6b217b74a70e575e4813635"
-    end
-
-    resource "compiler-rt" do
-      url "http://llvm.org/releases/3.9.1/compiler-rt-3.9.1.src.tar.xz"
-      sha256 "d30967b1a5fa51a2503474aacc913e69fd05ae862d37bf310088955bdb13ec99"
-    end
-
     # Only required to build & run Compiler-RT tests on macOS, optional otherwise.
     # http://clang.llvm.org/get_started.html
     resource "libcxx" do
@@ -51,42 +36,10 @@ class Llvm39Julia < Formula
       url "http://llvm.org/releases/3.9.1/libunwind-3.9.1.src.tar.xz"
       sha256 "0b0bc73264d7ab77d384f8a7498729e3c4da8ffee00e1c85ad02a2f85e91f0e6"
     end
-
-    resource "lld" do
-      url "http://llvm.org/releases/3.9.1/lld-3.9.1.src.tar.xz"
-      sha256 "48e128fabb2ddaee64ecb8935f7ac315b6e68106bc48aeaf655d179c65d87f34"
-    end
-
-    resource "lldb" do
-      url "http://llvm.org/releases/3.9.1/lldb-3.9.1.src.tar.xz"
-      sha256 "7e3311b2a1f80f4d3426e09f9459d079cab4d698258667e50a46dccbaaa460fc"
-    end
-
-    resource "openmp" do
-      url "http://llvm.org/releases/3.9.1/openmp-3.9.1.src.tar.xz"
-      sha256 "d23b324e422c0d5f3d64bae5f550ff1132c37a070e43c7ca93991676c86c7766"
-    end
-
-    resource "polly" do
-      url "http://llvm.org/releases/3.9.1/polly-3.9.1.src.tar.xz"
-      sha256 "9ba5e61fc7bf8c7435f64e2629e0810c9b1d1b03aa5b5605b780d0e177b4cb46"
-    end
   end
 
   head do
     url "http://llvm.org/git/llvm.git"
-
-    resource "clang" do
-      url "http://llvm.org/git/clang.git"
-    end
-
-    resource "clang-extra-tools" do
-      url "http://llvm.org/git/clang-tools-extra.git"
-    end
-
-    resource "compiler-rt" do
-      url "http://llvm.org/git/compiler-rt.git"
-    end
 
     resource "libcxx" do
       url "http://llvm.org/git/libcxx.git"
@@ -95,31 +48,16 @@ class Llvm39Julia < Formula
     resource "libunwind" do
       url "http://llvm.org/git/libunwind.git"
     end
-
-    resource "lld" do
-      url "http://llvm.org/git/lld.git"
-    end
-
-    resource "lldb" do
-      url "http://llvm.org/git/lldb.git"
-    end
-
-    resource "openmp" do
-      url "http://llvm.org/git/openmp.git"
-    end
-
-    resource "polly" do
-      url "http://llvm.org/git/polly.git"
-    end
   end
 
+  revision 1
   bottle do
     root_url 'https://juliabottles.s3.amazonaws.com'
     cellar :any
-    sha256 "7ed132633a51174f5ff2b6e9df4710ba199634fe95ccea0aeebfe330cd51bcde" => :mavericks
-    sha256 "b559e788557d816c75bea8a8f01f1636e418a71385ea6956933b9805fd755422" => :yosemite
-    sha256 "f7fe9e8c1fdfb20510e38c34c3d3ad2c70e6bf3f95448b86fa91d3eebc31d78b" => :el_capitan
-    sha256 "5b7787e5659cbe20e3f09d264455a1b8cdd60cb935641399fb117998e0b3352f" => :sierra
+    sha256 "3ac3290a24931a6ddff686d8d695e4436920d008b49677473e739bfd4c4badbf" => :mavericks
+    sha256 "29a4b522e4ec3e4a30c3446ae801d288939cd37e3ab227c55c1e2bf13a8651c2" => :yosemite
+    sha256 "95ff13a6a74d39aae4392f4e6e527c70d8dad8422177538e5365a98fae1c0278" => :el_capitan
+    sha256 "1a63528a2050471cd7b4eddb2e69eb0b8cb8b30bfa74a45954a81485e8eec2c5" => :sierra
   end
 
   def patches
@@ -203,13 +141,8 @@ class Llvm39Julia < Formula
     # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
 
-    (buildpath/"tools/clang").install resource("clang")
-    (buildpath/"tools/clang/tools/extra").install resource("clang-extra-tools")
-    (buildpath/"projects/openmp").install resource("openmp")
     (buildpath/"projects/libcxx").install resource("libcxx") if build_libcxx?
     (buildpath/"projects/libunwind").install resource("libunwind")
-    (buildpath/"tools/lld").install resource("lld")
-    (buildpath/"tools/polly").install resource("polly")
 
     if build.with? "lldb"
       if build.with? "python"
@@ -231,29 +164,15 @@ class Llvm39Julia < Formula
       system "security", "list-keychains", "-d", "user", "-s", "/Users/#{username}/Library/Keychains/login.keychain"
     end
 
-    if build.with? "compiler-rt"
-      (buildpath/"projects/compiler-rt").install resource("compiler-rt")
-
-      # compiler-rt has some iOS simulator features that require i386 symbols
-      # I'm assuming the rest of clang needs support too for 32-bit compilation
-      # to work correctly, but if not, perhaps universal binaries could be
-      # limited to compiler-rt. llvm makes this somewhat easier because compiler-rt
-      # can almost be treated as an entirely different build from llvm.
-      ENV.permit_arch_flags
-    end
-
     args = %w[
       -DLLVM_OPTIMIZED_TABLEGEN=ON
       -DLLVM_INCLUDE_DOCS=OFF
       -DLLVM_ENABLE_RTTI=ON
       -DLLVM_ENABLE_EH=ON
       -DLLVM_INSTALL_UTILS=ON
-      -DWITH_POLLY=ON
-      -DLINK_POLLY_INTO_TOOLS=ON
     ]
     args << "-DLLVM_TARGETS_TO_BUILD=#{build.with?("all-targets") ? "all" : "AMDGPU;ARM;NVPTX;X86"}"
     args << "-DLIBOMP_ARCH=x86_64"
-    args << "-DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON" if build.with? "compiler-rt"
     args << "-DLLVM_CREATE_XCODE_TOOLCHAIN=ON" if build.with? "toolchain"
 
     if build.with? "shared-libs"
@@ -299,14 +218,8 @@ class Llvm39Julia < Formula
       system "make", "install-xcode-toolchain" if build.with? "toolchain"
     end
 
-    (share/"clang/tools").install Dir["tools/clang/tools/scan-{build,view}"]
-    inreplace "#{share}/clang/tools/scan-build/bin/scan-build", "$RealBin/bin/clang", "#{bin}/clang"
-    bin.install_symlink share/"clang/tools/scan-build/bin/scan-build", share/"clang/tools/scan-view/bin/scan-view"
-    man1.install_symlink share/"clang/tools/scan-build/man/scan-build.1"
-
     # install llvm python bindings
     (lib/"python2.7/site-packages").install buildpath/"bindings/python/llvm"
-    (lib/"python2.7/site-packages").install buildpath/"tools/clang/bindings/python/clang"
   end
 
   def caveats
