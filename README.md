@@ -1,3 +1,13 @@
+This tap is not actively maintained
+===================================
+
+To install Julia through homebrew, use [`Homebrew cask`](https://caskroom.github.io/); `brew cask install julia`.
+
+To install Julia from source, follow the instructions on the [main Julia github repo](https://github.com/JuliaLang/julia).
+
+This tap is still published as an example of how to build Julia and various dependencies for the curious and enterprising dev looking to build Julia on Homebrew.
+
+
 homebrew-julia
 ==============
 
