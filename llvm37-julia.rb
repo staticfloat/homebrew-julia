@@ -162,8 +162,8 @@ class Llvm37Julia < Formula
   cxxstdlib_check :skip
 
   # Apple's libstdc++ is too old to build LLVM
-  fails_with :gcc
-  fails_with :llvm
+  #fails_with :gcc
+  #fails_with :llvm
 
   def install
     # One of llvm makefiles relies on gnu sed behavior to generate CMake modules correctly
