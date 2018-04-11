@@ -115,9 +115,9 @@ class Llvm39Julia < Formula
   end
 
   if MacOS.version <= :snow_leopard
-    depends_on :python
+    depends_on "python@2"
   else
-    depends_on :python => :optional
+    depends_on "python@2" => :optional
   end
   depends_on "cmake" => :build
 

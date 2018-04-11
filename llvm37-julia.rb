@@ -146,7 +146,7 @@ class Llvm37Julia < Formula
   depends_on "gnu-sed" => :build
   depends_on "gmp"
   depends_on "libffi" => :recommended
-  depends_on :python => :optional
+  depends_on "python@2" => :optional
 
   if build.with? "lldb"
     depends_on "swig"

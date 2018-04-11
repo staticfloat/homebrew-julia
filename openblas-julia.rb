@@ -2,7 +2,7 @@ require 'formula'
 
 class OpenblasJulia < Formula
   homepage 'http://xianyi.github.com/OpenBLAS/'
-  url 'http://github.com/xianyi/OpenBLAS/archive/v0.2.20.tar.gz'
+  url 'https://github.com/xianyi/OpenBLAS/archive/v0.2.20.tar.gz'
   head 'https://github.com/xianyi/OpenBLAS.git', :branch => 'develop'
   sha256 '5ef38b15d9c652985774869efd548b8e3e972e1e99475c673b25537ed7bcf394'
 
@@ -13,7 +13,7 @@ class OpenblasJulia < Formula
     sha256 'ee7ac2970c35b32558ac80faf43e64aa54920407e5c3b2ce65daa6a799a6011d' => :sierra
   end
 
-  depends_on :fortran
+  depends_on "gcc"
 
   keg_only 'Conflicts with openblas in homebrew-science.'
 

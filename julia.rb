@@ -37,7 +37,7 @@ class Julia < Formula
   depends_on "pcre2"
   depends_on "gmp"
   depends_on "fftw"
-  depends_on :fortran
+  depends_on "gcc"
   depends_on "mpfr"
   depends_on "libgit2"
   depends_on "mbedtls"
