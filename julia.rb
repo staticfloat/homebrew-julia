@@ -185,7 +185,7 @@ class Julia < Formula
 
   def caveats
     head_flag = build.head? ? " --HEAD " : " "
-    <<-EOS.undent
+    <<-EOS
     Documentation and Examples have been installed into:
     #{share}/julia
 

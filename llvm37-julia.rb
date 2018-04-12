@@ -10,7 +10,7 @@ class CodesignRequirement < Requirement
   end
 
   def message
-    <<-EOS.undent
+    <<-EOS
       lldb_codesign identity must be available to build with LLDB.
       See: https://llvm.org/svn/llvm-project/lldb/trunk/docs/code-signing.txt
     EOS
@@ -287,7 +287,7 @@ class Llvm37Julia < Formula
     end
   end
 
-  def caveats; <<-EOS.undent
+  def caveats; <<-EOS
     Extra tools are installed in #{opt_share}/clang-#{ver}
 
     To link to libc++, something like the following is required:
