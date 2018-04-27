@@ -93,7 +93,7 @@ class Llvm39Julia < Formula
     return patch_list
   end
 
-  keg_only :provided_by_osx
+  keg_only :provided_by_macos
 
   option :universal
   option "without-compiler-rt", "Do not build Clang runtime support libraries for code sanitizers, builtins, and profiling"
